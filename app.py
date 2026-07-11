@@ -1,5 +1,5 @@
 """
-Loan Pro AI — Intelligent Credit Eligibility Platform (Light & Colorful Edition)
+Credit Spectrum AI — Intelligent Credit Eligibility Platform (Light & Colorful Edition)
 Powered by XGBoost | Secure • Intelligent • Trusted
 """
 
@@ -19,7 +19,7 @@ import time
 # 1. PAGE CONFIG
 # =====================================================================================
 st.set_page_config(
-    page_title="Loan Pro AI | Intelligent Credit Eligibility Platform",
+    page_title="Credit Spectrum AI | Intelligent Credit Eligibility Platform",
     page_icon="🏦",
     layout="wide",
     initial_sidebar_state="expanded",
@@ -239,7 +239,7 @@ FEATURE_COLS = ['purpose', 'int.rate', 'installment', 'log.annual.inc', 'dti', '
 # =====================================================================================
 # 3. DATA + AUTO-HEALING MODEL LOADING 
 # =====================================================================================
-@st.cache_resource(show_spinner="🏦 Booting Loan Pro AI Core (Auto-healing if needed)...")
+@st.cache_resource(show_spinner="🏦 Booting Credit Spectrum AI Core (Auto-healing if needed)...")
 def load_pipeline():
     df_raw = pd.read_csv('loan_data.csv')
     df_processed = df_raw.copy()
@@ -291,7 +291,7 @@ df_raw, df_processed, le, scaler, model, X_test_scaled, y_test = load_pipeline()
 # =====================================================================================
 # 4. SIDEBAR NAVIGATION
 # =====================================================================================
-st.sidebar.markdown("## 🏦 Loan Pro <span style='color:#ef4d8b'>AI</span>", unsafe_allow_html=True)
+st.sidebar.markdown("## 🏦 Credit Spectrum <span style='color:#ef4d8b'>AI</span>", unsafe_allow_html=True)
 st.sidebar.caption("Secure • Intelligent • Trusted")
 st.sidebar.markdown("---")
 
@@ -334,7 +334,7 @@ if choice == "🏠 Home":
     st.markdown("""
     <div class="hero-wrap">
         <span class="hero-tag">POWERED BY EXPLAINABLE AI &nbsp;•&nbsp; XGBOOST</span>
-        <div class="hero-title">🏦 Loan Pro AI</div>
+        <div class="hero-title">🏦 Credit Spectrum AI</div>
         <div class="hero-sub">🪙 Next-Generation Loan Intelligence Platform for the Modern Digital Bank</div>
         <p style="max-width:640px; opacity:0.85;">
             Analyze a customer's complete financial profile, quantify credit risk and predict
@@ -370,7 +370,7 @@ if choice == "🏠 Home":
     st.markdown("###  ")
     st.markdown("""
     <div class="glass-card">
-        <h3>🛡️ Why Loan Pro AI?</h3>
+        <h3>🛡️ Why Credit Spectrum AI?</h3>
         <p>Built for institutions that need speed <b>and</b> trust — every prediction is paired with
         a confidence score and a plain-language explanation, so risk teams and customers alike
         understand exactly why a decision was made.</p>
@@ -532,7 +532,7 @@ elif choice == "📈 Analytics":
 # =====================================================================================
 elif choice == "🧠 AI Predictor":
     st.markdown('<div class="hero-title" style="font-size:32px;">🔮 The AI Credit Radar</div>', unsafe_allow_html=True)
-    st.caption("Enter applicant telemetry below. Loan Pro AI will assess credit-policy eligibility in real time.")
+    st.caption("Enter applicant telemetry below. Credit Spectrum AI will assess credit-policy eligibility in real time.")
 
     with st.form("prediction_form"):
         st.markdown('<div class="glass-card"><h3>📋 Section 1 — Applicant & Loan Details</h3>', unsafe_allow_html=True)
@@ -577,7 +577,7 @@ elif choice == "🧠 AI Predictor":
 
     if submit_button:
         steps = [
-            "Connecting to Loan Pro AI...",
+            "Connecting to Credit Spectrum AI...",
             "Loading XGBoost engine...",
             "Evaluating financial profile...",
             "Checking credit policy thresholds...",
@@ -703,10 +703,10 @@ elif choice == "📁 Dataset":
 # 10. ABOUT THE MODEL
 # =====================================================================================
 elif choice == "👨‍💻 About the Model":
-    st.markdown('<div class="hero-title" style="font-size:32px;">🧭 About Loan Pro AI</div>', unsafe_allow_html=True)
+    st.markdown('<div class="hero-title" style="font-size:32px;">🧭 About Credit Spectrum AI</div>', unsafe_allow_html=True)
     st.markdown("""
     <div class="glass-card">
-    <p>Loan Pro AI is an intelligent credit-eligibility platform that evaluates demographic
+    <p>Credit Spectrum AI is an intelligent credit-eligibility platform that evaluates demographic
     and financial telemetry to assess loan risk and predict credit-policy compliance,
     using a production-grade <b>XGBoost</b> classifier.</p>
     </div>
