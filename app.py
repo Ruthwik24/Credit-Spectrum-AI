@@ -1,5 +1,5 @@
 """
-Credit Spectrum AI — Intelligent Credit Eligibility Platform (Luxury Banking Edition)
+Credit Spectrum AI — Intelligent Credit Eligibility Platform (Futuristic Neon-Glass Edition)
 Powered by XGBoost | Secure • Intelligent • Trusted
 """
 
@@ -21,7 +21,7 @@ import random
 # =====================================================================================
 st.set_page_config(
     page_title="Credit Spectrum AI | Intelligent Credit Eligibility Platform",
-    page_icon="🪙",
+    page_icon="💠",
     layout="wide",
     initial_sidebar_state="collapsed",
 )
@@ -34,33 +34,30 @@ if "batch_result" not in st.session_state:
     st.session_state.batch_result = None
 
 # =====================================================================================
-# 2. THEME — Gold & Platinum futuristic neon-glass, mood-reactive
+# 2. THEME — dark futuristic neon-glass, mood-reactive
 # =====================================================================================
 def apply_theme(mood="default"):
     palettes = {
         "default": dict(
-            bg="#0F1117",
-            accent1="#D4AF37", # Gold
-            accent2="#C0C0C0", # Platinum
-            accent3="#8C7853", # Accent / Bronze
-            text="#F5F5F5",
-            cardBorder="rgba(212,175,55,0.35)", glow="rgba(212,175,55,0.25)",
-            heroGrad="linear-gradient(120deg, rgba(212,175,55,0.12), rgba(192,192,192,0.10) 55%, rgba(140,120,83,0.12))",
-            titleGrad="linear-gradient(90deg, #D4AF37 0%, #C0C0C0 30%, #D4AF37 60%, #C0C0C0 100%)",
+            bg="radial-gradient(circle at 15% 10%, #131a3a 0%, #0b0f24 45%, #050710 100%)",
+            accent1="#00e5ff", accent2="#a855f7", accent3="#ff2e9a", text="#e8ecff",
+            cardBorder="rgba(0,229,255,0.35)", glow="rgba(0,229,255,0.35)",
+            heroGrad="linear-gradient(120deg, rgba(0,229,255,0.14), rgba(168,85,247,0.14) 55%, rgba(255,46,154,0.14))",
+            titleGrad="linear-gradient(90deg, #00e5ff 0%, #a855f7 30%, #ff2e9a 60%, #00e5ff 100%)",
         ),
         "approved": dict(
-            bg="#072318",
-            accent1="#67D46D", accent2="#39ff14", accent3="#D4AF37", text="#e7fff2",
-            cardBorder="rgba(103,212,109,0.40)", glow="rgba(103,212,109,0.40)",
-            heroGrad="linear-gradient(120deg, rgba(103,212,109,0.18), rgba(57,255,20,0.14))",
-            titleGrad="linear-gradient(90deg, #67D46D 0%, #39ff14 50%, #D4AF37 100%)",
+            bg="radial-gradient(circle at 15% 10%, #072318 0%, #051a11 45%, #030f0a 100%)",
+            accent1="#00ffa3", accent2="#39ff14", accent3="#00e5ff", text="#e7fff2",
+            cardBorder="rgba(0,255,163,0.40)", glow="rgba(0,255,163,0.40)",
+            heroGrad="linear-gradient(120deg, rgba(0,255,163,0.18), rgba(57,255,20,0.14))",
+            titleGrad="linear-gradient(90deg, #00ffa3 0%, #39ff14 50%, #00e5ff 100%)",
         ),
         "declined": dict(
-            bg="#2a0810",
-            accent1="#D84A4A", accent2="#ff6b6b", accent3="#C0C0C0", text="#ffe9ee",
-            cardBorder="rgba(216,74,74,0.40)", glow="rgba(216,74,74,0.40)",
-            heroGrad="linear-gradient(120deg, rgba(216,74,74,0.20), rgba(255,107,107,0.14))",
-            titleGrad="linear-gradient(90deg, #D84A4A 0%, #ff6b6b 50%, #C0C0C0 100%)",
+            bg="radial-gradient(circle at 15% 10%, #2a0810 0%, #1a050a 45%, #0d0306 100%)",
+            accent1="#ff2e5b", accent2="#ff6b6b", accent3="#ff2e9a", text="#ffe9ee",
+            cardBorder="rgba(255,46,91,0.40)", glow="rgba(255,46,91,0.40)",
+            heroGrad="linear-gradient(120deg, rgba(255,46,91,0.20), rgba(255,107,107,0.14))",
+            titleGrad="linear-gradient(90deg, #ff2e5b 0%, #ff6b6b 50%, #ff2e9a 100%)",
         ),
     }
     p = palettes[mood]
@@ -73,7 +70,7 @@ def apply_theme(mood="default"):
         dur = random.uniform(9, 20)
         delay = random.uniform(0, 14)
         size = random.randint(15, 30)
-        opacity = round(random.uniform(0.08, 0.22), 2)
+        opacity = round(random.uniform(0.10, 0.28), 2)
         particles_html += (
             f'<span class="money-particle" style="left:{left}vw; font-size:{size}px; '
             f'animation-duration:{dur}s; animation-delay:{delay}s; opacity:{opacity};">{g}</span>'
@@ -83,7 +80,7 @@ def apply_theme(mood="default"):
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
 
-    html, body, [class*="css"] {{ font-family: 'Poppins', 'Inter', sans-serif; }}
+    html, body, [class*="css"] {{ font-family: 'Inter', 'Poppins', sans-serif; }}
     #MainMenu, footer, header {{ visibility: hidden; }}
 
     .stApp {{
@@ -100,11 +97,11 @@ def apply_theme(mood="default"):
     .stApp::before {{
         content: ""; position: fixed; inset: 0;
         background-image:
-            radial-gradient(2.5px 2.5px at 18% 25%, {p['accent1']}44, transparent),
-            radial-gradient(2.5px 2.5px at 75% 60%, {p['accent2']}33, transparent),
-            radial-gradient(2px 2px at 85% 15%, {p['accent3']}33, transparent),
-            radial-gradient(2px 2px at 40% 85%, {p['accent1']}22, transparent),
-            radial-gradient(1.5px 1.5px at 60% 35%, {p['accent2']}22, transparent);
+            radial-gradient(2.5px 2.5px at 18% 25%, {p['accent1']}88, transparent),
+            radial-gradient(2.5px 2.5px at 75% 60%, {p['accent2']}77, transparent),
+            radial-gradient(2px 2px at 85% 15%, {p['accent3']}77, transparent),
+            radial-gradient(2px 2px at 40% 85%, {p['accent1']}55, transparent),
+            radial-gradient(1.5px 1.5px at 60% 35%, {p['accent2']}55, transparent);
         background-size: 550px 550px; opacity: 0.55; pointer-events: none; z-index: 0;
         animation: drift 40s linear infinite;
     }}
@@ -124,16 +121,16 @@ def apply_theme(mood="default"):
     h1, h2, h3 {{ font-family: 'Poppins', sans-serif !important; color: {p['text']} !important; font-weight: 700 !important; }}
     p, span, div, label {{ color: {p['text']}; }}
 
-    /* ---------- GLASS CARD (Luxury Bank) ---------- */
+    /* ---------- GLASS CARD (dark neon) ---------- */
     .glass-card {{
-        background: rgba(255,255,255,0.05); border: 1px solid {p['cardBorder']};
-        border-radius: 20px; padding: 26px; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-        box-shadow: 0 4px 30px rgba(0,0,0,0.5), 0 0 18px {p['glow']} inset; transition: all 0.35s ease;
+        background: rgba(255,255,255,0.04); border: 1px solid {p['cardBorder']};
+        border-radius: 20px; padding: 26px; backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+        box-shadow: 0 0 30px rgba(0,0,0,0.35), 0 0 18px {p['glow']} inset; transition: all 0.35s ease;
         margin-bottom: 18px; position: relative; z-index: 1;
     }}
     .glass-card:hover {{
         transform: translateY(-6px); border-color: {p['accent2']};
-        box-shadow: 0 8px 40px {p['glow']}, 0 0 22px {p['glow']} inset;
+        box-shadow: 0 0 40px {p['glow']}, 0 0 22px {p['glow']} inset;
     }}
 
     /* ---------- PANEL (for dashboard/analytics grid boxes) ---------- */
@@ -189,7 +186,7 @@ def apply_theme(mood="default"):
     }}
     @keyframes cardFloat {{ 0%,100%{{ transform: translateY(0) rotate(-2deg);}} 50%{{ transform: translateY(-10px) rotate(2deg);}} }}
     .credit-card .chip {{ font-size: 26px; }}
-    .credit-card .num {{ color: #1a1a1a; font-family: 'Orbitron', monospace; font-weight: 700; letter-spacing: 2px; font-size: 15px; margin-top: 14px; text-shadow: 0 0 6px rgba(255,255,255,0.4); }}
+    .credit-card .num {{ color: #fff; font-family: 'Orbitron', monospace; letter-spacing: 2px; font-size: 15px; margin-top: 14px; text-shadow: 0 0 6px rgba(0,0,0,0.4); }}
     .credit-card .brand {{ position:absolute; bottom: 12px; right: 16px; font-size: 20px; }}
 
     /* ---------- TOP NAV BAR (glassy, futuristic pill tabs) ---------- */
@@ -211,22 +208,21 @@ def apply_theme(mood="default"):
     @keyframes navBorderFlow {{ 0%{{background-position:0% 50%;}} 100%{{background-position:300% 50%;}} }}
 
     div[data-testid="stHorizontalBlock"] div[role="radiogroup"] {{
-        display: flex !important; flex-direction: row !important; width: 100% !important; justify-content: stretch !important; gap: 8px !important;
+        display: flex; flex-wrap: nowrap; gap: 10px; justify-content: space-between; width: 100%;
     }}
     div[role="radiogroup"] label {{
         background: rgba(255,255,255,0.035); border: 1px solid {p['cardBorder']}; border-radius: 30px;
         padding: 13px 18px !important; font-weight: 700; font-size: 14.5px; letter-spacing: 0.3px;
-        color: {p['text']} !important; opacity: 0.85; 
-        flex: 1 1 100% !important; display: flex !important; justify-content: center !important; align-items: center !important; margin: 0 !important;
+        color: {p['text']} !important; opacity: 0.85; flex: 1 1 0; justify-content: center;
         transition: transform 0.25s cubic-bezier(.34,1.56,.64,1), box-shadow 0.3s ease, border-color 0.3s ease, opacity 0.3s ease;
         cursor: pointer; position: relative; overflow: hidden; z-index: 1;
     }}
-    /* Hide the default radio circle completely */
-    div[role="radiogroup"] > label > div:first-of-type {{
-        display: none !important; width: 0 !important; height: 0 !important; margin: 0 !important; padding: 0 !important;
+    /* Kill Streamlit's native circular radio marker entirely (no more red dot) */
+    div[role="radiogroup"] label > div:first-child {{
+        display: none !important; width: 0 !important; height: 0 !important;
+        margin: 0 !important; padding: 0 !important;
     }}
-    
-    div[role="radiogroup"] label p {{ color: inherit !important; margin: 0; padding: 0; }}
+    div[role="radiogroup"] label p {{ color: inherit !important; }}
     div[role="radiogroup"] label::before {{
         content: ""; position: absolute; inset: 0; border-radius: 30px; z-index: -1;
         background: conic-gradient(from 0deg, {p['accent1']}, {p['accent2']}, {p['accent3']}, {p['accent1']});
@@ -239,14 +235,14 @@ def apply_theme(mood="default"):
         transition: width 0.3s ease, left 0.3s ease; opacity: 0;
     }}
     div[role="radiogroup"] label:hover {{
-        transform: translateY(-4px) scale(1.02); border-color: {p['accent1']};
+        transform: translateY(-4px) scale(1.05); border-color: {p['accent1']};
         box-shadow: 0 6px 20px {p['glow']}; color: {p['accent1']} !important; opacity: 1;
     }}
     div[role="radiogroup"] label:has(input:checked) {{
-        background: rgba(30,30,30,0.65);
+        background: rgba(10,12,26,0.85);
         border-color: transparent; opacity: 1;
         color: {p['accent1']} !important; font-weight: 800;
-        transform: translateY(-2px) scale(1.03);
+        transform: translateY(-2px) scale(1.06);
         box-shadow: 0 0 26px {p['glow']}, inset 0 0 14px {p['glow']};
         animation: navSelectPulse 0.55s cubic-bezier(.34,1.56,.64,1);
     }}
@@ -259,8 +255,8 @@ def apply_theme(mood="default"):
     @keyframes navConicSpin {{ from{{ filter: blur(10px) hue-rotate(0deg); }} to{{ filter: blur(10px) hue-rotate(360deg); }} }}
     @keyframes navSelectPulse {{
         0% {{ transform: scale(0.9) translateY(0); box-shadow: 0 0 0 {p['glow']}; }}
-        55% {{ transform: scale(1.08) translateY(-4px); }}
-        100% {{ transform: scale(1.03) translateY(-2px); box-shadow: 0 0 26px {p['glow']}, inset 0 0 14px {p['glow']}; }}
+        55% {{ transform: scale(1.12) translateY(-4px); }}
+        100% {{ transform: scale(1.06) translateY(-2px); box-shadow: 0 0 26px {p['glow']}, inset 0 0 14px {p['glow']}; }}
     }}
     div[role="radiogroup"] input {{ display:none; }}
 
@@ -306,18 +302,18 @@ def apply_theme(mood="default"):
 
     /* ---------- RESULT CARDS ---------- */
     .approved-hero {{
-        background: linear-gradient(135deg, rgba(103,212,109,0.16), rgba(103,212,109,0.04));
-        border: 1px solid #67D46D; border-radius: 24px; padding: 36px; text-align: center;
-        box-shadow: 0 0 55px rgba(103,212,109,0.45); position: relative; z-index: 2;
+        background: linear-gradient(135deg, rgba(0,255,163,0.16), rgba(0,255,163,0.04));
+        border: 1px solid #00ffa3; border-radius: 24px; padding: 36px; text-align: center;
+        box-shadow: 0 0 55px rgba(0,255,163,0.45); position: relative; z-index: 2;
     }}
     .declined-hero {{
-        background: linear-gradient(135deg, rgba(216,74,74,0.16), rgba(216,74,74,0.04));
-        border: 1px solid #D84A4A; border-radius: 24px; padding: 36px; text-align: center;
-        box-shadow: 0 0 55px rgba(216,74,74,0.45); position: relative; z-index: 2;
+        background: linear-gradient(135deg, rgba(255,46,91,0.16), rgba(255,46,91,0.04));
+        border: 1px solid #ff2e5b; border-radius: 24px; padding: 36px; text-align: center;
+        box-shadow: 0 0 55px rgba(255,46,91,0.45); position: relative; z-index: 2;
     }}
     .verdict-title {{ font-family:'Orbitron',sans-serif; font-size: 30px; font-weight: 900; margin-bottom: 6px;}}
-    .approved-hero .verdict-title {{ color: #67D46D; text-shadow: 0 0 18px rgba(103,212,109,0.6); }}
-    .declined-hero .verdict-title {{ color: #D84A4A; text-shadow: 0 0 18px rgba(216,74,74,0.6); }}
+    .approved-hero .verdict-title {{ color: #00ffa3; text-shadow: 0 0 18px rgba(0,255,163,0.6); }}
+    .declined-hero .verdict-title {{ color: #ff6b6b; text-shadow: 0 0 18px rgba(255,46,91,0.6); }}
     .verdict-icon {{ font-size: 54px; animation: popIn 0.6s ease; }}
     @keyframes popIn {{ 0%{{ transform: scale(0);}} 70%{{ transform: scale(1.2);}} 100%{{ transform: scale(1);}} }}
 
@@ -345,19 +341,11 @@ def apply_theme(mood="default"):
         100% {{ transform: translateY(105vh) rotate(-200deg); opacity: 0.3; }}
     }}
 
-    /* ---------- TIMELINE / ROADMAP CARDS ---------- */
-    .timeline-item {{
-        background: rgba(255,255,255,0.04); border: 1px solid {p['cardBorder']};
-        border-radius: 14px; padding: 16px 20px; margin-bottom: 14px;
-        backdrop-filter: blur(12px); border-left: 5px solid {p['accent1']};
-        box-shadow: 0 4px 16px rgba(0,0,0,0.2); transition: transform 0.3s ease, box-shadow 0.3s ease;
-        display: flex; align-items: center; gap: 12px;
-    }}
-    .timeline-item:hover {{
-        transform: translateX(8px); box-shadow: 0 6px 20px {p['glow']}; border-color: {p['accent2']};
-    }}
-    .timeline-icon {{
-        font-size: 24px; filter: drop-shadow(0 0 6px {p['glow']});
+    /* ---------- TIMELINE ---------- */
+    .timeline-item {{ border-left: 3px solid {p['accent1']}; padding-left: 18px; margin-bottom: 18px; position: relative; }}
+    .timeline-item::before {{
+        content: ""; position: absolute; left: -8px; top: 2px; width: 13px; height: 13px; border-radius: 50%;
+        background: {p['accent1']}; box-shadow: 0 0 10px {p['accent1']};
     }}
 
     /* ---------- LEADERBOARD ---------- */
@@ -370,7 +358,7 @@ def apply_theme(mood="default"):
     .leader-crown {{ font-size: 22px; margin-right: 10px; }}
     .champion-badge {{
         display: inline-block; padding: 20px 30px; border-radius: 22px;
-        background: linear-gradient(135deg, rgba(212,175,55,0.14), rgba(192,192,192,0.14));
+        background: linear-gradient(135deg, rgba(0,229,255,0.14), rgba(168,85,247,0.14));
         border: 2px solid {p['accent1']}; text-align: center; animation: floaty 4s ease-in-out infinite;
         box-shadow: 0 0 26px {p['glow']};
     }}
@@ -398,40 +386,35 @@ def apply_theme(mood="default"):
     .stTextInput input, .stNumberInput input, .stTextArea textarea,
     div[data-baseweb="input"] input, div[data-baseweb="base-input"] input,
     .stNumberInput div[data-baseweb="input"], .stTextInput div[data-baseweb="input"] {{
-        background: rgba(30,30,30,0.35) !important; color: {p['text']} !important;
-        border: 1px solid {p['cardBorder']} !important; border-radius: 18px !important;
-        backdrop-filter: blur(20px) !important; -webkit-text-fill-color: {p['text']} !important;
+        background: rgba(12,16,36,0.85) !important; color: {p['text']} !important;
+        border: 1px solid {p['cardBorder']} !important; border-radius: 12px !important;
+        -webkit-text-fill-color: {p['text']} !important;
     }}
     div[data-baseweb="input"], div[data-baseweb="base-input"] {{
-        background: transparent !important; border-radius: 18px !important; border: none !important;
+        background: rgba(12,16,36,0.85) !important; border-radius: 12px !important;
     }}
     .stNumberInput button, .stNumberInput button svg {{
-        background: transparent !important; color: {p['text']} !important; fill: {p['text']} !important;
+        background: rgba(12,16,36,0.9) !important; color: {p['text']} !important; fill: {p['text']} !important;
     }}
     .stTextInput input::placeholder, .stTextArea textarea::placeholder,
     .stNumberInput input::placeholder {{ color: {p['text']} !important; opacity: 0.5 !important; }}
 
-    /* select boxes / multiselect (BaseWeb) — glassy overrides */
-    div[data-baseweb="select"] {{
-        background: rgba(30,30,30,0.35) !important; color: {p['text']} !important;
-        border: 1px solid {p['cardBorder']} !important; border-radius: 18px !important;
-        backdrop-filter: blur(20px) !important;
-    }}
-    div[data-baseweb="select"] > div,
+    /* select boxes / multiselect (BaseWeb) — forced high-specificity overrides */
+    div[data-baseweb="select"], div[data-baseweb="select"] > div,
     div[data-baseweb="select"] div[data-baseweb="base-input"] {{
-        background-color: transparent !important; color: {p['text']} !important;
-        border: none !important;
+        background: rgba(12,16,36,0.85) !important; color: {p['text']} !important;
+        border: 1px solid {p['cardBorder']} !important; border-radius: 12px !important;
     }}
     div[data-baseweb="select"] * {{ color: {p['text']} !important; -webkit-text-fill-color: {p['text']} !important; }}
     div[data-baseweb="select"] svg {{ fill: {p['text']} !important; }}
     [data-baseweb="popover"] ul, [data-baseweb="menu"] {{
-        background: #181818 !important; border: 1px solid {p['cardBorder']} !important; border-radius: 12px;
+        background: #0c1024 !important; border: 1px solid {p['cardBorder']} !important;
     }}
     [data-baseweb="popover"] li, [data-baseweb="menu"] li {{ color: {p['text']} !important; }}
     [data-baseweb="popover"] li:hover, [data-baseweb="menu"] li:hover {{
-        background: rgba(255,215,0,0.15) !important; color: {p['accent1']} !important;
+        background: rgba(255,255,255,0.08) !important; color: {p['accent1']} !important;
     }}
-    [data-baseweb="tag"] {{ background: {p['accent1']}33 !important; color: {p['text']} !important; border: 1px solid {p['accent1']} !important; }}
+    [data-baseweb="tag"] {{ background: {p['accent1']}33 !important; color: {p['text']} !important; }}
 
     /* slider */
     .stSlider [data-baseweb="slider"] div {{ color: {p['text']} !important; }}
@@ -454,17 +437,10 @@ def apply_theme(mood="default"):
 
     /* expander */
     [data-testid="stExpander"] {{
-        background: rgba(25,25,25,0.45) !important; border: 1px solid {p['cardBorder']} !important;
+        background: rgba(255,255,255,0.035) !important; border: 1px solid {p['cardBorder']} !important;
         border-radius: 16px !important; backdrop-filter: blur(14px);
     }}
-    [data-testid="stExpander"] details {{ background: transparent !important; }}
-    [data-testid="stExpander"] summary {{ color: #ffffff !important; background: rgba(25,25,25,0.45) !important; border-radius: 16px; padding: 10px; }}
-    
-    /* Prevent expander from turning white on hover */
-    [data-testid="stExpander"] details summary:hover, .streamlit-expanderHeader:hover {{
-        background: rgba(50,50,50,0.40) !important;
-        color: {p['accent1']} !important;
-    }}
+    [data-testid="stExpander"] summary {{ color: {p['text']} !important; }}
 
     /* alerts (info/success/warning/error) */
     [data-testid="stAlertContainer"], .stAlert {{
@@ -487,7 +463,7 @@ def apply_theme(mood="default"):
     .glass-table-wrap {{
         background: rgba(255,255,255,0.035); border: 1px solid {p['cardBorder']}; border-radius: 18px;
         padding: 4px; backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
-        box-shadow: 0 4px 24px rgba(0,0,0,0.35), 0 0 14px {p['glow']} inset;
+        box-shadow: 0 0 24px rgba(0,0,0,0.35), 0 0 14px {p['glow']} inset;
         overflow: auto; margin-bottom: 16px; position: relative; z-index: 1;
     }}
     .glass-table {{
@@ -497,10 +473,9 @@ def apply_theme(mood="default"):
     .glass-table thead th {{
         position: sticky; top: 0; text-align: left; padding: 13px 16px; font-weight: 800;
         font-size: 12.5px; letter-spacing: 0.6px; text-transform: uppercase;
-        color: {p['accent1']} !important; background: #181818; 
-        border-bottom: 2px solid {p['cardBorder']}; z-index: 999;
+        color: {p['accent1']} !important; background: rgba(255,255,255,0.055);
+        border-bottom: 1px solid {p['cardBorder']}; backdrop-filter: blur(18px); z-index: 2;
     }}
-    .glass-table tbody {{ margin-top: 50px; }}
     .glass-table tbody td {{
         padding: 11px 16px; border-bottom: 1px solid rgba(255,255,255,0.06);
         color: {p['text']} !important; white-space: nowrap;
@@ -556,40 +531,36 @@ def panel_header(icon, title, subtitle=""):
 
 
 def style_fig(fig, p, height=380, hovermode="closest"):
-    """Apply a consistent luxury glassy / futuristic look to any Plotly figure."""
+    """Apply a consistent glassy / futuristic look to any Plotly figure, with fully
+    legible legend, axis, and hover text regardless of the active color theme."""
     fig.update_layout(
         template="plotly_dark",
         height=height,
         paper_bgcolor="rgba(0,0,0,0)",
-        plot_bgcolor="rgba(255,255,255,0.03)",
-        font=dict(family="Poppins, sans-serif", color="#F5F5F5", size=14),
+        plot_bgcolor="rgba(255,255,255,0.015)",
+        font=dict(family="Inter, sans-serif", color=p['text'], size=13),
         margin=dict(t=36, l=10, r=10, b=10),
         hovermode=hovermode,
         hoverlabel=dict(
-            bgcolor="rgba(15,17,23,0.95)", bordercolor=p['accent1'],
-            font=dict(color="#F5F5F5", size=13, family="Poppins, sans-serif"),
+            bgcolor="rgba(10,14,32,0.92)", bordercolor=p['accent1'],
+            font=dict(color=p['text'], size=13, family="Inter, sans-serif"),
         ),
         legend=dict(
-            orientation="h",
-            y=-0.18,
-            x=0.5,
-            xanchor="center",
-            bgcolor="rgba(0,0,0,0)",
-            font=dict(color="#F5F5F5", size=12.5),
-            bordercolor=p['cardBorder'], borderwidth=0,
+            bgcolor="rgba(255,255,255,0.05)", bordercolor=p['cardBorder'], borderwidth=1,
+            font=dict(color=p['text'], size=12.5),
+            orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0,
         ),
-        title=dict(font=dict(color="#F5F5F5")),
-        transition_duration=500,
-        uirevision=True
+        title=dict(font=dict(color=p['text'])),
+        transition=dict(duration=350, easing="cubic-in-out"),
     )
     fig.update_xaxes(
-        gridcolor="rgba(255,255,255,0.05)", zerolinecolor="rgba(255,255,255,0.1)",
-        tickfont=dict(color="#F5F5F5"), title_font=dict(color="#F5F5F5"),
+        gridcolor="rgba(255,255,255,0.07)", zerolinecolor="rgba(255,255,255,0.12)",
+        tickfont=dict(color=p['text']), title_font=dict(color=p['text']),
         linecolor="rgba(255,255,255,0.15)",
     )
     fig.update_yaxes(
-        gridcolor="rgba(255,255,255,0.05)", zerolinecolor="rgba(255,255,255,0.1)",
-        tickfont=dict(color="#F5F5F5"), title_font=dict(color="#F5F5F5"),
+        gridcolor="rgba(255,255,255,0.07)", zerolinecolor="rgba(255,255,255,0.12)",
+        tickfont=dict(color=p['text']), title_font=dict(color=p['text']),
         linecolor="rgba(255,255,255,0.15)",
     )
     return fig
@@ -612,7 +583,7 @@ FEATURE_COLS = ['purpose', 'int.rate', 'installment', 'log.annual.inc', 'dti', '
 # =====================================================================================
 # 3. DATA + AUTO-HEALING MODEL LOADING
 # =====================================================================================
-@st.cache_resource(show_spinner="🪙 Booting Credit Spectrum AI Core...")
+@st.cache_resource(show_spinner="💠 Booting Credit Spectrum AI Core...")
 def load_pipeline():
     df_raw = pd.read_csv('loan_data.csv')
     df_processed = df_raw.copy()
@@ -668,7 +639,7 @@ st.markdown("""
         <span class="hero-title">Credit Spectrum AI</span>
         <span class="orbit-emoji">💵</span><span class="orbit-emoji d2">₿</span><span class="orbit-emoji d3">💳</span>
     </div>
-    <div class="hero-sub">🪙 Next-Generation Loan Intelligence Platform for the Modern Digital Bank ₹💹</div>
+    <div class="hero-sub">💠 Next-Generation Loan Intelligence Platform for the Modern Digital Bank ₹💹</div>
     <p style="max-width:680px; margin:0 auto; opacity:0.85;">
         Analyze a customer's complete financial profile, quantify credit risk and predict
         loan eligibility in milliseconds — with full transparency into every decision. 🔐🧾📈
@@ -682,7 +653,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # =====================================================================================
-# 5. TOP NAVIGATION BAR (glassy, futuristic pill tabs)
+# 5. TOP NAVIGATION BAR (futuristic pill tabs)
 # =====================================================================================
 st.markdown('<div class="navbar-wrap">', unsafe_allow_html=True)
 menu = [
@@ -787,7 +758,7 @@ elif choice == "📊 Dashboard":
             purpose_counts = purpose_counts.sort_values('count', ascending=True)
             fig1 = px.bar(
                 purpose_counts, x='count', y='purpose', orientation='h',
-                color='count', color_continuous_scale=[PALETTE['accent3'], PALETTE['accent2'], PALETTE['accent1']],
+                color='count', color_continuous_scale=[PALETTE['accent2'], PALETTE['accent1'], PALETTE['accent3']],
                 text='count',
             )
             fig1.update_traces(
@@ -808,15 +779,15 @@ elif choice == "📊 Dashboard":
             fig2 = px.pie(
                 policy_counts, values='count', names='credit.policy', hole=0.6,
                 color='credit.policy',
-                color_discrete_map={'Meets Policy': PALETTE['accent1'], 'Below Policy': PALETTE['accent2']},
+                color_discrete_map={'Meets Policy': PALETTE['accent1'], 'Below Policy': PALETTE['accent3']},
             )
             fig2.update_traces(
-                textinfo='label+percent', textposition="inside", textfont=dict(color="#101318", size=14, weight="bold"),
-                marker=dict(line=dict(color='rgba(25,25,25,0.9)', width=2)),
-                pull=[0.02, 0.02], rotation=90,
+                textinfo='percent+label', textfont=dict(color=PALETTE['text'], size=13),
+                marker=dict(line=dict(color='rgba(8,10,24,0.9)', width=3)),
+                pull=[0.04, 0.04], rotation=90,
                 hovertemplate='<b>%{label}</b><br>%{value:,} applicants (%{percent})<extra></extra>',
             )
-            fig2.update_layout(showlegend=True, annotations=[dict(
+            fig2.update_layout(annotations=[dict(
                 text=f"{(filtered['credit.policy']==1).mean()*100:.0f}%<br><span style='font-size:11px;opacity:0.7'>Compliant</span>",
                 x=0.5, y=0.5, showarrow=False, font=dict(size=22, color=PALETTE['accent1'])
             )])
@@ -829,7 +800,7 @@ elif choice == "📊 Dashboard":
         fig3 = px.histogram(
             filtered.assign(**{'Policy Status': fico_labels}), x='fico', color='Policy Status',
             marginal='box', nbins=45, barmode='overlay', opacity=0.82,
-            color_discrete_map={'Meets Policy': PALETTE['accent1'], 'Below Policy': PALETTE['accent2']},
+            color_discrete_map={'Meets Policy': PALETTE['accent1'], 'Below Policy': PALETTE['accent3']},
         )
         fig3.update_traces(marker_line_color='rgba(255,255,255,0.25)', marker_line_width=0.6,
                             hovertemplate='FICO: %{x}<br>Count: %{y}<extra></extra>')
@@ -845,7 +816,7 @@ elif choice == "📊 Dashboard":
             fig5 = px.histogram(
                 filtered.assign(**{'Policy Status': dti_labels}), x='dti', color='Policy Status',
                 nbins=40, barmode='overlay', opacity=0.82,
-                color_discrete_map={'Meets Policy': PALETTE['accent1'], 'Below Policy': PALETTE['accent2']},
+                color_discrete_map={'Meets Policy': PALETTE['accent1'], 'Below Policy': PALETTE['accent3']},
             )
             fig5.update_traces(marker_line_color='rgba(255,255,255,0.25)', marker_line_width=0.6,
                                 hovertemplate='DTI: %{x:.1f}<br>Count: %{y}<extra></extra>')
@@ -862,7 +833,7 @@ elif choice == "📊 Dashboard":
             )
             fig6 = px.bar(
                 rate_summary, x='purpose', y='int.rate', color='Policy Status', barmode='group',
-                color_discrete_map={'Meets Policy': PALETTE['accent1'], 'Below Policy': PALETTE['accent2']},
+                color_discrete_map={'Meets Policy': PALETTE['accent1'], 'Below Policy': PALETTE['accent3']},
             )
             fig6.update_traces(
                 marker_line_color='rgba(255,255,255,0.3)', marker_line_width=1,
@@ -878,7 +849,7 @@ elif choice == "📊 Dashboard":
         corr = df_processed.corr()
         fig4 = go.Figure(data=go.Heatmap(
             z=corr.values, x=corr.columns, y=corr.columns,
-            colorscale=[[0, PALETTE['accent3']], [0.5, "#181818"], [1, PALETTE['accent1']]],
+            colorscale=[[0, PALETTE['accent3']], [0.5, "#0c1024"], [1, PALETTE['accent1']]],
             zmid=0, text=corr.round(2).values, texttemplate="%{text}",
             textfont=dict(size=10, color=PALETTE['text']),
             hovertemplate='%{x} ↔ %{y}<br>Correlation: %{z:.2f}<extra></extra>',
@@ -914,24 +885,18 @@ elif choice == "📈 Analytics":
             panel_header("🎯", "Accuracy Gauge", "Overall correct-classification rate on holdout data")
             fig_acc = go.Figure(go.Indicator(
                 mode="gauge+number", value=acc * 100,
-                gauge={'axis': {'range': [None, 100], 'tickcolor': PALETTE['text']}, 
-                       'bar': {'color': PALETTE['accent1']},
-                       'bgcolor': "rgba(255,255,255,0.05)", 'borderwidth': 1, 'bordercolor': PALETTE['cardBorder']},
-                number={'font': {'color': PALETTE['text']}}
-            ))
-            fig_acc.update_layout(template="plotly_dark", height=270, paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)", margin=dict(t=30, b=10))
+                gauge={'axis': {'range': [None, 100]}, 'bar': {'color': "#00e5ff"},
+                       'bgcolor': "rgba(0,0,0,0)", 'borderwidth': 1, 'bordercolor': "#333"}))
+            fig_acc.update_layout(template="plotly_dark", height=270, paper_bgcolor="rgba(0,0,0,0)", margin=dict(t=10))
             st.plotly_chart(fig_acc, use_container_width=True)
     with c2:
         with st.container(border=True):
             panel_header("📈", "ROC AUC Gauge", "Model's ability to rank approvals above declines")
             fig_auc = go.Figure(go.Indicator(
                 mode="gauge+number", value=auc * 100,
-                gauge={'axis': {'range': [None, 100], 'tickcolor': PALETTE['text']}, 
-                       'bar': {'color': PALETTE['accent2']},
-                       'bgcolor': "rgba(255,255,255,0.05)", 'borderwidth': 1, 'bordercolor': PALETTE['cardBorder']},
-                number={'font': {'color': PALETTE['text']}}
-            ))
-            fig_auc.update_layout(template="plotly_dark", height=270, paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)", margin=dict(t=30, b=10))
+                gauge={'axis': {'range': [None, 100]}, 'bar': {'color': "#ff2e9a"},
+                       'bgcolor': "rgba(0,0,0,0)", 'borderwidth': 1, 'bordercolor': "#333"}))
+            fig_auc.update_layout(template="plotly_dark", height=270, paper_bgcolor="rgba(0,0,0,0)", margin=dict(t=10))
             st.plotly_chart(fig_auc, use_container_width=True)
 
     r1, r2 = st.columns(2)
@@ -940,25 +905,21 @@ elif choice == "📈 Analytics":
             panel_header("🌐", "ROC Curve", "True vs. false positive trade-off vs. a random baseline")
             fpr, tpr, _ = roc_curve(y_test, y_prob)
             fig_roc = go.Figure()
-            fig_roc.add_trace(go.Scatter(x=fpr, y=tpr, mode='lines', fill='tozeroy', name='XGBoost',
-                                          line=dict(color=PALETTE['accent1'], width=3), fillcolor='rgba(212, 175, 55, 0.2)'))
+            fig_roc.add_trace(go.Scatter(x=fpr, y=tpr, mode='lines', name='XGBoost',
+                                          line=dict(color='#a855f7', width=3)))
             fig_roc.add_trace(go.Scatter(x=[0, 1], y=[0, 1], mode='lines', name='Baseline',
-                                          line=dict(color=PALETTE['accent2'], dash='dash')))
-            fig_roc.update_layout(xaxis_title="False Positive Rate", yaxis_title="True Positive Rate")
-            style_fig(fig_roc, PALETTE, height=320, hovermode="x unified")
-            st.plotly_chart(fig_roc, use_container_width=True, config=PLOTLY_CONFIG)
+                                          line=dict(color='#666', dash='dash')))
+            fig_roc.update_layout(template="plotly_dark", height=320,
+                                   paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)", margin=dict(t=10))
+            st.plotly_chart(fig_roc, use_container_width=True)
     with r2:
         with st.container(border=True):
             panel_header("🧮", "Confusion Matrix", "Predicted vs. actual outcomes on the test set")
             cm = confusion_matrix(y_test, y_pred)
-            cm_labels = ["True Negatives", "False Positives", "False Negatives", "True Positives"]
-            cm_values = cm.flatten()
-            cm_df = pd.DataFrame({"Category": cm_labels, "Count": cm_values})
-            fig_cm = px.bar(cm_df, x="Category", y="Count", color="Category",
-                            color_discrete_sequence=[PALETTE['accent2'], PALETTE['accent3'], PALETTE['accent3'], PALETTE['accent1']])
-            fig_cm.update_layout(showlegend=False, xaxis_title="", yaxis_title="Count")
-            style_fig(fig_cm, PALETTE, height=320)
-            st.plotly_chart(fig_cm, use_container_width=True, config=PLOTLY_CONFIG)
+            fig_cm = px.imshow(cm, text_auto=True, template="plotly_dark",
+                                color_continuous_scale="Plasma", labels=dict(x="Predicted", y="Actual"))
+            fig_cm.update_layout(paper_bgcolor="rgba(0,0,0,0)", margin=dict(t=10))
+            st.plotly_chart(fig_cm, use_container_width=True)
 
     st.markdown("### 🏆 Algo-Arena Leaderboard")
     st.caption("Every architecture we trained, ranked by test-set performance.")
@@ -989,15 +950,12 @@ elif choice == "📈 Analytics":
         "Test Accuracy": [0.8569, 0.9881, 0.9840, 0.9892],
         "Test ROC AUC": [0.9341, 0.9829, 0.9969, 0.9978],
     })
-    
-    # Melt dataframe for plotting horizontally
-    metrics_melted = metrics_df.melt(id_vars='AI Architecture', var_name='Metric', value_name='Score')
     with st.container(border=True):
         panel_header("⚔️", "Combat Results", "Head-to-head test performance across every architecture")
-        fig = px.bar(metrics_melted, y='AI Architecture', x='Score', color='Metric',
-                     barmode='group', orientation='h', color_discrete_sequence=[PALETTE['accent1'], PALETTE['accent2']])
-        style_fig(fig, PALETTE, height=380)
-        st.plotly_chart(fig, use_container_width=True, config=PLOTLY_CONFIG)
+        fig = px.bar(metrics_df, x='AI Architecture', y=['Test Accuracy', 'Test ROC AUC'],
+                     barmode='group', template='plotly_dark', color_discrete_sequence=['#00e5ff', '#ff2e9a'])
+        fig.update_layout(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)", margin=dict(t=10))
+        st.plotly_chart(fig, use_container_width=True)
 
     st.markdown("""
     <div class="glass-card">
@@ -1014,10 +972,10 @@ elif choice == "📈 Analytics":
             importances = model.feature_importances_
             imp_df = pd.DataFrame({"Feature": FEATURE_COLS, "Importance": importances}).sort_values(
                 "Importance", ascending=True)
-            fig_imp = px.bar(imp_df, x="Importance", y="Feature", orientation='h',
-                              color="Importance", color_continuous_scale=[PALETTE['accent3'], PALETTE['accent1']])
-            style_fig(fig_imp, PALETTE, height=440)
-            st.plotly_chart(fig_imp, use_container_width=True, config=PLOTLY_CONFIG)
+            fig_imp = px.bar(imp_df, x="Importance", y="Feature", orientation='h', template="plotly_dark",
+                              color="Importance", color_continuous_scale=["#a855f7", "#00e5ff"])
+            fig_imp.update_layout(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)", height=440, margin=dict(t=10))
+            st.plotly_chart(fig_imp, use_container_width=True)
         except Exception:
             st.info("Feature importance is unavailable for this model instance.")
 
@@ -1081,7 +1039,7 @@ elif choice == "🧠 AI Predictor":
             submit_button = st.form_submit_button("🔍 ANALYZE APPLICANT")
 
         if submit_button:
-            with st.spinner("🪙 Credit Spectrum AI is evaluating the financial profile..."):
+            with st.spinner("💠 Credit Spectrum AI is evaluating the financial profile..."):
                 time.sleep(0.8)
 
             purp_enc = le.transform([purpose])[0]
@@ -1142,16 +1100,14 @@ elif choice == "🧠 AI Predictor":
 
             g_val = confidence[1] * 100
             fig_g = go.Figure(go.Indicator(
-                mode="gauge+number", value=g_val, title={'text': "Eligibility Meter", 'font': {'color': PALETTE['text']}},
-                gauge={'axis': {'range': [0, 100], 'tickcolor': PALETTE['text']},
-                       'bar': {'color': "#67D46D" if prediction == 1 else "#D84A4A"},
-                       'steps': [{'range': [0, 40], 'color': 'rgba(216,74,74,0.20)'},
-                                 {'range': [40, 70], 'color': 'rgba(212,175,55,0.20)'},
-                                 {'range': [70, 100], 'color': 'rgba(103,212,109,0.20)'}],
-                       'bgcolor': "rgba(0,0,0,0)"},
-                number={'font': {'color': PALETTE['text']}}
-            ))
-            fig_g.update_layout(template="plotly_dark", height=300, paper_bgcolor="rgba(0,0,0,0)", margin=dict(t=40, b=10))
+                mode="gauge+number", value=g_val, title={'text': "Eligibility Meter"},
+                gauge={'axis': {'range': [0, 100]},
+                       'bar': {'color': "#00ffa3" if prediction == 1 else "#ff2e5b"},
+                       'steps': [{'range': [0, 40], 'color': 'rgba(255,46,91,0.20)'},
+                                 {'range': [40, 70], 'color': 'rgba(246,165,9,0.20)'},
+                                 {'range': [70, 100], 'color': 'rgba(0,255,163,0.20)'}],
+                       'bgcolor': "rgba(0,0,0,0)"}))
+            fig_g.update_layout(template="plotly_dark", height=300, paper_bgcolor="rgba(0,0,0,0)")
             st.plotly_chart(fig_g, use_container_width=True)
 
             report_df = pd.DataFrame([{
@@ -1186,7 +1142,7 @@ elif choice == "🧠 AI Predictor":
                 batch_df = pd.read_csv(uploaded)
                 render_glass_table(batch_df.head(), max_height=260)
                 if st.button("⚡ Run Batch Prediction"):
-                    with st.spinner("🪙 Scoring the entire portfolio..."):
+                    with st.spinner("💠 Scoring the entire portfolio..."):
                         work = batch_df.copy()
                         work['purpose'] = work['purpose'].apply(
                             lambda v: v if v in le.classes_ else le.classes_[0])
@@ -1252,25 +1208,11 @@ elif choice == "👨‍💻 About the Model":
     """, unsafe_allow_html=True)
 
     st.markdown("### 🛤️ Model Development Roadmap")
-    steps = [
-        ("📁", "Dataset Collection"), 
-        ("🧹", "Data Cleaning"), 
-        ("🔠", "Categorical Encoding"), 
-        ("⚖️", "Feature Scaling"),
-        ("⚖️", "SMOTE Class Balancing"), 
-        ("✂️", "Train / Test Split"), 
-        ("🎛️", "Hyperparameter Tuning (RandomizedSearchCV)"),
-        ("⚙️", "XGBoost Training"), 
-        ("📊", "Evaluation (ROC AUC / Accuracy)"), 
-        ("🚀", "Production Deployment")
-    ]
-    for icon, s in steps:
-        st.markdown(f"""
-        <div class="timeline-item">
-            <div class="timeline-icon">{icon}</div>
-            <div><b>{s}</b></div>
-        </div>
-        """, unsafe_allow_html=True)
+    steps = ["Dataset Collection", "Data Cleaning", "Categorical Encoding", "Feature Scaling",
+             "SMOTE Class Balancing", "Train / Test Split", "Hyperparameter Tuning (RandomizedSearchCV)",
+             "XGBoost Training", "Evaluation (ROC AUC / Accuracy)", "Production Deployment"]
+    for s in steps:
+        st.markdown(f'<div class="timeline-item">{s}</div>', unsafe_allow_html=True)
 
     st.markdown("### 📖 Feature Glossary")
     glossary = {
