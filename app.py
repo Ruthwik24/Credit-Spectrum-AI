@@ -284,17 +284,25 @@ def apply_theme(mood="default"):
 
     /* ---------- BUTTONS (glassy) ---------- */
     .stButton>button, .stFormSubmitButton>button, .stDownloadButton>button {{
-        background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01));
-        color: {p['text']} !important; border: 1px solid {p['accent1']}55; border-radius: 14px; padding: 12px 20px;
-        font-weight: 800; letter-spacing: 0.4px; width: 100%;
-        backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-        box-shadow: 0 0 18px {p['glow']}, inset 0 1px 0 rgba(255,255,255,0.05);
-        transition: all 0.3s ease;
+        background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01)) !important;
+        color: {p['text']} !important; 
+        border: 1px solid {p['accent1']}55 !important; 
+        border-radius: 14px !important; 
+        padding: 12px 20px !important;
+        font-weight: 800 !important; 
+        letter-spacing: 0.4px !important; 
+        width: 100% !important;
+        backdrop-filter: blur(16px) !important; 
+        -webkit-backdrop-filter: blur(16px) !important;
+        box-shadow: 0 0 18px {p['glow']}, inset 0 1px 0 rgba(255,255,255,0.05) !important;
+        transition: all 0.3s ease !important;
     }}
     .stButton>button:hover, .stFormSubmitButton>button:hover, .stDownloadButton>button:hover {{
-        background: linear-gradient(135deg, {p['accent1']}33, {p['accent2']}33);
-        border-color: {p['accent1']}; color: {p['accent1']} !important;
-        box-shadow: 0 0 28px {p['glow']}; transform: translateY(-2px);
+        background: linear-gradient(135deg, {p['accent1']}33, {p['accent2']}33) !important;
+        border-color: {p['accent1']} !important; 
+        color: {p['accent1']} !important;
+        box-shadow: 0 0 28px {p['glow']} !important; 
+        transform: translateY(-2px) !important;
     }}
 
     /* ---------- RESULT CARDS ---------- */
@@ -475,18 +483,54 @@ def apply_theme(mood="default"):
         border-bottom: 2px solid {p['accent1']} !important;
     }}
 
-    /* expander (Download Center fix) */
-    [data-testid="stExpander"] {{
-        background: rgba(255,255,255,0.03) !important; border: 1px solid {p['cardBorder']} !important;
-        border-radius: 16px !important; backdrop-filter: blur(14px); overflow: hidden;
+    /* ================= STRICT EXPANDER / DOWNLOAD CENTER FIX ================= */
+    [data-testid="stExpander"] {
+        background: rgba(15, 15, 15, 0.6) !important; 
+        background-color: rgba(15, 15, 15, 0.6) !important; 
+        border: 1px solid {p['cardBorder']} !important;
+        border-radius: 16px !important; 
+        backdrop-filter: blur(14px) !important; 
+        -webkit-backdrop-filter: blur(14px) !important;
+        overflow: hidden !important;
+    }
+    
+    /* Target the summary (header) and all its states to PREVENT white background */
+    [data-testid="stExpander"] > details > summary,
+    [data-testid="stExpander"] > details > summary:hover,
+    [data-testid="stExpander"] > details > summary:focus,
+    [data-testid="stExpander"] > details > summary:active,
+    [data-testid="stExpander"] > details > summary:focus-visible,
+    [data-testid="stExpander"] > details:focus-within > summary {{
+        background: rgba(20, 20, 20, 0.8) !important;
+        background-color: rgba(20, 20, 20, 0.8) !important;
+        color: {p['text']} !important;
+        border: none !important;
+        outline: none !important;
     }}
-    [data-testid="stExpander"] summary {{ color: {p['text']} !important; transition: background 0.3s ease; }}
-    [data-testid="stExpander"] summary:hover {{
-        background: rgba(212,175,55,0.15) !important; color: {p['accent1']} !important;
+
+    /* Specific hover for the header */
+    [data-testid="stExpander"] > details > summary:hover {{
+        background: rgba(212, 175, 55, 0.15) !important;
+        background-color: rgba(212, 175, 55, 0.15) !important;
+        color: {p['accent1']} !important;
     }}
-    .streamlit-expanderHeader svg {{ fill: {p['accent1']} !important; color: {p['accent1']} !important; }}
-    [data-testid="stExpanderDetails"] {{
-        background: rgba(10,10,10,0.8) !important; border-top: 1px solid {p['cardBorder']} !important;
+
+    /* Force all inner elements of the header to be transparent so no white divs sneak in */
+    [data-testid="stExpander"] > details > summary * {{
+        background: transparent !important;
+        background-color: transparent !important;
+    }}
+
+    .streamlit-expanderHeader svg {{ 
+        fill: {p['accent1']} !important; 
+        color: {p['accent1']} !important; 
+    }}
+    
+    [data-testid="stExpanderDetails"],
+    [data-testid="stExpander"] > details > div {{
+        background: rgba(10,10,10,0.8) !important; 
+        background-color: rgba(10,10,10,0.8) !important; 
+        border-top: 1px solid {p['cardBorder']} !important;
     }}
 
     /* alerts (info/success/warning/error) */
