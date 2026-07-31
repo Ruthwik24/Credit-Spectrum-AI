@@ -422,14 +422,19 @@ def apply_theme(mood="default"):
         box-shadow: none !important;
     }}
 
-    /* Dropdown popover containers */
+    /* ================= STRICT DROPDOWN MENU / POPOVER FIX ================= */
+    /* Streamlit mounts dropdowns in a portal at the end of the body, so we must be very aggressive */
     div[data-baseweb="popover"] {{
-        background: transparent !important;
+        background-color: transparent !important;
     }}
     
     div[data-baseweb="popover"] > div,
-    ul[data-baseweb="menu"] {{
+    div[data-baseweb="popover"] ul,
+    [data-testid="stVirtualDropdown"],
+    ul[role="listbox"],
+    div[role="listbox"] {{
         background: rgba(15, 15, 15, 0.95) !important;
+        background-color: rgba(15, 15, 15, 0.95) !important;
         backdrop-filter: blur(24px) !important;
         -webkit-backdrop-filter: blur(24px) !important;
         border: 1px solid {p['cardBorder']} !important;
@@ -437,20 +442,47 @@ def apply_theme(mood="default"):
         box-shadow: 0 8px 32px rgba(0,0,0,0.8), 0 0 20px {p['glow']} !important;
     }}
 
-    /* Dropdown list items */
-    ul[data-baseweb="menu"] li {{
+    /* Force all child elements of the dropdown portal to avoid inheriting white backgrounds */
+    [data-testid="stVirtualDropdown"] > div,
+    [data-testid="stVirtualDropdown"] > div > div,
+    [data-testid="stVirtualDropdown"] > ul {{
+        background-color: transparent !important;
+    }}
+
+    div[data-baseweb="popover"] li,
+    ul[role="listbox"] li,
+    div[role="listbox"] li,
+    li[role="option"] {{
+        background: transparent !important;
         background-color: transparent !important;
         color: {p['text']} !important;
         transition: all 0.2s ease !important;
         font-size: 14.5px !important;
+        padding: 8px 12px !important;
+        margin: 2px 4px !important;
+        border-radius: 8px !important;
     }}
 
-    ul[data-baseweb="menu"] li:hover,
-    ul[data-baseweb="menu"] li[aria-selected="true"],
-    ul[data-baseweb="menu"] li[aria-selected="true"]:hover {{
+    div[data-baseweb="popover"] li:hover,
+    ul[role="listbox"] li:hover,
+    div[role="listbox"] li:hover,
+    li[role="option"]:hover,
+    div[data-baseweb="popover"] li[aria-selected="true"],
+    ul[role="listbox"] li[aria-selected="true"],
+    div[role="listbox"] li[aria-selected="true"],
+    li[role="option"][aria-selected="true"] {{
+        background: rgba(212,175,55,0.3) !important;
         background-color: rgba(212,175,55,0.3) !important;
         color: {p['accent1']} !important;
         font-weight: 800 !important;
+    }}
+
+    /* Multiselect Tags */
+    [data-baseweb="tag"] {{ 
+        background: rgba(212,175,55,0.2) !important; 
+        color: {p['text']} !important; 
+        border: 1px solid {p['accent1']} !important; 
+        border-radius: 6px !important; 
     }}
 
     /* +/- Buttons on Number Inputs */
