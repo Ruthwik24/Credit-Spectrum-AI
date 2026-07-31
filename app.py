@@ -299,15 +299,6 @@ def apply_theme(mood="default"):
         background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.02));
         border: 1px solid {p['cardBorder']};
     }}
-    .st-key-hero_cta_row [data-testid="stHorizontalBlock"] {{ gap: 0.6rem !important; }}
-    .st-key-hero_cta_row .stButton>button {{
-        background: rgba(255,255,255,0.06) !important; backdrop-filter: blur(20px) saturate(160%);
-        border: 1px solid {p['cardBorder']} !important; box-shadow: 0 0 22px {p['glow']}, inset 0 1px 0 rgba(255,255,255,0.14) !important;
-    }}
-    .st-key-hero_cta_row .stButton>button:hover {{
-        background: rgba(255,255,255,0.12) !important; border-color: {p['accent1']} !important;
-        box-shadow: 0 0 30px {p['glow']} !important;
-    }}
 
     /* ---------- RESULT CARDS ---------- */
     .approved-hero {{
@@ -498,6 +489,7 @@ def apply_theme(mood="default"):
     </style>
     <div class="money-bg">{particles_html}</div>
     """, unsafe_allow_html=True)
+    return p
 
 
 def cash_celebration(good=True, n=36):
@@ -538,7 +530,51 @@ def panel_header(icon, title, subtitle=""):
         st.markdown(f'<div class="panel-sub">{subtitle}</div>', unsafe_allow_html=True)
 
 
-apply_theme(st.session_state.mood)
+def style_fig(fig, p, height=380, hovermode="closest"):
+    """Apply a consistent glassy / futuristic look to any Plotly figure, with fully
+    legible legend, axis, and hover text regardless of the active color theme."""
+    fig.update_layout(
+        template="plotly_dark",
+        height=height,
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(255,255,255,0.015)",
+        font=dict(family="Inter, sans-serif", color=p['text'], size=13),
+        margin=dict(t=36, l=10, r=10, b=10),
+        hovermode=hovermode,
+        hoverlabel=dict(
+            bgcolor="rgba(10,14,32,0.92)", bordercolor=p['accent1'],
+            font=dict(color=p['text'], size=13, family="Inter, sans-serif"),
+        ),
+        legend=dict(
+            bgcolor="rgba(255,255,255,0.05)", bordercolor=p['cardBorder'], borderwidth=1,
+            font=dict(color=p['text'], size=12.5),
+            orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0,
+        ),
+        title=dict(font=dict(color=p['text'])),
+        transition=dict(duration=350, easing="cubic-in-out"),
+    )
+    fig.update_xaxes(
+        gridcolor="rgba(255,255,255,0.07)", zerolinecolor="rgba(255,255,255,0.12)",
+        tickfont=dict(color=p['text']), title_font=dict(color=p['text']),
+        linecolor="rgba(255,255,255,0.15)",
+    )
+    fig.update_yaxes(
+        gridcolor="rgba(255,255,255,0.07)", zerolinecolor="rgba(255,255,255,0.12)",
+        tickfont=dict(color=p['text']), title_font=dict(color=p['text']),
+        linecolor="rgba(255,255,255,0.15)",
+    )
+    return fig
+
+
+PLOTLY_CONFIG = {
+    "displayModeBar": True,
+    "displaylogo": False,
+    "scrollZoom": True,
+    "modeBarButtonsToRemove": ["lasso2d", "select2d"],
+}
+
+
+PALETTE = apply_theme(st.session_state.mood)
 
 FEATURE_COLS = ['purpose', 'int.rate', 'installment', 'log.annual.inc', 'dti', 'fico',
                 'days.with.cr.line', 'revol.bal', 'revol.util', 'inq.last.6mths',
@@ -648,16 +684,13 @@ with st.expander("📥 Download Center  •  🟢 Core Status: ONLINE  •  ⚙�
 # 6. HOME
 # =====================================================================================
 if choice == "🏠 Home":
-    with st.container(key="hero_cta_row"):
-        c1, c2, c3 = st.columns([1.3, 1.6, 4])
-        with c1:
-            if st.button("🚀 Start Prediction", key="cta_predict"):
-                st.session_state.page = "🧠 AI Predictor"
-                st.rerun()
-        with c2:
-            if st.button("📊 Explore Dashboard", key="cta_dashboard"):
-                st.session_state.page = "📊 Dashboard"
-                st.rerun()
+    st.markdown("""
+    <div class="glass-card" style="text-align:center; padding:22px 24px; margin-bottom:6px;">
+        <span style="font-size:13.5px; opacity:0.8;">
+        ✨ Use the navigation bar above — <b>🧠 AI Predictor</b> to score an applicant,
+        or <b>📊 Dashboard</b> to explore the live data holograms.</span>
+    </div>
+    """, unsafe_allow_html=True)
 
     st.markdown("### ")
     s1, s2, s3, s4 = st.columns(4)
@@ -705,8 +738,6 @@ elif choice == "📊 Dashboard":
     st.markdown('<div class="hero-title" style="font-size:32px;">📊 Financial Holograms</div>', unsafe_allow_html=True)
     st.caption("Interactive, live exploration of the applicant financial data structure.")
 
-    neon_scale = ["#00e5ff", "#a855f7", "#ff2e9a", "#00ffa3", "#ff6b6b", "#f6a509"]
-
     k1, k2, k3, k4 = st.columns(4)
     k1.metric("💼 Total Applicants", f"{df_raw.shape[0]:,}")
     k2.metric("🛡️ Meets Policy", f"{(df_raw['credit.policy']==1).mean()*100:.1f}%")
@@ -724,53 +755,112 @@ elif choice == "📊 Dashboard":
             panel_header("💼", "Capital Allocation by Purpose", "Volume of applications per stated loan purpose")
             purpose_counts = filtered['purpose'].value_counts().reset_index()
             purpose_counts.columns = ['purpose', 'count']
-            fig1 = px.bar(purpose_counts, x='purpose', y='count', color='purpose', template="plotly_dark",
-                          color_discrete_sequence=neon_scale)
-            fig1.update_layout(showlegend=False, paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
-                                margin=dict(t=10))
-            st.plotly_chart(fig1, use_container_width=True)
+            purpose_counts = purpose_counts.sort_values('count', ascending=True)
+            fig1 = px.bar(
+                purpose_counts, x='count', y='purpose', orientation='h',
+                color='count', color_continuous_scale=[PALETTE['accent2'], PALETTE['accent1'], PALETTE['accent3']],
+                text='count',
+            )
+            fig1.update_traces(
+                texttemplate='%{text:,}', textposition='outside',
+                marker_line_color='rgba(255,255,255,0.35)', marker_line_width=1,
+                hovertemplate='<b>%{y}</b><br>Applications: %{x:,}<extra></extra>',
+            )
+            fig1.update_layout(coloraxis_showscale=False, showlegend=False,
+                                xaxis_title="Applications", yaxis_title="")
+            style_fig(fig1, PALETTE, height=380)
+            st.plotly_chart(fig1, use_container_width=True, config=PLOTLY_CONFIG)
     with col2:
         with st.container(border=True):
             panel_header("🛡️", "Credit Policy Compliance", "Share of applicants meeting vs. missing policy")
             policy_counts = filtered['credit.policy'].value_counts().reset_index()
             policy_counts.columns = ['credit.policy', 'count']
             policy_counts['credit.policy'] = policy_counts['credit.policy'].map({1: 'Meets Policy', 0: 'Below Policy'})
-            fig2 = px.pie(policy_counts, values='count', names='credit.policy', hole=0.55, template="plotly_dark",
-                          color='credit.policy',
-                          color_discrete_map={'Meets Policy': '#00ffa3', 'Below Policy': '#ff2e5b'})
-            fig2.update_layout(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)", margin=dict(t=10))
-            st.plotly_chart(fig2, use_container_width=True)
+            fig2 = px.pie(
+                policy_counts, values='count', names='credit.policy', hole=0.6,
+                color='credit.policy',
+                color_discrete_map={'Meets Policy': PALETTE['accent1'], 'Below Policy': PALETTE['accent3']},
+            )
+            fig2.update_traces(
+                textinfo='percent+label', textfont=dict(color=PALETTE['text'], size=13),
+                marker=dict(line=dict(color='rgba(8,10,24,0.9)', width=3)),
+                pull=[0.04, 0.04], rotation=90,
+                hovertemplate='<b>%{label}</b><br>%{value:,} applicants (%{percent})<extra></extra>',
+            )
+            fig2.update_layout(annotations=[dict(
+                text=f"{(filtered['credit.policy']==1).mean()*100:.0f}%<br><span style='font-size:11px;opacity:0.7'>Compliant</span>",
+                x=0.5, y=0.5, showarrow=False, font=dict(size=22, color=PALETTE['accent1'])
+            )])
+            style_fig(fig2, PALETTE, height=380)
+            st.plotly_chart(fig2, use_container_width=True, config=PLOTLY_CONFIG)
 
     with st.container(border=True):
         panel_header("💎", "FICO Trust-Score Distribution", "Credit score spread split by policy outcome")
-        fig3 = px.histogram(filtered, x='fico', color='credit.policy', marginal='box', template="plotly_dark",
-                             nbins=50, color_discrete_sequence=['#ff2e5b', '#00ffa3'])
-        fig3.update_layout(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)", margin=dict(t=10))
-        st.plotly_chart(fig3, use_container_width=True)
+        fico_labels = filtered['credit.policy'].map({1: 'Meets Policy', 0: 'Below Policy'})
+        fig3 = px.histogram(
+            filtered.assign(**{'Policy Status': fico_labels}), x='fico', color='Policy Status',
+            marginal='box', nbins=45, barmode='overlay', opacity=0.82,
+            color_discrete_map={'Meets Policy': PALETTE['accent1'], 'Below Policy': PALETTE['accent3']},
+        )
+        fig3.update_traces(marker_line_color='rgba(255,255,255,0.25)', marker_line_width=0.6,
+                            hovertemplate='FICO: %{x}<br>Count: %{y}<extra></extra>')
+        fig3.update_layout(bargap=0.04, xaxis_title="FICO Score", yaxis_title="Applicants")
+        style_fig(fig3, PALETTE, height=420, hovermode="x unified")
+        st.plotly_chart(fig3, use_container_width=True, config=PLOTLY_CONFIG)
 
     d1, d2 = st.columns(2)
     with d1:
         with st.container(border=True):
             panel_header("⚖️", "Debt-to-Income Spread", "How DTI relates to policy compliance")
-            fig5 = px.histogram(filtered, x='dti', color='credit.policy', template="plotly_dark",
-                                 color_discrete_sequence=['#ff2e5b', '#00ffa3'])
-            fig5.update_layout(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)", margin=dict(t=10))
-            st.plotly_chart(fig5, use_container_width=True)
+            dti_labels = filtered['credit.policy'].map({1: 'Meets Policy', 0: 'Below Policy'})
+            fig5 = px.histogram(
+                filtered.assign(**{'Policy Status': dti_labels}), x='dti', color='Policy Status',
+                nbins=40, barmode='overlay', opacity=0.82,
+                color_discrete_map={'Meets Policy': PALETTE['accent1'], 'Below Policy': PALETTE['accent3']},
+            )
+            fig5.update_traces(marker_line_color='rgba(255,255,255,0.25)', marker_line_width=0.6,
+                                hovertemplate='DTI: %{x:.1f}<br>Count: %{y}<extra></extra>')
+            fig5.update_layout(bargap=0.04, xaxis_title="Debt-to-Income Ratio", yaxis_title="Applicants")
+            style_fig(fig5, PALETTE, height=380, hovermode="x unified")
+            st.plotly_chart(fig5, use_container_width=True, config=PLOTLY_CONFIG)
     with d2:
         with st.container(border=True):
-            panel_header("💸", "Interest Rate by Purpose", "Rate ranges assigned across purposes & outcomes")
-            fig6 = px.box(filtered, x='purpose', y='int.rate', color='credit.policy', template="plotly_dark",
-                          color_discrete_sequence=['#ff2e5b', '#00ffa3'])
-            fig6.update_layout(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)", margin=dict(t=10))
-            st.plotly_chart(fig6, use_container_width=True)
+            panel_header("💸", "Interest Rate by Purpose", "Average rate assigned across purposes & outcomes")
+            rate_labels = filtered['credit.policy'].map({1: 'Meets Policy', 0: 'Below Policy'})
+            rate_summary = (
+                filtered.assign(**{'Policy Status': rate_labels})
+                .groupby(['purpose', 'Policy Status'])['int.rate'].mean().mul(100).reset_index()
+            )
+            fig6 = px.bar(
+                rate_summary, x='purpose', y='int.rate', color='Policy Status', barmode='group',
+                color_discrete_map={'Meets Policy': PALETTE['accent1'], 'Below Policy': PALETTE['accent3']},
+            )
+            fig6.update_traces(
+                marker_line_color='rgba(255,255,255,0.3)', marker_line_width=1,
+                hovertemplate='<b>%{x}</b><br>Avg Rate: %{y:.2f}%<extra></extra>',
+            )
+            fig6.update_layout(xaxis_title="", yaxis_title="Avg Interest Rate (%)", bargap=0.25)
+            fig6.update_xaxes(tickangle=-30)
+            style_fig(fig6, PALETTE, height=380)
+            st.plotly_chart(fig6, use_container_width=True, config=PLOTLY_CONFIG)
 
     with st.container(border=True):
         panel_header("🕸️", "Feature Neural-Link", "Correlation matrix across every engineered signal")
         corr = df_processed.corr()
-        fig4 = go.Figure(data=go.Heatmap(z=corr.values, x=corr.columns, y=corr.columns, colorscale='Plasma'))
-        fig4.update_layout(template="plotly_dark", height=560, paper_bgcolor="rgba(0,0,0,0)",
-                            plot_bgcolor="rgba(0,0,0,0)", margin=dict(t=10))
-        st.plotly_chart(fig4, use_container_width=True)
+        fig4 = go.Figure(data=go.Heatmap(
+            z=corr.values, x=corr.columns, y=corr.columns,
+            colorscale=[[0, PALETTE['accent3']], [0.5, "#0c1024"], [1, PALETTE['accent1']]],
+            zmid=0, text=corr.round(2).values, texttemplate="%{text}",
+            textfont=dict(size=10, color=PALETTE['text']),
+            hovertemplate='%{x} ↔ %{y}<br>Correlation: %{z:.2f}<extra></extra>',
+            colorbar=dict(
+                thickness=14, outlinewidth=0, tickfont=dict(color=PALETTE['text']),
+                bgcolor="rgba(0,0,0,0)",
+            ),
+        ))
+        style_fig(fig4, PALETTE, height=560)
+        fig4.update_xaxes(tickangle=-40)
+        st.plotly_chart(fig4, use_container_width=True, config=PLOTLY_CONFIG)
 
 # =====================================================================================
 # 8. ANALYTICS — labeled interactive panels + Leaderboard + Champion model
@@ -961,7 +1051,7 @@ elif choice == "🧠 AI Predictor":
             confidence = model.predict_proba(input_scaled)[0]
 
             st.session_state.mood = "approved" if prediction == 1 else "declined"
-            apply_theme(st.session_state.mood)
+            PALETTE = apply_theme(st.session_state.mood)
 
             st.markdown("---")
 
