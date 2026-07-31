@@ -1,5 +1,5 @@
 """
-Credit Spectrum AI — Intelligent Credit Eligibility Platform (Money Edition)
+Credit Spectrum AI — Intelligent Credit Eligibility Platform (Futuristic Neon-Glass Edition)
 Powered by XGBoost | Secure • Intelligent • Trusted
 """
 
@@ -21,52 +21,56 @@ import random
 # =====================================================================================
 st.set_page_config(
     page_title="Credit Spectrum AI | Intelligent Credit Eligibility Platform",
-    page_icon="💰",
+    page_icon="💠",
     layout="wide",
     initial_sidebar_state="collapsed",
 )
 
 if "mood" not in st.session_state:
     st.session_state.mood = "default"   # default | approved | declined
+if "page" not in st.session_state:
+    st.session_state.page = "🏠 Home"
+if "batch_result" not in st.session_state:
+    st.session_state.batch_result = None
 
 # =====================================================================================
-# 2. THEME — light, colorful, money-reactive glassmorphism + floating cash/crypto
+# 2. THEME — dark futuristic neon-glass, mood-reactive
 # =====================================================================================
 def apply_theme(mood="default"):
     palettes = {
         "default": dict(
-            bg="radial-gradient(circle at 12% 8%, #fff3d6 0%, #ffe6ef 38%, #f1e4ff 72%, #ffe9d6 100%)",
-            accent1="#f6a509", accent2="#ef4d8b", accent3="#8b5cf6", text="#3a2a4d",
-            cardBorder="rgba(139,92,246,0.28)",
-            heroGrad="linear-gradient(120deg, rgba(246,165,9,0.22), rgba(239,77,139,0.18) 55%, rgba(139,92,246,0.18))",
-            titleGrad="linear-gradient(90deg, #f6a509 0%, #ef4d8b 25%, #8b5cf6 50%, #f6a509 75%, #ef4d8b 100%)",
+            bg="radial-gradient(circle at 15% 10%, #131a3a 0%, #0b0f24 45%, #050710 100%)",
+            accent1="#00e5ff", accent2="#a855f7", accent3="#ff2e9a", text="#e8ecff",
+            cardBorder="rgba(0,229,255,0.35)", glow="rgba(0,229,255,0.35)",
+            heroGrad="linear-gradient(120deg, rgba(0,229,255,0.14), rgba(168,85,247,0.14) 55%, rgba(255,46,154,0.14))",
+            titleGrad="linear-gradient(90deg, #00e5ff 0%, #a855f7 30%, #ff2e9a 60%, #00e5ff 100%)",
         ),
         "approved": dict(
-            bg="radial-gradient(circle at 12% 8%, #e4ffe8 0%, #cdf7d6 40%, #a9edc0 75%, #d9ffe0 100%)",
-            accent1="#16a34a", accent2="#22c55e", accent3="#65d68a", text="#0d3b20",
-            cardBorder="rgba(22,163,74,0.35)",
-            heroGrad="linear-gradient(120deg, rgba(34,197,94,0.28), rgba(101,214,138,0.18))",
-            titleGrad="linear-gradient(90deg, #0d7a3c 0%, #22c55e 30%, #86e0a3 60%, #16a34a 100%)",
+            bg="radial-gradient(circle at 15% 10%, #072318 0%, #051a11 45%, #030f0a 100%)",
+            accent1="#00ffa3", accent2="#39ff14", accent3="#00e5ff", text="#e7fff2",
+            cardBorder="rgba(0,255,163,0.40)", glow="rgba(0,255,163,0.40)",
+            heroGrad="linear-gradient(120deg, rgba(0,255,163,0.18), rgba(57,255,20,0.14))",
+            titleGrad="linear-gradient(90deg, #00ffa3 0%, #39ff14 50%, #00e5ff 100%)",
         ),
         "declined": dict(
-            bg="radial-gradient(circle at 12% 8%, #ffe9e9 0%, #ffd2d2 40%, #ffb4b8 75%, #ffe3e3 100%)",
-            accent1="#dc2626", accent2="#f43f5e", accent3="#fb7185", text="#5c0d14",
-            cardBorder="rgba(220,38,38,0.35)",
-            heroGrad="linear-gradient(120deg, rgba(244,63,94,0.26), rgba(251,113,133,0.18))",
-            titleGrad="linear-gradient(90deg, #b91c1c 0%, #f43f5e 30%, #fca5ac 60%, #dc2626 100%)",
+            bg="radial-gradient(circle at 15% 10%, #2a0810 0%, #1a050a 45%, #0d0306 100%)",
+            accent1="#ff2e5b", accent2="#ff6b6b", accent3="#ff2e9a", text="#ffe9ee",
+            cardBorder="rgba(255,46,91,0.40)", glow="rgba(255,46,91,0.40)",
+            heroGrad="linear-gradient(120deg, rgba(255,46,91,0.20), rgba(255,107,107,0.14))",
+            titleGrad="linear-gradient(90deg, #ff2e5b 0%, #ff6b6b 50%, #ff2e9a 100%)",
         ),
     }
     p = palettes[mood]
 
-    glyphs = ["₹", "₹", "₹", "💵", "💴", "🪙", "₿", "Ξ", "💸", "💎", "₹", "🪙"]
+    glyphs = ["₹", "₹", "💵", "💴", "💶", "💷", "🪙", "₿", "Ξ", "💸", "💎", "💳", "🏦", "📄", "🪙"]
     particles_html = ""
-    for i in range(22):
+    for i in range(34):
         g = random.choice(glyphs)
-        left = random.randint(0, 98)
-        dur = random.uniform(10, 22)
-        delay = random.uniform(0, 12)
-        size = random.randint(16, 30)
-        opacity = round(random.uniform(0.12, 0.30), 2)
+        left = random.randint(0, 99)
+        dur = random.uniform(9, 20)
+        delay = random.uniform(0, 14)
+        size = random.randint(15, 30)
+        opacity = round(random.uniform(0.10, 0.28), 2)
         particles_html += (
             f'<span class="money-particle" style="left:{left}vw; font-size:{size}px; '
             f'animation-duration:{dur}s; animation-delay:{delay}s; opacity:{opacity};">{g}</span>'
@@ -74,139 +78,193 @@ def apply_theme(mood="default"):
 
     st.markdown(f"""
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
 
     html, body, [class*="css"] {{ font-family: 'Inter', 'Poppins', sans-serif; }}
+    #MainMenu, footer, header {{ visibility: hidden; }}
 
     .stApp {{
         background: {p['bg']};
-        background-attachment: fixed;
-        color: {p['text']};
-        transition: background 1.2s ease;
+        background-attachment: fixed; color: {p['text']}; transition: background 1.2s ease;
     }}
+    .block-container {{ padding-top: 1.2rem; max-width: 1300px; }}
 
     .stApp::before {{
-        content: "";
-        position: fixed; inset: 0;
+        content: ""; position: fixed; inset: 0;
         background-image:
-            radial-gradient(2.5px 2.5px at 18% 25%, {p['accent1']}66, transparent),
-            radial-gradient(2.5px 2.5px at 75% 60%, {p['accent2']}55, transparent),
-            radial-gradient(2px 2px at 85% 15%, {p['accent3']}55, transparent),
-            radial-gradient(2px 2px at 40% 85%, {p['accent1']}44, transparent);
-        background-size: 550px 550px;
-        opacity: 0.7;
-        pointer-events: none;
-        z-index: 0;
-        animation: drift 45s linear infinite;
+            radial-gradient(2.5px 2.5px at 18% 25%, {p['accent1']}88, transparent),
+            radial-gradient(2.5px 2.5px at 75% 60%, {p['accent2']}77, transparent),
+            radial-gradient(2px 2px at 85% 15%, {p['accent3']}77, transparent),
+            radial-gradient(2px 2px at 40% 85%, {p['accent1']}55, transparent),
+            radial-gradient(1.5px 1.5px at 60% 35%, {p['accent2']}55, transparent);
+        background-size: 550px 550px; opacity: 0.55; pointer-events: none; z-index: 0;
+        animation: drift 40s linear infinite;
     }}
     @keyframes drift {{ from{{background-position:0 0;}} to{{background-position:550px 550px;}} }}
 
-    .money-bg {{ position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }}
+    .money-bg {{ position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; height: 100vh; width: 100vw; }}
     .money-particle {{
         position: absolute; top: -60px; animation-name: fallDrift; animation-timing-function: linear;
-        animation-iteration-count: infinite; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.12));
+        animation-iteration-count: infinite; filter: drop-shadow(0 0 6px {p['glow']});
     }}
     @keyframes fallDrift {{
         0%   {{ transform: translateY(-8vh) translateX(0) rotate(0deg); }}
-        50%  {{ transform: translateY(55vh) translateX(30px) rotate(180deg); }}
-        100% {{ transform: translateY(115vh) translateX(-20px) rotate(360deg); }}
+        50%  {{ transform: translateY(55vh) translateX(35px) rotate(180deg); }}
+        100% {{ transform: translateY(115vh) translateX(-25px) rotate(360deg); }}
     }}
 
     h1, h2, h3 {{ font-family: 'Poppins', sans-serif !important; color: {p['text']} !important; font-weight: 700 !important; }}
     p, span, div, label {{ color: {p['text']}; }}
 
+    /* ---------- GLASS CARD (dark neon) ---------- */
     .glass-card {{
-        background: rgba(255,255,255,0.55); border: 1px solid {p['cardBorder']};
-        border-radius: 20px; padding: 26px; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-        box-shadow: 0 10px 30px rgba(80,40,90,0.10); transition: all 0.35s ease; margin-bottom: 18px;
-        position: relative; z-index: 1;
+        background: rgba(255,255,255,0.04); border: 1px solid {p['cardBorder']};
+        border-radius: 20px; padding: 26px; backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+        box-shadow: 0 0 30px rgba(0,0,0,0.35), 0 0 18px {p['glow']} inset; transition: all 0.35s ease;
+        margin-bottom: 18px; position: relative; z-index: 1;
     }}
-    .glass-card:hover {{ transform: translateY(-6px); border-color: {p['accent2']}; box-shadow: 0 18px 38px rgba(80,40,90,0.16); }}
+    .glass-card:hover {{
+        transform: translateY(-6px); border-color: {p['accent2']};
+        box-shadow: 0 0 40px {p['glow']}, 0 0 22px {p['glow']} inset;
+    }}
 
+    /* ---------- PANEL (for dashboard/analytics grid boxes) ---------- */
+    div[data-testid="stVerticalBlockBorderWrapper"] {{
+        background: rgba(255,255,255,0.035) !important;
+        border: 1px solid {p['cardBorder']} !important; border-radius: 20px !important;
+        backdrop-filter: blur(16px); box-shadow: 0 0 24px rgba(0,0,0,0.3); position: relative; z-index: 1;
+        transition: box-shadow 0.3s ease, transform 0.3s ease;
+    }}
+    div[data-testid="stVerticalBlockBorderWrapper"]:hover {{
+        box-shadow: 0 0 32px {p['glow']}; transform: translateY(-3px);
+    }}
+    .panel-title {{
+        font-family:'Poppins',sans-serif; font-weight:800; font-size:18px; margin-bottom:2px;
+        color:{p['accent1']} !important;
+    }}
+    .panel-sub {{ font-size:12.5px; opacity:0.65; margin-bottom:10px; }}
+
+    /* ---------- HERO / TITLE ---------- */
     .hero-wrap {{
         background: {p['heroGrad']}; border: 1px solid {p['cardBorder']}; border-radius: 28px;
-        padding: 46px 42px; backdrop-filter: blur(20px); margin-bottom: 22px; position: relative;
-        overflow: hidden; z-index: 1; text-align: center;
+        padding: 50px 42px; backdrop-filter: blur(22px); margin-bottom: 22px; position: relative;
+        overflow: hidden; z-index: 1; text-align: center; box-shadow: 0 0 50px {p['glow']};
     }}
-    .brand-row {{ display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap; }}
-    .coin-spin {{ display: inline-block; font-size: 42px; animation: spinCoin 3.2s linear infinite; }}
+    .brand-row {{ display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap; }}
+    .coin-spin {{ display: inline-block; font-size: 44px; animation: spinCoin 3.2s linear infinite; filter: drop-shadow(0 0 10px {p['glow']}); }}
     @keyframes spinCoin {{ 0%{{ transform: rotateY(0deg); }} 100%{{ transform: rotateY(360deg); }} }}
     .hero-title {{
-        font-family: 'Poppins', sans-serif; font-size: 50px; font-weight: 900;
+        font-family: 'Orbitron', 'Poppins', sans-serif; font-size: 52px; font-weight: 900; letter-spacing: 1px;
         background: {p['titleGrad']}; background-size: 300% auto;
         -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
         margin-bottom: 4px; animation: shimmer 6s linear infinite;
+        text-shadow: 0 0 30px {p['glow']};
     }}
     @keyframes shimmer {{ 0%{{ background-position: 0% center; }} 100%{{ background-position: 300% center; }} }}
-    .orbit-emoji {{ display:inline-block; animation: bob 2.4s ease-in-out infinite; }}
+    .orbit-emoji {{ display:inline-block; animation: bob 2.4s ease-in-out infinite; filter: drop-shadow(0 0 8px {p['glow']}); }}
     .orbit-emoji.d2 {{ animation-delay: 0.4s; }}
     .orbit-emoji.d3 {{ animation-delay: 0.8s; }}
     @keyframes bob {{ 0%,100%{{ transform: translateY(0) rotate(-4deg); }} 50%{{ transform: translateY(-9px) rotate(4deg); }} }}
-    .hero-sub {{ font-size: 19px; color: {p['text']}; opacity: 0.85; font-weight: 400; margin: 8px 0 14px; }}
+    .hero-sub {{ font-size: 19px; color: {p['text']}; opacity: 0.85; font-weight: 400; margin: 10px 0 14px; }}
     .hero-tag {{
-        display: inline-block; padding: 6px 16px; border-radius: 30px; background: rgba(255,255,255,0.55);
-        border: 1px solid {p['accent1']}; color: {p['accent1']}; font-size: 13px; letter-spacing: 1px; font-weight: 700;
+        display: inline-block; padding: 6px 18px; border-radius: 30px; background: rgba(255,255,255,0.05);
+        border: 1px solid {p['accent1']}; color: {p['accent1']}; font-size: 12.5px; letter-spacing: 1.5px; font-weight: 700;
+        box-shadow: 0 0 14px {p['glow']};
     }}
 
+    /* ---------- FLOATING 3D CREDIT CARD ---------- */
+    .credit-card {{
+        width: 230px; height: 140px; margin: 22px auto 0; border-radius: 16px; position: relative;
+        background: linear-gradient(135deg, {p['accent2']}, {p['accent1']} 60%, {p['accent3']});
+        box-shadow: 0 0 30px {p['glow']}, 0 12px 30px rgba(0,0,0,0.4);
+        animation: cardFloat 4.5s ease-in-out infinite; padding: 16px; text-align: left;
+    }}
+    @keyframes cardFloat {{ 0%,100%{{ transform: translateY(0) rotate(-2deg);}} 50%{{ transform: translateY(-10px) rotate(2deg);}} }}
+    .credit-card .chip {{ font-size: 26px; }}
+    .credit-card .num {{ color: #fff; font-family: 'Orbitron', monospace; letter-spacing: 2px; font-size: 15px; margin-top: 14px; text-shadow: 0 0 6px rgba(0,0,0,0.4); }}
+    .credit-card .brand {{ position:absolute; bottom: 12px; right: 16px; font-size: 20px; }}
+
+    /* ---------- TOP NAV BAR (futuristic pill tabs) ---------- */
     .navbar-wrap {{
-        background: rgba(255,255,255,0.55); border: 1px solid {p['cardBorder']}; border-radius: 20px;
-        padding: 10px 14px; backdrop-filter: blur(16px); margin-bottom: 22px; z-index: 2; position: relative;
+        background: rgba(255,255,255,0.04); border: 1px solid {p['cardBorder']}; border-radius: 24px;
+        padding: 12px 16px; backdrop-filter: blur(18px); margin-bottom: 22px; z-index: 2; position: sticky; top: 8px;
+        box-shadow: 0 0 26px {p['glow']};
     }}
     div[data-testid="stHorizontalBlock"] div[role="radiogroup"] {{
-        display: flex; flex-wrap: wrap; gap: 6px; justify-content: center;
+        display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
     }}
     div[role="radiogroup"] label {{
-        background: rgba(255,255,255,0.6); border: 1px solid {p['cardBorder']}; border-radius: 14px;
-        padding: 8px 16px !important; font-weight: 600; transition: all 0.25s ease; cursor: pointer;
+        background: rgba(255,255,255,0.03); border: 1px solid {p['cardBorder']}; border-radius: 30px;
+        padding: 10px 20px !important; font-weight: 700; font-size: 14.5px; letter-spacing: 0.3px;
+        transition: all 0.25s ease; cursor: pointer;
     }}
-    div[role="radiogroup"] label:hover {{ transform: translateY(-2px); border-color: {p['accent2']}; }}
+    div[role="radiogroup"] label:hover {{
+        transform: translateY(-3px) scale(1.03); border-color: {p['accent1']};
+        box-shadow: 0 0 18px {p['glow']}; color: {p['accent1']} !important;
+    }}
+    div[role="radiogroup"] label:has(input:checked) {{
+        background: linear-gradient(90deg, {p['accent1']}33, {p['accent2']}33);
+        border-color: {p['accent1']}; box-shadow: 0 0 22px {p['glow']}, 0 0 6px {p['glow']} inset;
+        color: {p['accent1']} !important;
+    }}
+    div[role="radiogroup"] input {{ display:none; }}
 
+    /* ---------- STAT / METRIC CARDS ---------- */
     .stat-card {{
-        background: rgba(255,255,255,0.55); border: 1px solid {p['cardBorder']}; border-radius: 18px;
+        background: rgba(255,255,255,0.04); border: 1px solid {p['cardBorder']}; border-radius: 18px;
         padding: 22px 10px; text-align: center; backdrop-filter: blur(14px); animation: floaty 5s ease-in-out infinite;
-        position: relative; z-index: 1;
+        position: relative; z-index: 1; box-shadow: 0 0 16px {p['glow']};
     }}
     .stat-card:nth-child(2) {{ animation-delay: 0.6s; }}
     .stat-card:nth-child(3) {{ animation-delay: 1.2s; }}
     @keyframes floaty {{ 0%,100%{{ transform: translateY(0);}} 50%{{ transform: translateY(-8px);}} }}
     .stat-number {{
-        font-size: 34px; font-weight: 800; font-family: 'Poppins', sans-serif; background: {p['titleGrad']};
+        font-size: 34px; font-weight: 800; font-family: 'Orbitron', sans-serif; background: {p['titleGrad']};
         -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
     }}
-    .stat-label {{ font-size: 13px; color: {p['text']}; opacity:0.75; letter-spacing: 0.5px; text-transform: uppercase; margin-top: 4px;}}
+    .stat-label {{ font-size: 12.5px; color: {p['text']}; opacity:0.7; letter-spacing: 0.6px; text-transform: uppercase; margin-top: 4px;}}
 
-    .stButton>button, .stFormSubmitButton>button {{
+    [data-testid="stMetric"] {{
+        background: rgba(255,255,255,0.04); border: 1px solid {p['cardBorder']}; border-radius: 16px;
+        padding: 14px 10px; box-shadow: 0 0 14px {p['glow']};
+    }}
+    [data-testid="stMetricValue"] {{ color: {p['accent1']} !important; }}
+
+    /* ---------- BUTTONS ---------- */
+    .stButton>button, .stFormSubmitButton>button, .stDownloadButton>button {{
         background: linear-gradient(90deg, {p['accent1']}, {p['accent2']});
-        color: #fff; border: 1px solid rgba(255,255,255,0.5); border-radius: 14px; padding: 12px 20px;
-        font-weight: 700; letter-spacing: 0.4px; width: 100%; box-shadow: 0 8px 22px rgba(80,40,90,0.18);
+        color: #05060a; border: 1px solid rgba(255,255,255,0.25); border-radius: 14px; padding: 12px 20px;
+        font-weight: 800; letter-spacing: 0.4px; width: 100%; box-shadow: 0 0 18px {p['glow']};
         transition: all 0.3s ease;
     }}
-    .stButton>button:hover, .stFormSubmitButton>button:hover {{
+    .stButton>button:hover, .stFormSubmitButton>button:hover, .stDownloadButton>button:hover {{
         background: linear-gradient(90deg, {p['accent2']}, {p['accent3']});
-        box-shadow: 0 12px 30px rgba(80,40,90,0.26); transform: translateY(-2px);
+        box-shadow: 0 0 28px {p['glow']}; transform: translateY(-2px);
     }}
 
+    /* ---------- RESULT CARDS ---------- */
     .approved-hero {{
-        background: linear-gradient(135deg, rgba(34,197,94,0.22), rgba(34,197,94,0.06));
-        border: 1px solid #16a34a; border-radius: 24px; padding: 36px; text-align: center;
-        box-shadow: 0 0 44px rgba(34,197,94,0.30); position: relative; z-index: 2;
+        background: linear-gradient(135deg, rgba(0,255,163,0.16), rgba(0,255,163,0.04));
+        border: 1px solid #00ffa3; border-radius: 24px; padding: 36px; text-align: center;
+        box-shadow: 0 0 55px rgba(0,255,163,0.45); position: relative; z-index: 2;
     }}
     .declined-hero {{
-        background: linear-gradient(135deg, rgba(244,63,94,0.22), rgba(244,63,94,0.06));
-        border: 1px solid #dc2626; border-radius: 24px; padding: 36px; text-align: center;
-        box-shadow: 0 0 44px rgba(244,63,94,0.30); position: relative; z-index: 2;
+        background: linear-gradient(135deg, rgba(255,46,91,0.16), rgba(255,46,91,0.04));
+        border: 1px solid #ff2e5b; border-radius: 24px; padding: 36px; text-align: center;
+        box-shadow: 0 0 55px rgba(255,46,91,0.45); position: relative; z-index: 2;
     }}
-    .verdict-title {{ font-family:'Poppins',sans-serif; font-size: 32px; font-weight: 800; margin-bottom: 6px;}}
-    .approved-hero .verdict-title {{ color: #0d7a3c; }}
-    .declined-hero .verdict-title {{ color: #b91c1c; }}
+    .verdict-title {{ font-family:'Orbitron',sans-serif; font-size: 30px; font-weight: 900; margin-bottom: 6px;}}
+    .approved-hero .verdict-title {{ color: #00ffa3; text-shadow: 0 0 18px rgba(0,255,163,0.6); }}
+    .declined-hero .verdict-title {{ color: #ff6b6b; text-shadow: 0 0 18px rgba(255,46,91,0.6); }}
     .verdict-icon {{ font-size: 54px; animation: popIn 0.6s ease; }}
     @keyframes popIn {{ 0%{{ transform: scale(0);}} 70%{{ transform: scale(1.2);}} 100%{{ transform: scale(1);}} }}
 
     .reason-chip {{
         display: inline-block; margin: 5px 6px; padding: 8px 14px; border-radius: 30px;
-        background: rgba(255,255,255,0.65); border: 1px solid {p['cardBorder']}; font-size: 13.5px; font-weight: 600;
+        background: rgba(255,255,255,0.05); border: 1px solid {p['cardBorder']}; font-size: 13.5px; font-weight: 600;
     }}
 
+    /* ---------- CASH RAIN (on approval) ---------- */
     .cash-rain {{ position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 9999; }}
     .cash-drop {{
         position: absolute; top: -50px; font-size: 30px; animation-name: cashFall;
@@ -216,7 +274,6 @@ def apply_theme(mood="default"):
         0%   {{ transform: translateY(-10vh) rotate(0deg); opacity: 1; }}
         100% {{ transform: translateY(105vh) rotate(400deg); opacity: 0.9; }}
     }}
-
     .decline-drop {{
         position: absolute; top: -50px; font-size: 26px; animation-name: declineFall;
         animation-timing-function: ease-in; animation-iteration-count: 1; animation-fill-mode: forwards;
@@ -226,23 +283,32 @@ def apply_theme(mood="default"):
         100% {{ transform: translateY(105vh) rotate(-200deg); opacity: 0.3; }}
     }}
 
+    /* ---------- TIMELINE ---------- */
     .timeline-item {{ border-left: 3px solid {p['accent1']}; padding-left: 18px; margin-bottom: 18px; position: relative; }}
     .timeline-item::before {{
         content: ""; position: absolute; left: -8px; top: 2px; width: 13px; height: 13px; border-radius: 50%;
         background: {p['accent1']}; box-shadow: 0 0 10px {p['accent1']};
     }}
 
+    /* ---------- LEADERBOARD ---------- */
     .leader-row {{
         display: flex; align-items: center; justify-content: space-between; padding: 14px 20px;
-        background: rgba(255,255,255,0.55); border: 1px solid {p['cardBorder']}; border-radius: 16px;
+        background: rgba(255,255,255,0.04); border: 1px solid {p['cardBorder']}; border-radius: 16px;
         margin-bottom: 10px; transition: all 0.25s ease;
     }}
-    .leader-row:hover {{ transform: translateX(6px); border-color: {p['accent2']}; }}
+    .leader-row:hover {{ transform: translateX(6px); border-color: {p['accent2']}; box-shadow: 0 0 16px {p['glow']}; }}
     .leader-crown {{ font-size: 22px; margin-right: 10px; }}
     .champion-badge {{
         display: inline-block; padding: 20px 30px; border-radius: 22px;
-        background: linear-gradient(135deg, rgba(246,165,9,0.25), rgba(239,77,139,0.15));
+        background: linear-gradient(135deg, rgba(0,229,255,0.14), rgba(168,85,247,0.14));
         border: 2px solid {p['accent1']}; text-align: center; animation: floaty 4s ease-in-out infinite;
+        box-shadow: 0 0 26px {p['glow']};
+    }}
+
+    /* ---------- FILE UPLOADER (drag & drop) ---------- */
+    [data-testid="stFileUploaderDropzone"] {{
+        background: rgba(255,255,255,0.03) !important; border: 2px dashed {p['accent1']} !important;
+        border-radius: 18px !important; box-shadow: 0 0 16px {p['glow']};
     }}
 
     hr {{ border-color: {p['cardBorder']}; }}
@@ -255,7 +321,7 @@ def apply_theme(mood="default"):
 
 def cash_celebration(good=True, n=36):
     """Full-screen falling cash / crypto glyphs shown once after a verdict."""
-    good_glyphs = ["💵", "💰", "🤑", "₹", "🪙", "💸", "₿", "Ξ", "🎉"]
+    good_glyphs = ["💵", "💰", "🤑", "₹", "🪙", "💸", "₿", "Ξ", "💳", "🎉"]
     bad_glyphs = ["📉", "💔", "🥀", "☔", "🪙", "🍂"]
     glyphs = good_glyphs if good else bad_glyphs
     cls = "cash-drop" if good else "decline-drop"
@@ -271,6 +337,12 @@ def cash_celebration(good=True, n=36):
     st.markdown(f'<div class="cash-rain">{spans}</div>', unsafe_allow_html=True)
 
 
+def panel_header(icon, title, subtitle=""):
+    st.markdown(f'<div class="panel-title">{icon} {title}</div>', unsafe_allow_html=True)
+    if subtitle:
+        st.markdown(f'<div class="panel-sub">{subtitle}</div>', unsafe_allow_html=True)
+
+
 apply_theme(st.session_state.mood)
 
 FEATURE_COLS = ['purpose', 'int.rate', 'installment', 'log.annual.inc', 'dti', 'fico',
@@ -280,7 +352,7 @@ FEATURE_COLS = ['purpose', 'int.rate', 'installment', 'log.annual.inc', 'dti', '
 # =====================================================================================
 # 3. DATA + AUTO-HEALING MODEL LOADING
 # =====================================================================================
-@st.cache_resource(show_spinner="💰 Booting Credit Spectrum AI Core (Auto-healing if needed)...")
+@st.cache_resource(show_spinner="💠 Booting Credit Spectrum AI Core...")
 def load_pipeline():
     df_raw = pd.read_csv('loan_data.csv')
     df_processed = df_raw.copy()
@@ -326,7 +398,7 @@ if not os.path.exists('loan_data.csv'):
 df_raw, df_processed, le, scaler, model, X_test_scaled, y_test = load_pipeline()
 
 # =====================================================================================
-# 4. HERO / BRAND HEADER (with animated coin + orbiting money emojis)
+# 4. HERO / BRAND HEADER
 # =====================================================================================
 st.markdown("""
 <div class="hero-wrap">
@@ -334,24 +406,31 @@ st.markdown("""
     <div class="brand-row">
         <span class="coin-spin">🪙</span>
         <span class="hero-title">Credit Spectrum AI</span>
-        <span class="orbit-emoji">💵</span><span class="orbit-emoji d2">₿</span><span class="orbit-emoji d3">Ξ</span>
+        <span class="orbit-emoji">💵</span><span class="orbit-emoji d2">₿</span><span class="orbit-emoji d3">💳</span>
     </div>
-    <div class="hero-sub">🪙 Next-Generation Loan Intelligence Platform for the Modern Digital Bank ₹💹</div>
+    <div class="hero-sub">💠 Next-Generation Loan Intelligence Platform for the Modern Digital Bank ₹💹</div>
     <p style="max-width:680px; margin:0 auto; opacity:0.85;">
         Analyze a customer's complete financial profile, quantify credit risk and predict
         loan eligibility in milliseconds — with full transparency into every decision. 🔐🧾📈
     </p>
+    <div class="credit-card">
+        <div class="chip">🟨</div>
+        <div class="num">•••• •••• •••• 4042</div>
+        <div class="brand">💳</div>
+    </div>
 </div>
 """, unsafe_allow_html=True)
 
 # =====================================================================================
-# 5. TOP NAVIGATION BAR (moved from sidebar to a horizontal bar under the hero)
+# 5. TOP NAVIGATION BAR (futuristic pill tabs)
 # =====================================================================================
 st.markdown('<div class="navbar-wrap">', unsafe_allow_html=True)
 menu = [
     "🏠 Home", "📊 Dashboard", "📈 Analytics", "🧠 AI Predictor", "📁 Dataset", "👨‍💻 About the Model",
 ]
-choice = st.radio("Navigate", menu, horizontal=True, label_visibility="collapsed")
+choice = st.radio("Navigate", menu, index=menu.index(st.session_state.page),
+                   horizontal=True, label_visibility="collapsed")
+st.session_state.page = choice
 st.markdown('</div>', unsafe_allow_html=True)
 
 top_l, top_r = st.columns([3, 1])
@@ -423,67 +502,82 @@ if choice == "🏠 Home":
                 <p style="font-size:13.5px;">{desc}</p>
             </div>""", unsafe_allow_html=True)
 
-    st.markdown("### 💹 The Journey of Money — From Application to Approval")
-    st.image("https://media.giphy.com/media/xT9IgzoKnwFNmISR8I/giphy.gif",
-              caption="Every approved application is a step toward financial freedom 💵", use_container_width=True)
-
 # =====================================================================================
-# 7. DASHBOARD (EDA)
+# 7. DASHBOARD (EDA) — Financial Holograms, labeled interactive panels
 # =====================================================================================
 elif choice == "📊 Dashboard":
-    st.markdown('<div class="hero-title" style="font-size:32px;">📊 Finance Holograms</div>', unsafe_allow_html=True)
-    st.caption("Interactive exploration of the applicant financial data structure.")
+    st.markdown('<div class="hero-title" style="font-size:32px;">📊 Financial Holograms</div>', unsafe_allow_html=True)
+    st.caption("Interactive, live exploration of the applicant financial data structure.")
 
-    warm_scale = ["#f6a509", "#ef4d8b", "#8b5cf6", "#fb923c", "#f472b6", "#c084fc"]
+    neon_scale = ["#00e5ff", "#a855f7", "#ff2e9a", "#00ffa3", "#ff6b6b", "#f6a509"]
+
+    k1, k2, k3, k4 = st.columns(4)
+    k1.metric("💼 Total Applicants", f"{df_raw.shape[0]:,}")
+    k2.metric("🛡️ Meets Policy", f"{(df_raw['credit.policy']==1).mean()*100:.1f}%")
+    k3.metric("💎 Avg FICO", f"{df_raw['fico'].mean():.0f}")
+    k4.metric("💸 Avg Interest Rate", f"{df_raw['int.rate'].mean()*100:.2f}%")
+
+    st.markdown("###  ")
+    purpose_filter = st.multiselect("🔎 Filter by loan purpose", options=sorted(df_raw['purpose'].unique()),
+                                     default=sorted(df_raw['purpose'].unique()))
+    filtered = df_raw[df_raw['purpose'].isin(purpose_filter)] if purpose_filter else df_raw
 
     col1, col2 = st.columns(2)
     with col1:
-        purpose_counts = df_raw['purpose'].value_counts().reset_index()
-        purpose_counts.columns = ['purpose', 'count']
-        fig1 = px.bar(purpose_counts, x='purpose', y='count', color='purpose',
-                      title="💼 Capital Allocation by Loan Purpose", template="plotly_white",
-                      color_discrete_sequence=warm_scale)
-        fig1.update_layout(showlegend=False, paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)")
-        st.plotly_chart(fig1, use_container_width=True)
+        with st.container(border=True):
+            panel_header("💼", "Capital Allocation by Purpose", "Volume of applications per stated loan purpose")
+            purpose_counts = filtered['purpose'].value_counts().reset_index()
+            purpose_counts.columns = ['purpose', 'count']
+            fig1 = px.bar(purpose_counts, x='purpose', y='count', color='purpose', template="plotly_dark",
+                          color_discrete_sequence=neon_scale)
+            fig1.update_layout(showlegend=False, paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
+                                margin=dict(t=10))
+            st.plotly_chart(fig1, use_container_width=True)
     with col2:
-        policy_counts = df_raw['credit.policy'].value_counts().reset_index()
-        policy_counts.columns = ['credit.policy', 'count']
-        policy_counts['credit.policy'] = policy_counts['credit.policy'].map({1: 'Meets Policy', 0: 'Below Policy'})
-        fig2 = px.pie(policy_counts, values='count', names='credit.policy', hole=0.55,
-                      title="🛡️ Credit Policy Compliance Ratio", template="plotly_white",
-                      color='credit.policy',
-                      color_discrete_map={'Meets Policy': '#22c55e', 'Below Policy': '#f43f5e'})
-        fig2.update_layout(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)")
-        st.plotly_chart(fig2, use_container_width=True)
+        with st.container(border=True):
+            panel_header("🛡️", "Credit Policy Compliance", "Share of applicants meeting vs. missing policy")
+            policy_counts = filtered['credit.policy'].value_counts().reset_index()
+            policy_counts.columns = ['credit.policy', 'count']
+            policy_counts['credit.policy'] = policy_counts['credit.policy'].map({1: 'Meets Policy', 0: 'Below Policy'})
+            fig2 = px.pie(policy_counts, values='count', names='credit.policy', hole=0.55, template="plotly_dark",
+                          color='credit.policy',
+                          color_discrete_map={'Meets Policy': '#00ffa3', 'Below Policy': '#ff2e5b'})
+            fig2.update_layout(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)", margin=dict(t=10))
+            st.plotly_chart(fig2, use_container_width=True)
 
-    fig3 = px.histogram(df_raw, x='fico', color='credit.policy', marginal='box',
-                         title="💎 FICO Trust Score Distribution", template="plotly_white", nbins=50,
-                         color_discrete_sequence=['#f43f5e', '#22c55e'])
-    fig3.update_layout(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)")
-    st.plotly_chart(fig3, use_container_width=True)
+    with st.container(border=True):
+        panel_header("💎", "FICO Trust-Score Distribution", "Credit score spread split by policy outcome")
+        fig3 = px.histogram(filtered, x='fico', color='credit.policy', marginal='box', template="plotly_dark",
+                             nbins=50, color_discrete_sequence=['#ff2e5b', '#00ffa3'])
+        fig3.update_layout(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)", margin=dict(t=10))
+        st.plotly_chart(fig3, use_container_width=True)
 
     d1, d2 = st.columns(2)
     with d1:
-        fig5 = px.histogram(df_raw, x='dti', color='credit.policy', template="plotly_white",
-                             title="⚖️ Debt-to-Income Distribution",
-                             color_discrete_sequence=['#f43f5e', '#22c55e'])
-        fig5.update_layout(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)")
-        st.plotly_chart(fig5, use_container_width=True)
+        with st.container(border=True):
+            panel_header("⚖️", "Debt-to-Income Spread", "How DTI relates to policy compliance")
+            fig5 = px.histogram(filtered, x='dti', color='credit.policy', template="plotly_dark",
+                                 color_discrete_sequence=['#ff2e5b', '#00ffa3'])
+            fig5.update_layout(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)", margin=dict(t=10))
+            st.plotly_chart(fig5, use_container_width=True)
     with d2:
-        fig6 = px.box(df_raw, x='purpose', y='int.rate', color='credit.policy', template="plotly_white",
-                       title="💸 Interest Rate by Purpose & Approval",
-                       color_discrete_sequence=['#f43f5e', '#22c55e'])
-        fig6.update_layout(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)")
-        st.plotly_chart(fig6, use_container_width=True)
+        with st.container(border=True):
+            panel_header("💸", "Interest Rate by Purpose", "Rate ranges assigned across purposes & outcomes")
+            fig6 = px.box(filtered, x='purpose', y='int.rate', color='credit.policy', template="plotly_dark",
+                          color_discrete_sequence=['#ff2e5b', '#00ffa3'])
+            fig6.update_layout(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)", margin=dict(t=10))
+            st.plotly_chart(fig6, use_container_width=True)
 
-    st.subheader("🕸️ Feature Neural-Link (Correlation Matrix)")
-    corr = df_processed.corr()
-    fig4 = go.Figure(data=go.Heatmap(z=corr.values, x=corr.columns, y=corr.columns, colorscale='Sunsetdark'))
-    fig4.update_layout(template="plotly_white", height=560, paper_bgcolor="rgba(0,0,0,0)")
-    st.plotly_chart(fig4, use_container_width=True)
+    with st.container(border=True):
+        panel_header("🕸️", "Feature Neural-Link", "Correlation matrix across every engineered signal")
+        corr = df_processed.corr()
+        fig4 = go.Figure(data=go.Heatmap(z=corr.values, x=corr.columns, y=corr.columns, colorscale='Plasma'))
+        fig4.update_layout(template="plotly_dark", height=560, paper_bgcolor="rgba(0,0,0,0)",
+                            plot_bgcolor="rgba(0,0,0,0)", margin=dict(t=10))
+        st.plotly_chart(fig4, use_container_width=True)
 
 # =====================================================================================
-# 8. ANALYTICS  (Leaderboard + Champion model)
+# 8. ANALYTICS — labeled interactive panels + Leaderboard + Champion model
 # =====================================================================================
 elif choice == "📈 Analytics":
     st.markdown('<div class="hero-title" style="font-size:32px;">📈 Model Analytics</div>', unsafe_allow_html=True)
@@ -494,42 +588,53 @@ elif choice == "📈 Analytics":
     acc = accuracy_score(y_test, y_pred)
     auc = roc_auc_score(y_test, y_prob)
 
+    m1, m2, m3 = st.columns(3)
+    m1.metric("🎯 Accuracy", f"{acc*100:.2f}%")
+    m2.metric("📈 ROC AUC", f"{auc*100:.2f}%")
+    m3.metric("🧮 Test Samples", f"{len(y_test):,}")
+
     c1, c2 = st.columns(2)
     with c1:
-        fig_acc = go.Figure(go.Indicator(
-            mode="gauge+number", value=acc * 100, title={'text': "Accuracy (%)"},
-            gauge={'axis': {'range': [None, 100]}, 'bar': {'color': "#f6a509"},
-                   'bgcolor': "rgba(0,0,0,0)", 'borderwidth': 1, 'bordercolor': "#eee"}))
-        fig_acc.update_layout(template="plotly_white", height=290, paper_bgcolor="rgba(0,0,0,0)")
-        st.plotly_chart(fig_acc, use_container_width=True)
+        with st.container(border=True):
+            panel_header("🎯", "Accuracy Gauge", "Overall correct-classification rate on holdout data")
+            fig_acc = go.Figure(go.Indicator(
+                mode="gauge+number", value=acc * 100,
+                gauge={'axis': {'range': [None, 100]}, 'bar': {'color': "#00e5ff"},
+                       'bgcolor': "rgba(0,0,0,0)", 'borderwidth': 1, 'bordercolor': "#333"}))
+            fig_acc.update_layout(template="plotly_dark", height=270, paper_bgcolor="rgba(0,0,0,0)", margin=dict(t=10))
+            st.plotly_chart(fig_acc, use_container_width=True)
     with c2:
-        fig_auc = go.Figure(go.Indicator(
-            mode="gauge+number", value=auc * 100, title={'text': "ROC AUC (%)"},
-            gauge={'axis': {'range': [None, 100]}, 'bar': {'color': "#ef4d8b"},
-                   'bgcolor': "rgba(0,0,0,0)", 'borderwidth': 1, 'bordercolor': "#eee"}))
-        fig_auc.update_layout(template="plotly_white", height=290, paper_bgcolor="rgba(0,0,0,0)")
-        st.plotly_chart(fig_auc, use_container_width=True)
+        with st.container(border=True):
+            panel_header("📈", "ROC AUC Gauge", "Model's ability to rank approvals above declines")
+            fig_auc = go.Figure(go.Indicator(
+                mode="gauge+number", value=auc * 100,
+                gauge={'axis': {'range': [None, 100]}, 'bar': {'color': "#ff2e9a"},
+                       'bgcolor': "rgba(0,0,0,0)", 'borderwidth': 1, 'bordercolor': "#333"}))
+            fig_auc.update_layout(template="plotly_dark", height=270, paper_bgcolor="rgba(0,0,0,0)", margin=dict(t=10))
+            st.plotly_chart(fig_auc, use_container_width=True)
 
     r1, r2 = st.columns(2)
     with r1:
-        fpr, tpr, _ = roc_curve(y_test, y_prob)
-        fig_roc = go.Figure()
-        fig_roc.add_trace(go.Scatter(x=fpr, y=tpr, mode='lines', name='XGBoost',
-                                      line=dict(color='#8b5cf6', width=3)))
-        fig_roc.add_trace(go.Scatter(x=[0, 1], y=[0, 1], mode='lines', name='Baseline',
-                                      line=dict(color='#ccc', dash='dash')))
-        fig_roc.update_layout(title="ROC Curve", template="plotly_white", height=340,
-                               paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)")
-        st.plotly_chart(fig_roc, use_container_width=True)
+        with st.container(border=True):
+            panel_header("🌐", "ROC Curve", "True vs. false positive trade-off vs. a random baseline")
+            fpr, tpr, _ = roc_curve(y_test, y_prob)
+            fig_roc = go.Figure()
+            fig_roc.add_trace(go.Scatter(x=fpr, y=tpr, mode='lines', name='XGBoost',
+                                          line=dict(color='#a855f7', width=3)))
+            fig_roc.add_trace(go.Scatter(x=[0, 1], y=[0, 1], mode='lines', name='Baseline',
+                                          line=dict(color='#666', dash='dash')))
+            fig_roc.update_layout(template="plotly_dark", height=320,
+                                   paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)", margin=dict(t=10))
+            st.plotly_chart(fig_roc, use_container_width=True)
     with r2:
-        cm = confusion_matrix(y_test, y_pred)
-        fig_cm = px.imshow(cm, text_auto=True, template="plotly_white",
-                            color_continuous_scale="Oranges",
-                            labels=dict(x="Predicted", y="Actual"), title="Confusion Matrix")
-        fig_cm.update_layout(paper_bgcolor="rgba(0,0,0,0)")
-        st.plotly_chart(fig_cm, use_container_width=True)
+        with st.container(border=True):
+            panel_header("🧮", "Confusion Matrix", "Predicted vs. actual outcomes on the test set")
+            cm = confusion_matrix(y_test, y_pred)
+            fig_cm = px.imshow(cm, text_auto=True, template="plotly_dark",
+                                color_continuous_scale="Plasma", labels=dict(x="Predicted", y="Actual"))
+            fig_cm.update_layout(paper_bgcolor="rgba(0,0,0,0)", margin=dict(t=10))
+            st.plotly_chart(fig_cm, use_container_width=True)
 
-    # ---------------- LEADERBOARD ----------------
     st.markdown("### 🏆 Algo-Arena Leaderboard")
     st.caption("Every architecture we trained, ranked by test-set performance.")
     leaderboard = [
@@ -545,30 +650,27 @@ elif choice == "📈 Analytics":
             <div>Accuracy: <b>{accv*100:.2f}%</b> &nbsp;|&nbsp; ROC AUC: <b>{aucv*100:.2f}%</b></div>
         </div>""", unsafe_allow_html=True)
 
-    ch1, ch2 = st.columns([1, 2])
-    with ch1:
-        st.markdown("""
-        <div style="text-align:center; margin-top:10px;">
-            <div class="champion-badge">
-                <div style="font-size:40px;">🏆👑</div>
-                <div style="font-weight:800; font-size:18px;">XGBoost</div>
-                <div style="font-size:12.5px; opacity:0.8;">Reigning Champion Model</div>
-            </div>
-        </div>""", unsafe_allow_html=True)
-    with ch2:
-        st.image("https://media.giphy.com/media/g9582DNuQppxC/giphy.gif",
-                  caption="🎉 XGBoost takes the crown — cha-ching! 💰", use_container_width=True)
+    st.markdown("""
+    <div style="text-align:center; margin-top:10px;">
+        <div class="champion-badge">
+            <div style="font-size:40px;">🏆👑</div>
+            <div style="font-weight:800; font-size:18px;">XGBoost</div>
+            <div style="font-size:12.5px; opacity:0.8;">Reigning Champion Model</div>
+        </div>
+    </div>""", unsafe_allow_html=True)
 
     metrics_df = pd.DataFrame({
         "AI Architecture": ["Logistic Regression", "Decision Tree", "Random Forest", "XGBoost ⭐"],
         "Test Accuracy": [0.8569, 0.9881, 0.9840, 0.9892],
         "Test ROC AUC": [0.9341, 0.9829, 0.9969, 0.9978],
     })
-    fig = px.bar(metrics_df, x='AI Architecture', y=['Test Accuracy', 'Test ROC AUC'],
-                 barmode='group', template='plotly_white', title="⚔️ Combat Results",
-                 color_discrete_sequence=['#f6a509', '#ef4d8b'])
-    fig.update_layout(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)")
-    st.plotly_chart(fig, use_container_width=True)
+    with st.container(border=True):
+        panel_header("⚔️", "Combat Results", "Head-to-head test performance across every architecture")
+        fig = px.bar(metrics_df, x='AI Architecture', y=['Test Accuracy', 'Test ROC AUC'],
+                     barmode='group', template='plotly_dark', color_discrete_sequence=['#00e5ff', '#ff2e9a'])
+        fig.update_layout(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)", margin=dict(t=10))
+        st.plotly_chart(fig, use_container_width=True)
+
     st.markdown("""
     <div class="glass-card">
     🧬 <b>Why XGBoost Was Chosen:</b> The tuned <b>XGBoost</b> model was promoted to production for its
@@ -578,173 +680,208 @@ elif choice == "📈 Analytics":
     </div>
     """, unsafe_allow_html=True)
 
-    st.markdown("### 🧠 AI Explainability — Global Feature Importance")
-    try:
-        importances = model.feature_importances_
-        imp_df = pd.DataFrame({"Feature": FEATURE_COLS, "Importance": importances}).sort_values(
-            "Importance", ascending=True)
-        fig_imp = px.bar(imp_df, x="Importance", y="Feature", orientation='h',
-                          template="plotly_white", color="Importance",
-                          color_continuous_scale=["#fde68a", "#ef4d8b"])
-        fig_imp.update_layout(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)", height=440)
-        st.plotly_chart(fig_imp, use_container_width=True)
-    except Exception:
-        st.info("Feature importance is unavailable for this model instance.")
+    with st.container(border=True):
+        panel_header("🧠", "Global Feature Importance", "Which signals the model leans on most")
+        try:
+            importances = model.feature_importances_
+            imp_df = pd.DataFrame({"Feature": FEATURE_COLS, "Importance": importances}).sort_values(
+                "Importance", ascending=True)
+            fig_imp = px.bar(imp_df, x="Importance", y="Feature", orientation='h', template="plotly_dark",
+                              color="Importance", color_continuous_scale=["#a855f7", "#00e5ff"])
+            fig_imp.update_layout(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)", height=440, margin=dict(t=10))
+            st.plotly_chart(fig_imp, use_container_width=True)
+        except Exception:
+            st.info("Feature importance is unavailable for this model instance.")
 
 # =====================================================================================
-# 9. AI PREDICTOR
+# 9. AI PREDICTOR — single applicant + batch CSV upload
 # =====================================================================================
 elif choice == "🧠 AI Predictor":
     st.markdown('<div class="hero-title" style="font-size:32px;">🔮 The AI Credit Radar</div>', unsafe_allow_html=True)
-    st.caption("Enter applicant telemetry below. Credit Spectrum AI will assess credit-policy eligibility in real time.")
+    st.caption("Analyze one applicant, or upload a CSV to batch-score an entire portfolio in real time.")
 
-    with st.form("prediction_form"):
-        st.markdown('<div class="glass-card"><h3>📋 Section 1 — Applicant & Loan Details</h3>', unsafe_allow_html=True)
-        c1, c2, c3, c4 = st.columns(4)
-        with c1:
-            purpose_options = list(le.classes_)
-            purpose = st.selectbox('💼 Purpose', purpose_options)
-        with c2:
-            int_rate = st.number_input('💸 Interest Rate', min_value=0.0, max_value=1.0, value=0.10)
-        with c3:
-            installment = st.number_input('💳 Monthly Installment ($)', min_value=0.0, max_value=2000.0, value=250.0)
-        with c4:
-            log_annual_inc = st.number_input('💰 Log Annual Income', min_value=0.0, max_value=15.0, value=10.5)
-        st.markdown('</div>', unsafe_allow_html=True)
+    clr1, clr2 = st.columns([1, 4])
+    with clr1:
+        if st.button("🧹 Clear & Reset"):
+            st.session_state.mood = "default"
+            st.session_state.batch_result = None
+            st.rerun()
 
-        st.markdown('<div class="glass-card"><h3>💎 Section 2 — Credit History</h3>', unsafe_allow_html=True)
-        c5, c6, c7, c8 = st.columns(4)
-        with c5:
-            fico = st.number_input('💎 FICO Score', min_value=300, max_value=850, value=700)
-        with c6:
-            dti = st.number_input('⚖️ Debt-to-Income (DTI)', min_value=0.0, max_value=50.0, value=15.0)
-        with c7:
-            days_with_cr_line = st.number_input('⏳ Credit Line Age (Days)', min_value=0.0, value=4000.0)
-        with c8:
-            pub_rec = st.number_input('🚨 Public Records', min_value=0, max_value=10, value=0)
-        st.markdown('</div>', unsafe_allow_html=True)
+    tab_single, tab_batch = st.tabs(["👤 Single Applicant", "📂 Batch Processing (CSV)"])
 
-        st.markdown('<div class="glass-card"><h3>📈 Section 3 — Revolving & Inquiry Behavior</h3>', unsafe_allow_html=True)
-        c9, c10, c11, c12 = st.columns(4)
-        with c9:
-            revol_bal = st.number_input('🏦 Revolving Balance ($)', min_value=0.0, value=10000.0)
-        with c10:
-            revol_util = st.number_input('📈 Revolving Utilization (%)', min_value=0.0, max_value=150.0, value=45.0)
-        with c11:
-            inq_last_6mths = st.number_input('🕵️ Inquiries (6M)', min_value=0, max_value=50, value=1)
-        with c12:
-            delinq_2yrs = st.number_input('⚠️ Delinquencies (2Y)', min_value=0, max_value=20, value=0)
-        st.markdown('</div>', unsafe_allow_html=True)
+    # ---------------- SINGLE APPLICANT ----------------
+    with tab_single:
+        with st.form("prediction_form"):
+            st.markdown('<div class="glass-card"><h3>📋 Section 1 — Applicant & Loan Details</h3>', unsafe_allow_html=True)
+            c1, c2, c3, c4 = st.columns(4)
+            with c1:
+                purpose_options = list(le.classes_)
+                purpose = st.selectbox('💼 Purpose', purpose_options)
+            with c2:
+                int_rate = st.number_input('💸 Interest Rate', min_value=0.0, max_value=1.0, value=0.10)
+            with c3:
+                installment = st.number_input('💳 Monthly Installment ($)', min_value=0.0, max_value=2000.0, value=250.0)
+            with c4:
+                log_annual_inc = st.number_input('💰 Log Annual Income', min_value=0.0, max_value=15.0, value=10.5)
+            st.markdown('</div>', unsafe_allow_html=True)
 
-        st.markdown("<br>", unsafe_allow_html=True)
-        submit_button = st.form_submit_button("🔍 ANALYZE APPLICANT")
+            st.markdown('<div class="glass-card"><h3>💎 Section 2 — Credit History</h3>', unsafe_allow_html=True)
+            c5, c6, c7, c8 = st.columns(4)
+            with c5:
+                fico = st.number_input('💎 FICO Score', min_value=300, max_value=850, value=700)
+            with c6:
+                dti = st.number_input('⚖️ Debt-to-Income (DTI)', min_value=0.0, max_value=50.0, value=15.0)
+            with c7:
+                days_with_cr_line = st.number_input('⏳ Credit Line Age (Days)', min_value=0.0, value=4000.0)
+            with c8:
+                pub_rec = st.number_input('🚨 Public Records', min_value=0, max_value=10, value=0)
+            st.markdown('</div>', unsafe_allow_html=True)
 
-    if submit_button:
-        steps = [
-            "Connecting to Credit Spectrum AI...",
-            "Loading XGBoost engine...",
-            "Evaluating financial profile...",
-            "Checking credit policy thresholds...",
-            "Counting the digital coins... 🪙",
-            "Generating confidence score...",
-            "Finalizing recommendation...",
-        ]
-        prog = st.progress(0)
-        status = st.empty()
-        for i, step in enumerate(steps):
-            status.markdown(f"🛰️ **{step}**")
-            time.sleep(0.3)
-            prog.progress(int((i + 1) / len(steps) * 100))
-        status.empty()
+            st.markdown('<div class="glass-card"><h3>📈 Section 3 — Revolving & Inquiry Behavior</h3>', unsafe_allow_html=True)
+            c9, c10, c11, c12 = st.columns(4)
+            with c9:
+                revol_bal = st.number_input('🏦 Revolving Balance ($)', min_value=0.0, value=10000.0)
+            with c10:
+                revol_util = st.number_input('📈 Revolving Utilization (%)', min_value=0.0, max_value=150.0, value=45.0)
+            with c11:
+                inq_last_6mths = st.number_input('🕵️ Inquiries (6M)', min_value=0, max_value=50, value=1)
+            with c12:
+                delinq_2yrs = st.number_input('⚠️ Delinquencies (2Y)', min_value=0, max_value=20, value=0)
+            st.markdown('</div>', unsafe_allow_html=True)
 
-        purp_enc = le.transform([purpose])[0]
-        input_data = np.array([[purp_enc, int_rate, installment, log_annual_inc, dti, fico,
-                                 days_with_cr_line, revol_bal, revol_util, inq_last_6mths,
-                                 delinq_2yrs, pub_rec]])
-        input_scaled = scaler.transform(input_data)
-        prediction = model.predict(input_scaled)[0]
-        confidence = model.predict_proba(input_scaled)[0]
+            st.markdown("<br>", unsafe_allow_html=True)
+            submit_button = st.form_submit_button("🔍 ANALYZE APPLICANT")
 
-        st.session_state.mood = "approved" if prediction == 1 else "declined"
-        apply_theme(st.session_state.mood)
+        if submit_button:
+            with st.spinner("💠 Credit Spectrum AI is evaluating the financial profile..."):
+                time.sleep(0.8)
 
-        st.markdown("---")
+            purp_enc = le.transform([purpose])[0]
+            input_data = np.array([[purp_enc, int_rate, installment, log_annual_inc, dti, fico,
+                                     days_with_cr_line, revol_bal, revol_util, inq_last_6mths,
+                                     delinq_2yrs, pub_rec]])
+            input_scaled = scaler.transform(input_data)
+            prediction = model.predict(input_scaled)[0]
+            confidence = model.predict_proba(input_scaled)[0]
 
-        if prediction == 1:
-            cash_celebration(good=True)
-            st.balloons()
-            st.markdown(f"""
-            <div class="approved-hero">
-                <div class="verdict-icon">🤑💵🎉</div>
-                <div class="verdict-title">✅ ELIGIBLE FOR LOAN!</div>
-                <p style="font-size:16px;">Confidence Score: <b>{confidence[1]*100:.2f}%</b></p>
-                <p style="font-size:15px;">₹💰 Cha-ching! This applicant meets the credit policy. 💰₹</p>
-            </div>""", unsafe_allow_html=True)
-            st.image("https://media.giphy.com/media/xT9IgzoKnwFNmISR8I/giphy.gif",
-                      caption="💸 Making it rain — loan approved!", use_container_width=True)
+            st.session_state.mood = "approved" if prediction == 1 else "declined"
+            apply_theme(st.session_state.mood)
 
-            reasons = []
-            if fico >= 700: reasons.append("✔ Excellent FICO Score")
-            if dti <= 15: reasons.append("✔ Low Debt-to-Income Ratio")
-            if delinq_2yrs == 0: reasons.append("✔ No Recent Delinquencies")
-            if revol_util <= 50: reasons.append("✔ Healthy Credit Utilization")
-            if inq_last_6mths <= 2: reasons.append("✔ Low Recent Credit Inquiries")
-            if not reasons: reasons = ["✔ Overall Profile Within Policy Thresholds"]
+            st.markdown("---")
 
-            st.markdown("<div style='text-align:center; margin-top:14px;'>" +
-                        "".join(f"<span class='reason-chip'>{r}</span>" for r in reasons) +
-                        "</div>", unsafe_allow_html=True)
-        else:
-            cash_celebration(good=False)
-            st.snow()
-            st.markdown(f"""
-            <div class="declined-hero">
-                <div class="verdict-icon">💔📉🚫</div>
-                <div class="verdict-title">🚫 NOT ELIGIBLE FOR LOAN</div>
-                <p style="font-size:16px;">Risk Confidence: <b>{confidence[0]*100:.2f}%</b></p>
-                <p style="font-size:15px;">The financial profile falls short of the credit policy threshold.</p>
-            </div>""", unsafe_allow_html=True)
-            st.image("https://media.giphy.com/media/d2Z9QYzA2aidiWn6/giphy.gif",
-                      caption="📉 No cha-ching this time — but there's a path forward.", use_container_width=True)
+            if prediction == 1:
+                cash_celebration(good=True)
+                st.markdown(f"""
+                <div class="approved-hero">
+                    <div class="verdict-icon">🤑💵🎉</div>
+                    <div class="verdict-title">✅ ELIGIBLE FOR LOAN!</div>
+                    <p style="font-size:16px;">Confidence Score: <b>{confidence[1]*100:.2f}%</b></p>
+                    <p style="font-size:15px;">₹💰 Cha-ching! This applicant meets the credit policy. 💰₹</p>
+                </div>""", unsafe_allow_html=True)
 
-            tips = []
-            if fico < 700: tips.append("📈 Improve your FICO score")
-            if dti > 15: tips.append("⚖️ Reduce debt-to-income ratio")
-            if revol_util > 50: tips.append("💳 Lower credit utilization")
-            if inq_last_6mths > 2: tips.append("🕵️ Avoid multiple recent inquiries")
-            if delinq_2yrs > 0: tips.append("⚠️ Maintain a clean repayment history")
-            if not tips: tips = ["🧭 Re-evaluate overall financial profile"]
+                reasons = []
+                if fico >= 700: reasons.append("✔ Excellent FICO Score")
+                if dti <= 15: reasons.append("✔ Low Debt-to-Income Ratio")
+                if delinq_2yrs == 0: reasons.append("✔ No Recent Delinquencies")
+                if revol_util <= 50: reasons.append("✔ Healthy Credit Utilization")
+                if inq_last_6mths <= 2: reasons.append("✔ Low Recent Credit Inquiries")
+                if not reasons: reasons = ["✔ Overall Profile Within Policy Thresholds"]
 
-            st.markdown("<div style='text-align:center; margin-top:14px;'>" +
-                        "".join(f"<span class='reason-chip'>{t}</span>" for t in tips) +
-                        "</div>", unsafe_allow_html=True)
+                st.markdown("<div style='text-align:center; margin-top:14px;'>" +
+                            "".join(f"<span class='reason-chip'>{r}</span>" for r in reasons) +
+                            "</div>", unsafe_allow_html=True)
+            else:
+                cash_celebration(good=False)
+                st.markdown(f"""
+                <div class="declined-hero">
+                    <div class="verdict-icon">💔📉🚫</div>
+                    <div class="verdict-title">🚫 NOT ELIGIBLE FOR LOAN</div>
+                    <p style="font-size:16px;">Risk Confidence: <b>{confidence[0]*100:.2f}%</b></p>
+                    <p style="font-size:15px;">The financial profile falls short of the credit policy threshold.</p>
+                </div>""", unsafe_allow_html=True)
 
-        g_val = confidence[1] * 100
-        fig_g = go.Figure(go.Indicator(
-            mode="gauge+number", value=g_val, title={'text': "Eligibility Meter"},
-            gauge={'axis': {'range': [0, 100]},
-                   'bar': {'color': "#22c55e" if prediction == 1 else "#f43f5e"},
-                   'steps': [{'range': [0, 40], 'color': 'rgba(244,63,94,0.20)'},
-                             {'range': [40, 70], 'color': 'rgba(246,165,9,0.20)'},
-                             {'range': [70, 100], 'color': 'rgba(34,197,94,0.20)'}],
-                   'bgcolor': "rgba(0,0,0,0)"}))
-        fig_g.update_layout(template="plotly_white", height=300, paper_bgcolor="rgba(0,0,0,0)")
-        st.plotly_chart(fig_g, use_container_width=True)
+                tips = []
+                if fico < 700: tips.append("📈 Improve your FICO score")
+                if dti > 15: tips.append("⚖️ Reduce debt-to-income ratio")
+                if revol_util > 50: tips.append("💳 Lower credit utilization")
+                if inq_last_6mths > 2: tips.append("🕵️ Avoid multiple recent inquiries")
+                if delinq_2yrs > 0: tips.append("⚠️ Maintain a clean repayment history")
+                if not tips: tips = ["🧭 Re-evaluate overall financial profile"]
 
-        report_df = pd.DataFrame([{
-            "purpose": purpose, "int.rate": int_rate, "installment": installment,
-            "log.annual.inc": log_annual_inc, "dti": dti, "fico": fico,
-            "days.with.cr.line": days_with_cr_line, "revol.bal": revol_bal,
-            "revol.util": revol_util, "inq.last.6mths": inq_last_6mths,
-            "delinq.2yrs": delinq_2yrs, "pub.rec": pub_rec,
-            "prediction": "Approved" if prediction == 1 else "Declined",
-            "confidence_%": round(confidence[1] * 100 if prediction == 1 else confidence[0] * 100, 2),
-        }])
-        st.download_button("📄 Download Prediction Report (CSV)", data=report_df.to_csv(index=False),
-                            file_name="astrabank_prediction_report.csv", mime="text/csv")
+                st.markdown("<div style='text-align:center; margin-top:14px;'>" +
+                            "".join(f"<span class='reason-chip'>{t}</span>" for t in tips) +
+                            "</div>", unsafe_allow_html=True)
 
-        st.info("🔄 Theme is now reflecting this verdict. Use **Reset Theme to Default** above the navigation, "
-                "or run a new prediction, to change it back.")
+            g_val = confidence[1] * 100
+            fig_g = go.Figure(go.Indicator(
+                mode="gauge+number", value=g_val, title={'text': "Eligibility Meter"},
+                gauge={'axis': {'range': [0, 100]},
+                       'bar': {'color': "#00ffa3" if prediction == 1 else "#ff2e5b"},
+                       'steps': [{'range': [0, 40], 'color': 'rgba(255,46,91,0.20)'},
+                                 {'range': [40, 70], 'color': 'rgba(246,165,9,0.20)'},
+                                 {'range': [70, 100], 'color': 'rgba(0,255,163,0.20)'}],
+                       'bgcolor': "rgba(0,0,0,0)"}))
+            fig_g.update_layout(template="plotly_dark", height=300, paper_bgcolor="rgba(0,0,0,0)")
+            st.plotly_chart(fig_g, use_container_width=True)
+
+            report_df = pd.DataFrame([{
+                "purpose": purpose, "int.rate": int_rate, "installment": installment,
+                "log.annual.inc": log_annual_inc, "dti": dti, "fico": fico,
+                "days.with.cr.line": days_with_cr_line, "revol.bal": revol_bal,
+                "revol.util": revol_util, "inq.last.6mths": inq_last_6mths,
+                "delinq.2yrs": delinq_2yrs, "pub.rec": pub_rec,
+                "prediction": "Approved" if prediction == 1 else "Declined",
+                "confidence_%": round(confidence[1] * 100 if prediction == 1 else confidence[0] * 100, 2),
+            }])
+            st.download_button("📄 Download Prediction Report (CSV)", data=report_df.to_csv(index=False),
+                                file_name="astrabank_prediction_report.csv", mime="text/csv")
+
+            st.info("🔄 Theme is now reflecting this verdict. Use **🧹 Clear & Reset** above, "
+                    "or **Reset Theme to Default**, to return to the default look.")
+
+    # ---------------- BATCH PROCESSING ----------------
+    with tab_batch:
+        st.markdown("""
+        <div class="glass-card">
+        📂 Upload a CSV with columns: <code>purpose, int.rate, installment, log.annual.inc, dti, fico,
+        days.with.cr.line, revol.bal, revol.util, inq.last.6mths, delinq.2yrs, pub.rec</code><br>
+        Drag & drop the file below, or click to browse.
+        </div>
+        """, unsafe_allow_html=True)
+
+        uploaded = st.file_uploader("Drop your applicant CSV here", type=["csv"], label_visibility="collapsed")
+
+        if uploaded is not None:
+            try:
+                batch_df = pd.read_csv(uploaded)
+                st.dataframe(batch_df.head(), use_container_width=True)
+                if st.button("⚡ Run Batch Prediction"):
+                    with st.spinner("💠 Scoring the entire portfolio..."):
+                        work = batch_df.copy()
+                        work['purpose'] = work['purpose'].apply(
+                            lambda v: v if v in le.classes_ else le.classes_[0])
+                        work['purpose_enc'] = le.transform(work['purpose'])
+                        X_batch = work[['purpose_enc'] + [c for c in FEATURE_COLS if c != 'purpose']]
+                        X_batch_scaled = scaler.transform(X_batch)
+                        preds = model.predict(X_batch_scaled)
+                        probs = model.predict_proba(X_batch_scaled)[:, 1]
+                        batch_df['prediction'] = np.where(preds == 1, "Eligible ✅", "Not Eligible 🚫")
+                        batch_df['confidence_%'] = (probs * 100).round(2)
+                        st.session_state.batch_result = batch_df
+            except Exception as e:
+                st.error(f"⚠️ Could not process file: {e}")
+
+        if st.session_state.batch_result is not None:
+            res = st.session_state.batch_result
+            n_eligible = (res['prediction'] == "Eligible ✅").sum()
+            n_total = len(res)
+            b1, b2, b3 = st.columns(3)
+            b1.metric("📦 Total Scored", n_total)
+            b2.metric("✅ Eligible", int(n_eligible))
+            b3.metric("🚫 Not Eligible", int(n_total - n_eligible))
+            st.dataframe(res, use_container_width=True, height=380)
+            st.download_button("📥 Download Batch Results (CSV)", data=res.to_csv(index=False),
+                                file_name="batch_prediction_results.csv", mime="text/csv")
 
 # =====================================================================================
 # 10. DATASET
