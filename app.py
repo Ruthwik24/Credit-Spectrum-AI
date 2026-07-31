@@ -83,6 +83,13 @@ def apply_theme(mood="default"):
     html, body, [class*="css"] {{ font-family: 'Inter', 'Poppins', sans-serif; }}
     #MainMenu, footer, header {{ visibility: hidden; }}
 
+    /* CRITICAL FIX: Ensure the underlying DOM body is completely black. 
+       This prevents popovers (which render outside .stApp) from revealing a white background through their transparency! */
+    html, body {{
+        background-color: #000000 !important;
+        background: #000000 !important;
+    }}
+
     .stApp {{
         background: {p['bg']};
         background-attachment: fixed; color: {p['text']}; transition: background 1.2s ease;
@@ -220,7 +227,7 @@ def apply_theme(mood="default"):
         transition: transform 0.25s cubic-bezier(.34,1.56,.64,1), box-shadow 0.3s ease, border-color 0.3s ease, opacity 0.3s ease, background 0.3s ease;
         cursor: pointer; position: relative; overflow: hidden; z-index: 1; display: flex !important; align-items: center !important; min-height: 48px !important;
     }}
-    /* Completely kill the radio button indicator dots and active bars */
+    /* Kill the radio button indicator dots and active bars */
     div[role="radiogroup"] label > div:first-child,
     div[role="radiogroup"] label div[data-testid="stMarkdownContainer"] ~ div,
     div[role="radiogroup"] label::after {{
@@ -417,71 +424,67 @@ def apply_theme(mood="default"):
     }}
 
     /* ================= STRICT GLASSY DROPDOWN TILES (NO OPAQUE BOXES) ================= */
-    /* Streamlit mounts dropdowns in a portal at the end of the body, so we must be very aggressive */
     div[data-baseweb="popover"] {{
         background-color: transparent !important;
     }}
     
     div[data-baseweb="popover"] > div,
-    [data-testid="stVirtualDropdown"] {{
-        background: rgba(10, 10, 10, 0.6) !important;
+    [data-testid="stVirtualDropdown"],
+    [data-testid="stVirtualDropdown"] > div,
+    [data-testid="stVirtualDropdown"] > div > div,
+    ul[data-baseweb="menu"],
+    ul[role="listbox"],
+    div[role="listbox"] {{
+        background: rgba(12, 12, 12, 0.85) !important;
+        background-color: rgba(12, 12, 12, 0.85) !important;
+        border: none !important;
+    }}
+
+    div[data-baseweb="popover"] > div {{
         backdrop-filter: blur(24px) !important;
         -webkit-backdrop-filter: blur(24px) !important;
         border: 1px solid {p['cardBorder']} !important;
         border-radius: 14px !important;
-        box-shadow: 0 12px 40px rgba(0,0,0,0.85), 0 0 20px {p['glow']} inset !important;
+        box-shadow: 0 12px 40px rgba(0,0,0,0.9), 0 0 20px {p['glow']} inset !important;
         padding: 8px !important;
     }}
 
-    ul[data-baseweb="menu"],
-    ul[role="listbox"] {{
-        background: transparent !important;
-        padding: 4px !important;
-    }}
-
-    /* Force all child elements of the dropdown portal to avoid inheriting white backgrounds */
-    [data-testid="stVirtualDropdown"] > div,
-    [data-testid="stVirtualDropdown"] > div > div,
-    [data-testid="stVirtualDropdown"] > ul {{
-        background-color: transparent !important;
-    }}
-
     /* INDIVIDUAL GLASS TILES */
-    ul[data-baseweb="menu"] li,
+    div[data-baseweb="popover"] li,
     ul[role="listbox"] li,
+    div[role="listbox"] li,
     li[role="option"] {{
         background: rgba(255, 255, 255, 0.05) !important;
+        background-color: rgba(255, 255, 255, 0.05) !important;
         border: 1px solid rgba(255, 255, 255, 0.1) !important;
-        border-radius: 10px !important;
-        margin-bottom: 8px !important;
-        padding: 12px 16px !important;
         color: {p['text']} !important;
+        transition: all 0.25s cubic-bezier(.34,1.56,.64,1) !important;
         font-size: 14.5px !important;
+        padding: 12px 16px !important;
+        margin: 6px 8px !important;
+        border-radius: 10px !important;
         backdrop-filter: blur(12px) !important;
         -webkit-backdrop-filter: blur(12px) !important;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1) !important;
-        transition: all 0.25s cubic-bezier(.34,1.56,.64,1) !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1) !important;
         display: block !important;
     }}
 
-    ul[data-baseweb="menu"] li:last-child,
-    ul[role="listbox"] li:last-child,
-    li[role="option"]:last-child {{
-        margin-bottom: 0 !important;
-    }}
-
-    ul[data-baseweb="menu"] li:hover,
+    /* Hover and Selected states for tiles */
+    div[data-baseweb="popover"] li:hover,
     ul[role="listbox"] li:hover,
+    div[role="listbox"] li:hover,
     li[role="option"]:hover,
-    ul[data-baseweb="menu"] li[aria-selected="true"],
+    div[data-baseweb="popover"] li[aria-selected="true"],
     ul[role="listbox"] li[aria-selected="true"],
+    div[role="listbox"] li[aria-selected="true"],
     li[role="option"][aria-selected="true"] {{
-        background: linear-gradient(135deg, rgba(212,175,55,0.3), rgba(229,228,226,0.1)) !important;
+        background: linear-gradient(135deg, {p['accent1']}44, {p['accent2']}22) !important;
+        background-color: rgba(212,175,55,0.25) !important;
         border: 1px solid {p['accent1']} !important;
         color: {p['accent1']} !important;
         font-weight: 800 !important;
         transform: translateY(-2px) scale(1.02) !important;
-        box-shadow: 0 8px 20px rgba(0,0,0,0.5), 0 0 12px {p['glow']} !important;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.6), 0 0 12px {p['glow']} !important;
     }}
 
     /* Multiselect Tags */
