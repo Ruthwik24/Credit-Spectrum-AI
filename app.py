@@ -389,116 +389,79 @@ def apply_theme(mood="default"):
     }}
     [data-testid="stCaptionContainer"] {{ color: {p['text']} !important; opacity: 0.7; }}
 
-    /* ALL INPUTS (Text, Number, Select) - Glossy & Glassy Overrides */
-    div[data-baseweb="input"], 
+    /* Target the container wrappers for ALL inputs */
     div[data-baseweb="base-input"],
-    div[data-baseweb="select"] > div,
-    div[data-testid="stSelectbox"] > div > div {{
-        background: rgba(15, 15, 15, 0.5) !important;
+    div[data-baseweb="input"],
+    div[data-testid="stSelectbox"] > div > div,
+    div[data-testid="stNumberInputContainer"] {{
+        background: rgba(15, 15, 15, 0.6) !important;
         backdrop-filter: blur(16px) !important;
         -webkit-backdrop-filter: blur(16px) !important;
-        color: {p['text']} !important;
-        border: 1px solid {p['cardBorder']} !important; 
+        border: 1px solid {p['cardBorder']} !important;
         border-radius: 12px !important;
+        color: {p['text']} !important;
         box-shadow: inset 0 2px 6px rgba(0,0,0,0.6), 0 0 10px rgba(0,0,0,0.2) !important;
-        transition: all 0.3s ease !important;
     }}
 
-    /* Parent select container reset */
-    div[data-baseweb="select"], div[data-testid="stSelectbox"] > div {{
+    /* Target the actual input elements so they inherit the glass effect naturally */
+    input[type="text"], 
+    input[type="number"], 
+    textarea, 
+    div[data-baseweb="select"] div {{
         background: transparent !important;
-        border: none !important;
-    }}
-
-    /* Focus states */
-    div[data-baseweb="input"]:focus-within, 
-    div[data-baseweb="base-input"]:focus-within,
-    div[data-baseweb="select"] > div:focus-within {{
-        border-color: {p['accent1']} !important;
-        box-shadow: 0 0 15px {p['glow']}, inset 0 2px 6px rgba(0,0,0,0.6) !important;
-    }}
-
-    /* Inner input field transparency and text colors */
-    .stTextInput input, 
-    .stNumberInput input, 
-    .stTextArea textarea,
-    div[data-baseweb="select"] div,
-    div[data-baseweb="select"] span {{
         color: {p['text']} !important;
         -webkit-text-fill-color: {p['text']} !important;
-    }}
-    
-    .stTextInput input, 
-    .stNumberInput input, 
-    .stTextArea textarea {{
-        background: transparent !important;
-        border: none !important;
         box-shadow: none !important;
     }}
 
-    /* Number input specific up/down buttons */
-    .stNumberInput button, .stNumberInput button svg {{
-        background: transparent !important; 
-        color: {p['text']} !important; 
-        fill: {p['text']} !important;
-        transition: all 0.2s ease;
+    /* Dropdown popover containers */
+    div[data-baseweb="popover"] {{
+        background: transparent !important;
     }}
-    .stNumberInput button:hover {{
-        background: rgba(212,175,55,0.2) !important;
-    }}
-
-    /* Placeholders */
-    .stTextInput input::placeholder, 
-    .stTextArea textarea::placeholder,
-    .stNumberInput input::placeholder {{ 
-        color: {p['text']} !important; 
-        opacity: 0.5 !important; 
-        -webkit-text-fill-color: rgba(255,255,255,0.5) !important;
-    }}
-
-    /* Selectbox dropdown arrow */
-    div[data-baseweb="select"] svg {{ 
-        fill: {p['accent1']} !important; 
-    }}
-
-    /* ================= GLASSY DROPDOWN MENU (Popover) ================= */
-    [data-baseweb="popover"] > div {{
-        background: rgba(15, 15, 15, 0.75) !important;
+    
+    div[data-baseweb="popover"] > div,
+    ul[data-baseweb="menu"] {{
+        background: rgba(15, 15, 15, 0.95) !important;
         backdrop-filter: blur(24px) !important;
         -webkit-backdrop-filter: blur(24px) !important;
         border: 1px solid {p['cardBorder']} !important;
         border-radius: 12px !important;
         box-shadow: 0 8px 32px rgba(0,0,0,0.8), 0 0 20px {p['glow']} !important;
-        padding: 6px !important;
     }}
-    
-    ul[data-baseweb="menu"] {{
+
+    /* Dropdown list items */
+    ul[data-baseweb="menu"] li {{
         background-color: transparent !important;
-    }}
-    
-    [data-baseweb="popover"] li, ul[data-baseweb="menu"] li {{ 
-        color: {p['text']} !important; 
-        background-color: transparent !important;
-        border-radius: 8px !important;
-        margin: 2px 4px !important;
+        color: {p['text']} !important;
         transition: all 0.2s ease !important;
-        font-size: 14px !important;
+        font-size: 14.5px !important;
     }}
-    
-    [data-baseweb="popover"] li:hover, ul[data-baseweb="menu"] li:hover,
-    [data-baseweb="popover"] li[aria-selected="true"], ul[data-baseweb="menu"] li[aria-selected="true"] {{
-        background: linear-gradient(135deg, rgba(212,175,55,0.3), rgba(229,228,226,0.1)) !important;
+
+    ul[data-baseweb="menu"] li:hover,
+    ul[data-baseweb="menu"] li[aria-selected="true"],
+    ul[data-baseweb="menu"] li[aria-selected="true"]:hover {{
+        background-color: rgba(212,175,55,0.3) !important;
         color: {p['accent1']} !important;
         font-weight: 800 !important;
-        transform: translateX(4px);
+    }}
+
+    /* +/- Buttons on Number Inputs */
+    div[data-testid="stNumberInputStepUp"],
+    div[data-testid="stNumberInputStepDown"] {{
+        background: transparent !important;
+    }}
+    div[data-testid="stNumberInputStepUp"] svg,
+    div[data-testid="stNumberInputStepDown"] svg,
+    div[data-baseweb="select"] svg {{
+        fill: {p['accent1']} !important;
     }}
     
-    /* Multiselect Tags */
-    [data-baseweb="tag"] {{ 
-        background: rgba(212,175,55,0.2) !important; 
-        color: {p['text']} !important; 
-        border: 1px solid {p['accent1']} !important; 
-        border-radius: 6px !important; 
+    /* Hover states for inputs */
+    div[data-baseweb="base-input"]:focus-within,
+    div[data-baseweb="input"]:focus-within,
+    div[data-testid="stSelectbox"] > div > div:focus-within {{
+        border-color: {p['accent1']} !important;
+        box-shadow: 0 0 15px {p['glow']}, inset 0 2px 6px rgba(0,0,0,0.6) !important;
     }}
 
     /* tabs */
