@@ -417,64 +417,71 @@ def apply_theme(mood="default"):
     }}
 
     /* ================= STRICT GLASSY DROPDOWN TILES (NO OPAQUE BOXES) ================= */
+    /* Streamlit mounts dropdowns in a portal at the end of the body, so we must be very aggressive */
     div[data-baseweb="popover"] {{
         background-color: transparent !important;
     }}
     
     div[data-baseweb="popover"] > div,
-    div[data-baseweb="popover"] ul,
-    [data-testid="stVirtualDropdown"],
-    ul[role="listbox"],
-    div[role="listbox"] {{
-        background: rgba(12, 12, 12, 0.55) !important;
-        background-color: rgba(12, 12, 12, 0.55) !important;
+    [data-testid="stVirtualDropdown"] {{
+        background: rgba(10, 10, 10, 0.6) !important;
         backdrop-filter: blur(24px) !important;
         -webkit-backdrop-filter: blur(24px) !important;
         border: 1px solid {p['cardBorder']} !important;
         border-radius: 14px !important;
         box-shadow: 0 12px 40px rgba(0,0,0,0.85), 0 0 20px {p['glow']} inset !important;
-        padding: 6px !important;
+        padding: 8px !important;
     }}
 
+    ul[data-baseweb="menu"],
+    ul[role="listbox"] {{
+        background: transparent !important;
+        padding: 4px !important;
+    }}
+
+    /* Force all child elements of the dropdown portal to avoid inheriting white backgrounds */
     [data-testid="stVirtualDropdown"] > div,
     [data-testid="stVirtualDropdown"] > div > div,
     [data-testid="stVirtualDropdown"] > ul {{
         background-color: transparent !important;
     }}
 
-    div[data-baseweb="popover"] li,
+    /* INDIVIDUAL GLASS TILES */
+    ul[data-baseweb="menu"] li,
     ul[role="listbox"] li,
-    div[role="listbox"] li,
     li[role="option"] {{
-        background: rgba(255, 255, 255, 0.04) !important;
-        background-color: rgba(255, 255, 255, 0.04) !important;
-        border: 1px solid rgba(255, 255, 255, 0.08) !important;
-        color: {p['text']} !important;
-        transition: all 0.25s cubic-bezier(.34,1.56,.64,1) !important;
-        font-size: 14.5px !important;
-        padding: 10px 14px !important;
-        margin: 4px 6px !important;
+        background: rgba(255, 255, 255, 0.05) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
         border-radius: 10px !important;
+        margin-bottom: 8px !important;
+        padding: 12px 16px !important;
+        color: {p['text']} !important;
+        font-size: 14.5px !important;
         backdrop-filter: blur(12px) !important;
         -webkit-backdrop-filter: blur(12px) !important;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1) !important;
+        transition: all 0.25s cubic-bezier(.34,1.56,.64,1) !important;
+        display: block !important;
     }}
 
-    div[data-baseweb="popover"] li:hover,
+    ul[data-baseweb="menu"] li:last-child,
+    ul[role="listbox"] li:last-child,
+    li[role="option"]:last-child {{
+        margin-bottom: 0 !important;
+    }}
+
+    ul[data-baseweb="menu"] li:hover,
     ul[role="listbox"] li:hover,
-    div[role="listbox"] li:hover,
     li[role="option"]:hover,
-    div[data-baseweb="popover"] li[aria-selected="true"],
+    ul[data-baseweb="menu"] li[aria-selected="true"],
     ul[role="listbox"] li[aria-selected="true"],
-    div[role="listbox"] li[aria-selected="true"],
     li[role="option"][aria-selected="true"] {{
-        background: linear-gradient(135deg, {p['accent1']}33, {p['accent2']}22) !important;
-        background-color: rgba(212,175,55,0.25) !important;
+        background: linear-gradient(135deg, rgba(212,175,55,0.3), rgba(229,228,226,0.1)) !important;
         border: 1px solid {p['accent1']} !important;
         color: {p['accent1']} !important;
         font-weight: 800 !important;
-        transform: translateY(-2px) scale(1.01) !important;
-        box-shadow: 0 6px 18px rgba(0,0,0,0.5), 0 0 12px {p['glow']} !important;
+        transform: translateY(-2px) scale(1.02) !important;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.5), 0 0 12px {p['glow']} !important;
     }}
 
     /* Multiselect Tags */
@@ -777,7 +784,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # =====================================================================================
-# 5. TOP NAVIGATION BAR (glassy, luxury pill tabs, equal width, zero dots, no top bar)
+# 5. TOP NAVIGATION BAR (glassy, luxury pill tabs)
 # =====================================================================================
 st.markdown('<div class="navbar-wrap">', unsafe_allow_html=True)
 menu = [
@@ -1338,7 +1345,7 @@ elif choice == "👨‍💻 About the Model":
     <div class="glass-card">
     <p>Credit Spectrum AI is an intelligent credit-eligibility platform that evaluates demographic
     and financial telemetry to assess loan risk and predict credit-policy compliance,
-    using a production-grade <b>XGBoost</b> classifier.</p>
+    using a premium production-grade <b>XGBoost</b> classifier.</p>
     </div>
     """, unsafe_allow_html=True)
 
