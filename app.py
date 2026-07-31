@@ -436,10 +436,10 @@ def apply_theme(mood="default"):
     [data-testid="stVirtualDropdown"],
     ul[role="listbox"],
     div[role="listbox"] {{
-        background: rgba(15, 15, 15, 0.95) !important;
-        background-color: rgba(15, 15, 15, 0.95) !important;
-        backdrop-filter: blur(24px) !important;
-        -webkit-backdrop-filter: blur(24px) !important;
+        background: rgba(15, 15, 15, 0.6) !important;
+        background-color: rgba(15, 15, 15, 0.6) !important;
+        backdrop-filter: blur(16px) !important;
+        -webkit-backdrop-filter: blur(16px) !important;
         border: 1px solid {p['cardBorder']} !important;
         border-radius: 12px !important;
         box-shadow: 0 8px 32px rgba(0,0,0,0.8), 0 0 20px {p['glow']} !important;
@@ -664,6 +664,7 @@ def style_fig(fig, p, height=380, hovermode="closest"):
     """Apply a consistent luxury glassy / futuristic look to any Plotly figure, with fully
     legible legend, axis, and hover text regardless of the active color theme."""
     fig.update_layout(
+        title=None,
         template="plotly_dark",
         height=height,
         paper_bgcolor="rgba(0,0,0,0)",
@@ -1319,8 +1320,13 @@ elif choice == "📁 Dataset":
                         <div class="stat-label">{lbl}</div></div>""", unsafe_allow_html=True)
 
     st.markdown("### 🔎 Search & Explore")
-    search = st.text_input("Filter by purpose (leave blank for all):", "")
-    display_df = df_raw if not search else df_raw[df_raw['purpose'].str.contains(search, case=False, na=False)]
+    purpose_filter_dataset = st.multiselect(
+        "Filter by purpose", 
+        options=sorted(df_raw['purpose'].dropna().unique()),
+        default=[],
+        placeholder="Choose options"
+    )
+    display_df = df_raw[df_raw['purpose'].isin(purpose_filter_dataset)] if purpose_filter_dataset else df_raw
     render_glass_table(display_df, max_height=420)
 
     st.download_button("📥 Download Full Dataset (CSV)", data=df_raw.to_csv(index=False),
