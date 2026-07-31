@@ -193,8 +193,8 @@ def apply_theme(mood="default"):
     .navbar-wrap {{
         background: linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.015));
         border: 1px solid {p['cardBorder']}; border-radius: 26px;
-        padding: 14px 18px; backdrop-filter: blur(26px) saturate(160%); -webkit-backdrop-filter: blur(26px) saturate(160%);
-        margin: 0 auto 22px; z-index: 20; position: sticky; top: 8px; max-width: 1400px;
+        padding: 16px 24px; backdrop-filter: blur(26px) saturate(160%); -webkit-backdrop-filter: blur(26px) saturate(160%);
+        margin: 0 auto 22px; z-index: 20; position: sticky; top: 8px; width: 100%;
         box-shadow: 0 0 30px {p['glow']}, 0 8px 32px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.08);
         position: relative; overflow: hidden;
     }}
@@ -208,14 +208,19 @@ def apply_theme(mood="default"):
     @keyframes navBorderFlow {{ 0%{{background-position:0% 50%;}} 100%{{background-position:300% 50%;}} }}
 
     div[data-testid="stHorizontalBlock"] div[role="radiogroup"] {{
-        display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;
+        display: flex; flex-wrap: nowrap; gap: 10px; justify-content: space-between; width: 100%;
     }}
     div[role="radiogroup"] label {{
         background: rgba(255,255,255,0.035); border: 1px solid {p['cardBorder']}; border-radius: 30px;
-        padding: 11px 22px !important; font-weight: 700; font-size: 14.5px; letter-spacing: 0.3px;
-        color: {p['text']} !important; opacity: 0.85;
+        padding: 13px 18px !important; font-weight: 700; font-size: 14.5px; letter-spacing: 0.3px;
+        color: {p['text']} !important; opacity: 0.85; flex: 1 1 0; justify-content: center;
         transition: transform 0.25s cubic-bezier(.34,1.56,.64,1), box-shadow 0.3s ease, border-color 0.3s ease, opacity 0.3s ease;
         cursor: pointer; position: relative; overflow: hidden; z-index: 1;
+    }}
+    /* Kill Streamlit's native circular radio marker entirely (no more red dot) */
+    div[role="radiogroup"] label > div:first-child {{
+        display: none !important; width: 0 !important; height: 0 !important;
+        margin: 0 !important; padding: 0 !important;
     }}
     div[role="radiogroup"] label p {{ color: inherit !important; }}
     div[role="radiogroup"] label::before {{
@@ -276,16 +281,32 @@ def apply_theme(mood="default"):
     }}
     [data-testid="stMetricValue"] {{ color: {p['accent1']} !important; }}
 
-    /* ---------- BUTTONS ---------- */
+    /* ---------- BUTTONS (glassy) ---------- */
     .stButton>button, .stFormSubmitButton>button, .stDownloadButton>button {{
-        background: linear-gradient(90deg, {p['accent1']}, {p['accent2']});
-        color: #05060a; border: 1px solid rgba(255,255,255,0.25); border-radius: 14px; padding: 12px 20px;
-        font-weight: 800; letter-spacing: 0.4px; width: 100%; box-shadow: 0 0 18px {p['glow']};
+        background: linear-gradient(135deg, rgba(255,255,255,0.10), rgba(255,255,255,0.03));
+        color: {p['text']} !important; border: 1px solid {p['accent1']}55; border-radius: 14px; padding: 12px 20px;
+        font-weight: 800; letter-spacing: 0.4px; width: 100%;
+        backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+        box-shadow: 0 0 18px {p['glow']}, inset 0 1px 0 rgba(255,255,255,0.12);
         transition: all 0.3s ease;
     }}
     .stButton>button:hover, .stFormSubmitButton>button:hover, .stDownloadButton>button:hover {{
-        background: linear-gradient(90deg, {p['accent2']}, {p['accent3']});
+        background: linear-gradient(135deg, {p['accent1']}33, {p['accent2']}33);
+        border-color: {p['accent1']}; color: {p['accent1']} !important;
         box-shadow: 0 0 28px {p['glow']}; transform: translateY(-2px);
+    }}
+    .hero-cta-btn.stButton>button {{
+        background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.02));
+        border: 1px solid {p['cardBorder']};
+    }}
+    .st-key-hero_cta_row [data-testid="stHorizontalBlock"] {{ gap: 0.6rem !important; }}
+    .st-key-hero_cta_row .stButton>button {{
+        background: rgba(255,255,255,0.06) !important; backdrop-filter: blur(20px) saturate(160%);
+        border: 1px solid {p['cardBorder']} !important; box-shadow: 0 0 22px {p['glow']}, inset 0 1px 0 rgba(255,255,255,0.14) !important;
+    }}
+    .st-key-hero_cta_row .stButton>button:hover {{
+        background: rgba(255,255,255,0.12) !important; border-color: {p['accent1']} !important;
+        box-shadow: 0 0 30px {p['glow']} !important;
     }}
 
     /* ---------- RESULT CARDS ---------- */
@@ -370,20 +391,31 @@ def apply_theme(mood="default"):
     }}
     [data-testid="stCaptionContainer"] {{ color: {p['text']} !important; opacity: 0.7; }}
 
-    /* text / number inputs */
-    .stTextInput input, .stNumberInput input, .stTextArea textarea {{
-        background: rgba(255,255,255,0.05) !important; color: {p['text']} !important;
+    /* text / number inputs — forced high-specificity overrides */
+    .stTextInput input, .stNumberInput input, .stTextArea textarea,
+    div[data-baseweb="input"] input, div[data-baseweb="base-input"] input,
+    .stNumberInput div[data-baseweb="input"], .stTextInput div[data-baseweb="input"] {{
+        background: rgba(12,16,36,0.85) !important; color: {p['text']} !important;
         border: 1px solid {p['cardBorder']} !important; border-radius: 12px !important;
+        -webkit-text-fill-color: {p['text']} !important;
     }}
-    .stNumberInput button {{ background: rgba(255,255,255,0.05) !important; color: {p['text']} !important; }}
-    .stTextInput input::placeholder, .stTextArea textarea::placeholder {{ color: {p['text']}; opacity: 0.45; }}
+    div[data-baseweb="input"], div[data-baseweb="base-input"] {{
+        background: rgba(12,16,36,0.85) !important; border-radius: 12px !important;
+    }}
+    .stNumberInput button, .stNumberInput button svg {{
+        background: rgba(12,16,36,0.9) !important; color: {p['text']} !important; fill: {p['text']} !important;
+    }}
+    .stTextInput input::placeholder, .stTextArea textarea::placeholder,
+    .stNumberInput input::placeholder {{ color: {p['text']} !important; opacity: 0.5 !important; }}
 
-    /* select boxes / multiselect (BaseWeb) */
-    [data-baseweb="select"] > div {{
-        background: rgba(255,255,255,0.05) !important; color: {p['text']} !important;
+    /* select boxes / multiselect (BaseWeb) — forced high-specificity overrides */
+    div[data-baseweb="select"], div[data-baseweb="select"] > div,
+    div[data-baseweb="select"] div[data-baseweb="base-input"] {{
+        background: rgba(12,16,36,0.85) !important; color: {p['text']} !important;
         border: 1px solid {p['cardBorder']} !important; border-radius: 12px !important;
     }}
-    [data-baseweb="select"] span, [data-baseweb="select"] div {{ color: {p['text']} !important; }}
+    div[data-baseweb="select"] * {{ color: {p['text']} !important; -webkit-text-fill-color: {p['text']} !important; }}
+    div[data-baseweb="select"] svg {{ fill: {p['text']} !important; }}
     [data-baseweb="popover"] ul, [data-baseweb="menu"] {{
         background: #0c1024 !important; border: 1px solid {p['cardBorder']} !important;
     }}
@@ -616,13 +648,16 @@ with st.expander("📥 Download Center  •  🟢 Core Status: ONLINE  •  ⚙�
 # 6. HOME
 # =====================================================================================
 if choice == "🏠 Home":
-    c1, c2 = st.columns([1, 1])
-    with c1:
-        if st.button("🚀 Start Prediction"):
-            st.info("Use the top navigation → **🧠 AI Predictor** to analyze an applicant.")
-    with c2:
-        if st.button("📊 Explore Dashboard"):
-            st.info("Use the top navigation → **📊 Dashboard** to explore the data holograms.")
+    with st.container(key="hero_cta_row"):
+        c1, c2, c3 = st.columns([1.3, 1.6, 4])
+        with c1:
+            if st.button("🚀 Start Prediction", key="cta_predict"):
+                st.session_state.page = "🧠 AI Predictor"
+                st.rerun()
+        with c2:
+            if st.button("📊 Explore Dashboard", key="cta_dashboard"):
+                st.session_state.page = "📊 Dashboard"
+                st.rerun()
 
     st.markdown("### ")
     s1, s2, s3, s4 = st.columns(4)
