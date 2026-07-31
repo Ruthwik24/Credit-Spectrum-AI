@@ -401,8 +401,11 @@ def apply_theme(mood="default"):
     div[data-baseweb="base-input"],
     div[data-baseweb="input"],
     div[data-testid="stSelectbox"] > div > div,
+    div[data-testid="stMultiSelect"] > div > div,
+    div[data-testid="stTextInput"] > div > div,
     div[data-testid="stNumberInputContainer"] {{
         background: rgba(15, 15, 15, 0.6) !important;
+        background-color: rgba(15, 15, 15, 0.6) !important;
         backdrop-filter: blur(16px) !important;
         -webkit-backdrop-filter: blur(16px) !important;
         border: 1px solid {p['cardBorder']} !important;
@@ -478,11 +481,14 @@ def apply_theme(mood="default"):
     }}
 
     /* Multiselect Tags */
-    [data-baseweb="tag"] {{ 
+    span[data-baseweb="tag"] {{ 
         background: rgba(212,175,55,0.2) !important; 
         color: {p['text']} !important; 
         border: 1px solid {p['accent1']} !important; 
         border-radius: 6px !important; 
+    }}
+    span[data-baseweb="tag"] span {{
+        color: {p['text']} !important; 
     }}
 
     /* +/- Buttons on Number Inputs */
@@ -663,7 +669,7 @@ def style_fig(fig, p, height=380, hovermode="closest"):
         paper_bgcolor="rgba(0,0,0,0)",
         plot_bgcolor="rgba(255,255,255,0.015)",
         font=dict(family="Inter, sans-serif", color=p['text'], size=13),
-        margin=dict(t=40, l=10, r=10, b=20),
+        margin=dict(t=65, l=10, r=10, b=40),
         hovermode=hovermode,
         hoverlabel=dict(
             bgcolor="rgba(10,10,10,0.95)", bordercolor=p['accent1'],
@@ -672,9 +678,8 @@ def style_fig(fig, p, height=380, hovermode="closest"):
         legend=dict(
             bgcolor="rgba(0,0,0,0.6)", bordercolor=p['cardBorder'], borderwidth=1,
             font=dict(color=p['text'], size=12.5),
-            orientation="h", yanchor="top", y=-0.15, xanchor="center", x=0.5,
+            orientation="h", yanchor="bottom", y=1.05, xanchor="center", x=0.5,
         ),
-        title=dict(font=dict(color=p['text'])),
         transition=dict(duration=350, easing="cubic-in-out"),
     )
     fig.update_xaxes(
@@ -693,7 +698,7 @@ def style_fig(fig, p, height=380, hovermode="closest"):
 PLOTLY_CONFIG = {
     "displayModeBar": True,
     "displaylogo": False,
-    "scrollZoom": True,
+    "scrollZoom": False,
     "modeBarButtonsToRemove": ["lasso2d", "select2d"],
 }
 
@@ -869,8 +874,12 @@ elif choice == "📊 Dashboard":
     k4.metric("💸 Avg Interest Rate", f"{df_raw['int.rate'].mean()*100:.2f}%")
 
     st.markdown("###  ")
-    purpose_filter = st.multiselect("🔎 Filter by loan purpose", options=sorted(df_raw['purpose'].dropna().unique()),
-                                     default=sorted(df_raw['purpose'].dropna().unique()))
+    purpose_filter = st.multiselect(
+        "🔎 Filter by loan purpose", 
+        options=sorted(df_raw['purpose'].dropna().unique()),
+        default=[],
+        placeholder="Choose options"
+    )
     filtered = df_raw[df_raw['purpose'].isin(purpose_filter)] if purpose_filter else df_raw
 
     col1, col2 = st.columns(2)
@@ -893,7 +902,7 @@ elif choice == "📊 Dashboard":
             fig1.update_layout(coloraxis_showscale=False, showlegend=False,
                                 xaxis_title="Applications", yaxis_title="")
             style_fig(fig1, PALETTE, height=380)
-            st.plotly_chart(fig1, use_container_width=True, config=PLOTLY_CONFIG)
+            st.plotly_chart(fig1, use_container_width=True, config=PLOTLY_CONFIG, theme=None)
     with col2:
         with st.container(border=True):
             panel_header("🛡️", "Credit Policy Compliance", "Share of applicants meeting vs. missing policy")
@@ -916,7 +925,7 @@ elif choice == "📊 Dashboard":
                 x=0.5, y=0.5, showarrow=False, font=dict(size=24, color=PALETTE['accent1'], weight="bold")
             )])
             style_fig(fig2, PALETTE, height=380)
-            st.plotly_chart(fig2, use_container_width=True, config=PLOTLY_CONFIG)
+            st.plotly_chart(fig2, use_container_width=True, config=PLOTLY_CONFIG, theme=None)
 
     with st.container(border=True):
         panel_header("💎", "FICO Trust-Score Distribution", "Credit score spread split by policy outcome")
@@ -930,7 +939,7 @@ elif choice == "📊 Dashboard":
                             hovertemplate='FICO: %{x}<br>Count: %{y}<extra></extra>')
         fig3.update_layout(bargap=0.04, xaxis_title="FICO Score", yaxis_title="Applicants")
         style_fig(fig3, PALETTE, height=420, hovermode="x unified")
-        st.plotly_chart(fig3, use_container_width=True, config=PLOTLY_CONFIG)
+        st.plotly_chart(fig3, use_container_width=True, config=PLOTLY_CONFIG, theme=None)
 
     d1, d2 = st.columns(2)
     with d1:
@@ -946,7 +955,7 @@ elif choice == "📊 Dashboard":
                                 hovertemplate='DTI: %{x:.1f}<br>Count: %{y}<extra></extra>')
             fig5.update_layout(bargap=0.04, xaxis_title="Debt-to-Income Ratio", yaxis_title="Applicants")
             style_fig(fig5, PALETTE, height=380, hovermode="x unified")
-            st.plotly_chart(fig5, use_container_width=True, config=PLOTLY_CONFIG)
+            st.plotly_chart(fig5, use_container_width=True, config=PLOTLY_CONFIG, theme=None)
     with d2:
         with st.container(border=True):
             panel_header("💸", "Interest Rate by Purpose", "Average rate assigned across purposes & outcomes")
@@ -966,7 +975,7 @@ elif choice == "📊 Dashboard":
             fig6.update_layout(xaxis_title="", yaxis_title="Avg Interest Rate (%)", bargap=0.25)
             fig6.update_xaxes(tickangle=-30)
             style_fig(fig6, PALETTE, height=380)
-            st.plotly_chart(fig6, use_container_width=True, config=PLOTLY_CONFIG)
+            st.plotly_chart(fig6, use_container_width=True, config=PLOTLY_CONFIG, theme=None)
 
     with st.container(border=True):
         panel_header("🕸️", "Feature Correlation Link", "Correlation matrix across every engineered signal")
@@ -984,7 +993,7 @@ elif choice == "📊 Dashboard":
         ))
         style_fig(fig4, PALETTE, height=560)
         fig4.update_xaxes(tickangle=-40)
-        st.plotly_chart(fig4, use_container_width=True, config=PLOTLY_CONFIG)
+        st.plotly_chart(fig4, use_container_width=True, config=PLOTLY_CONFIG, theme=None)
 
 # =====================================================================================
 # 8. ANALYTICS — Premium Interactive panels
@@ -1012,7 +1021,7 @@ elif choice == "📈 Analytics":
                 gauge={'axis': {'range': [None, 100]}, 'bar': {'color': PALETTE['accent1']},
                        'bgcolor': "rgba(0,0,0,0)", 'borderwidth': 1, 'bordercolor': "#444"}))
             fig_acc.update_layout(template="plotly_dark", height=270, paper_bgcolor="rgba(0,0,0,0)", margin=dict(t=20))
-            st.plotly_chart(fig_acc, use_container_width=True)
+            st.plotly_chart(fig_acc, use_container_width=True, config=PLOTLY_CONFIG, theme=None)
     with c2:
         with st.container(border=True):
             panel_header("📈", "ROC AUC Gauge", "Model's ability to rank approvals above declines")
@@ -1021,7 +1030,7 @@ elif choice == "📈 Analytics":
                 gauge={'axis': {'range': [None, 100]}, 'bar': {'color': PALETTE['accent2']},
                        'bgcolor': "rgba(0,0,0,0)", 'borderwidth': 1, 'bordercolor': "#444"}))
             fig_auc.update_layout(template="plotly_dark", height=270, paper_bgcolor="rgba(0,0,0,0)", margin=dict(t=20))
-            st.plotly_chart(fig_auc, use_container_width=True)
+            st.plotly_chart(fig_auc, use_container_width=True, config=PLOTLY_CONFIG, theme=None)
 
     r1, r2 = st.columns(2)
     with r1:
@@ -1034,7 +1043,7 @@ elif choice == "📈 Analytics":
             fig_roc.add_trace(go.Scatter(x=[0, 1], y=[0, 1], mode='lines', name='Baseline',
                                           line=dict(color=PALETTE['accent2'], dash='dash')))
             style_fig(fig_roc, PALETTE, height=320)
-            st.plotly_chart(fig_roc, use_container_width=True)
+            st.plotly_chart(fig_roc, use_container_width=True, config=PLOTLY_CONFIG, theme=None)
     with r2:
         with st.container(border=True):
             panel_header("🧮", "Confusion Matrix", "Predicted vs. actual outcomes on the test set")
@@ -1042,7 +1051,7 @@ elif choice == "📈 Analytics":
             fig_cm = px.imshow(cm, text_auto=True, template="plotly_dark",
                                 color_continuous_scale=[[0, "#0a0a0a"], [1, PALETTE['accent1']]], labels=dict(x="Predicted", y="Actual"))
             style_fig(fig_cm, PALETTE, height=320)
-            st.plotly_chart(fig_cm, use_container_width=True)
+            st.plotly_chart(fig_cm, use_container_width=True, config=PLOTLY_CONFIG, theme=None)
 
     st.markdown("### 🏆 Algo-Arena Leaderboard")
     st.caption("Every architecture we trained, ranked by test-set performance.")
@@ -1078,7 +1087,7 @@ elif choice == "📈 Analytics":
         fig = px.bar(metrics_df, x='AI Architecture', y=['Test Accuracy', 'Test ROC AUC'],
                      barmode='group', template='plotly_dark', color_discrete_sequence=[PALETTE['accent1'], PALETTE['accent2']])
         style_fig(fig, PALETTE, height=360)
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, use_container_width=True, config=PLOTLY_CONFIG, theme=None)
 
     st.markdown("""
     <div class="glass-card">
@@ -1098,7 +1107,7 @@ elif choice == "📈 Analytics":
             fig_imp = px.bar(imp_df, x="Importance", y="Feature", orientation='h', template="plotly_dark",
                               color="Importance", color_continuous_scale=[[0, "#0a0a0a"], [1, PALETTE['accent1']]])
             style_fig(fig_imp, PALETTE, height=440)
-            st.plotly_chart(fig_imp, use_container_width=True)
+            st.plotly_chart(fig_imp, use_container_width=True, config=PLOTLY_CONFIG, theme=None)
         except Exception:
             st.info("Feature importance is unavailable for this model instance.")
 
@@ -1231,7 +1240,7 @@ elif choice == "🧠 AI Predictor":
                                  {'range': [70, 100], 'color': 'rgba(0,255,163,0.20)'}],
                        'bgcolor': "rgba(0,0,0,0)"}))
             fig_g.update_layout(template="plotly_dark", height=300, paper_bgcolor="rgba(0,0,0,0)")
-            st.plotly_chart(fig_g, use_container_width=True)
+            st.plotly_chart(fig_g, use_container_width=True, config=PLOTLY_CONFIG, theme=None)
 
             report_df = pd.DataFrame([{
                 "purpose": purpose, "int.rate": int_rate, "installment": installment,
