@@ -1,5 +1,5 @@
 """
-Credit Spectrum AI — Intelligent Credit Eligibility Platform (Light & Colorful Edition)
+Credit Spectrum AI — Intelligent Credit Eligibility Platform (Money Edition)
 Powered by XGBoost | Secure • Intelligent • Trusted
 """
 
@@ -14,61 +14,67 @@ from xgboost import XGBClassifier
 import pickle
 import os
 import time
+import random
 
 # =====================================================================================
 # 1. PAGE CONFIG
 # =====================================================================================
 st.set_page_config(
     page_title="Credit Spectrum AI | Intelligent Credit Eligibility Platform",
-    page_icon="🏦",
+    page_icon="💰",
     layout="wide",
-    initial_sidebar_state="expanded",
+    initial_sidebar_state="collapsed",
 )
 
 if "mood" not in st.session_state:
     st.session_state.mood = "default"   # default | approved | declined
 
 # =====================================================================================
-# 2. THEME — light, colorful, mood-reactive glassmorphism
+# 2. THEME — light, colorful, money-reactive glassmorphism + floating cash/crypto
 # =====================================================================================
 def apply_theme(mood="default"):
     palettes = {
         "default": dict(
             bg="radial-gradient(circle at 12% 8%, #fff3d6 0%, #ffe6ef 38%, #f1e4ff 72%, #ffe9d6 100%)",
-            accent1="#f6a509",   # amber gold
-            accent2="#ef4d8b",   # coral magenta
-            accent3="#8b5cf6",   # violet
-            text="#3a2a4d",
+            accent1="#f6a509", accent2="#ef4d8b", accent3="#8b5cf6", text="#3a2a4d",
             cardBorder="rgba(139,92,246,0.28)",
             heroGrad="linear-gradient(120deg, rgba(246,165,9,0.22), rgba(239,77,139,0.18) 55%, rgba(139,92,246,0.18))",
-            titleGrad="linear-gradient(90deg, #f6a509 10%, #ef4d8b 55%, #8b5cf6 100%)",
+            titleGrad="linear-gradient(90deg, #f6a509 0%, #ef4d8b 25%, #8b5cf6 50%, #f6a509 75%, #ef4d8b 100%)",
         ),
         "approved": dict(
             bg="radial-gradient(circle at 12% 8%, #e4ffe8 0%, #cdf7d6 40%, #a9edc0 75%, #d9ffe0 100%)",
-            accent1="#16a34a",
-            accent2="#22c55e",
-            accent3="#65d68a",
-            text="#0d3b20",
+            accent1="#16a34a", accent2="#22c55e", accent3="#65d68a", text="#0d3b20",
             cardBorder="rgba(22,163,74,0.35)",
             heroGrad="linear-gradient(120deg, rgba(34,197,94,0.28), rgba(101,214,138,0.18))",
-            titleGrad="linear-gradient(90deg, #0d7a3c 10%, #22c55e 55%, #86e0a3 100%)",
+            titleGrad="linear-gradient(90deg, #0d7a3c 0%, #22c55e 30%, #86e0a3 60%, #16a34a 100%)",
         ),
         "declined": dict(
             bg="radial-gradient(circle at 12% 8%, #ffe9e9 0%, #ffd2d2 40%, #ffb4b8 75%, #ffe3e3 100%)",
-            accent1="#dc2626",
-            accent2="#f43f5e",
-            accent3="#fb7185",
-            text="#5c0d14",
+            accent1="#dc2626", accent2="#f43f5e", accent3="#fb7185", text="#5c0d14",
             cardBorder="rgba(220,38,38,0.35)",
             heroGrad="linear-gradient(120deg, rgba(244,63,94,0.26), rgba(251,113,133,0.18))",
-            titleGrad="linear-gradient(90deg, #b91c1c 10%, #f43f5e 55%, #fca5ac 100%)",
+            titleGrad="linear-gradient(90deg, #b91c1c 0%, #f43f5e 30%, #fca5ac 60%, #dc2626 100%)",
         ),
     }
     p = palettes[mood]
 
+    glyphs = ["₹", "₹", "₹", "💵", "💴", "🪙", "₿", "Ξ", "💸", "💎", "₹", "🪙"]
+    particles_html = ""
+    for i in range(22):
+        g = random.choice(glyphs)
+        left = random.randint(0, 98)
+        dur = random.uniform(10, 22)
+        delay = random.uniform(0, 12)
+        size = random.randint(16, 30)
+        opacity = round(random.uniform(0.12, 0.30), 2)
+        particles_html += (
+            f'<span class="money-particle" style="left:{left}vw; font-size:{size}px; '
+            f'animation-duration:{dur}s; animation-delay:{delay}s; opacity:{opacity};">{g}</span>'
+        )
+
     st.markdown(f"""
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap');
 
     html, body, [class*="css"] {{ font-family: 'Inter', 'Poppins', sans-serif; }}
 
@@ -95,140 +101,175 @@ def apply_theme(mood="default"):
     }}
     @keyframes drift {{ from{{background-position:0 0;}} to{{background-position:550px 550px;}} }}
 
-    h1, h2, h3 {{
-        font-family: 'Poppins', sans-serif !important;
-        color: {p['text']} !important;
-        font-weight: 700 !important;
+    .money-bg {{ position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }}
+    .money-particle {{
+        position: absolute; top: -60px; animation-name: fallDrift; animation-timing-function: linear;
+        animation-iteration-count: infinite; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.12));
     }}
+    @keyframes fallDrift {{
+        0%   {{ transform: translateY(-8vh) translateX(0) rotate(0deg); }}
+        50%  {{ transform: translateY(55vh) translateX(30px) rotate(180deg); }}
+        100% {{ transform: translateY(115vh) translateX(-20px) rotate(360deg); }}
+    }}
+
+    h1, h2, h3 {{ font-family: 'Poppins', sans-serif !important; color: {p['text']} !important; font-weight: 700 !important; }}
     p, span, div, label {{ color: {p['text']}; }}
 
-    /* ---------- GLASS CARD ---------- */
     .glass-card {{
-        background: rgba(255,255,255,0.55);
-        border: 1px solid {p['cardBorder']};
-        border-radius: 20px;
-        padding: 26px;
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-        box-shadow: 0 10px 30px rgba(80,40,90,0.10);
-        transition: all 0.35s ease;
-        margin-bottom: 18px;
+        background: rgba(255,255,255,0.55); border: 1px solid {p['cardBorder']};
+        border-radius: 20px; padding: 26px; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+        box-shadow: 0 10px 30px rgba(80,40,90,0.10); transition: all 0.35s ease; margin-bottom: 18px;
+        position: relative; z-index: 1;
     }}
-    .glass-card:hover {{
-        transform: translateY(-6px);
-        border-color: {p['accent2']};
-        box-shadow: 0 18px 38px rgba(80,40,90,0.16);
-    }}
+    .glass-card:hover {{ transform: translateY(-6px); border-color: {p['accent2']}; box-shadow: 0 18px 38px rgba(80,40,90,0.16); }}
 
-    /* ---------- HERO ---------- */
     .hero-wrap {{
-        background: {p['heroGrad']};
-        border: 1px solid {p['cardBorder']};
-        border-radius: 28px;
-        padding: 50px 42px;
-        backdrop-filter: blur(20px);
-        margin-bottom: 28px;
-        position: relative;
-        overflow: hidden;
+        background: {p['heroGrad']}; border: 1px solid {p['cardBorder']}; border-radius: 28px;
+        padding: 46px 42px; backdrop-filter: blur(20px); margin-bottom: 22px; position: relative;
+        overflow: hidden; z-index: 1; text-align: center;
     }}
+    .brand-row {{ display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap; }}
+    .coin-spin {{ display: inline-block; font-size: 42px; animation: spinCoin 3.2s linear infinite; }}
+    @keyframes spinCoin {{ 0%{{ transform: rotateY(0deg); }} 100%{{ transform: rotateY(360deg); }} }}
     .hero-title {{
-        font-family: 'Poppins', sans-serif;
-        font-size: 46px;
-        font-weight: 800;
-        background: {p['titleGrad']};
-        -webkit-background-clip: text;
-        background-clip: text;
-        -webkit-text-fill-color: transparent;
-        margin-bottom: 6px;
+        font-family: 'Poppins', sans-serif; font-size: 50px; font-weight: 900;
+        background: {p['titleGrad']}; background-size: 300% auto;
+        -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+        margin-bottom: 4px; animation: shimmer 6s linear infinite;
     }}
-    .hero-sub {{ font-size: 19px; color: {p['text']}; opacity: 0.85; font-weight: 400; margin-bottom: 14px; }}
+    @keyframes shimmer {{ 0%{{ background-position: 0% center; }} 100%{{ background-position: 300% center; }} }}
+    .orbit-emoji {{ display:inline-block; animation: bob 2.4s ease-in-out infinite; }}
+    .orbit-emoji.d2 {{ animation-delay: 0.4s; }}
+    .orbit-emoji.d3 {{ animation-delay: 0.8s; }}
+    @keyframes bob {{ 0%,100%{{ transform: translateY(0) rotate(-4deg); }} 50%{{ transform: translateY(-9px) rotate(4deg); }} }}
+    .hero-sub {{ font-size: 19px; color: {p['text']}; opacity: 0.85; font-weight: 400; margin: 8px 0 14px; }}
     .hero-tag {{
-        display: inline-block; padding: 6px 16px; border-radius: 30px;
-        background: rgba(255,255,255,0.55); border: 1px solid {p['accent1']};
-        color: {p['accent1']}; font-size: 13px; letter-spacing: 1px; font-weight: 700;
+        display: inline-block; padding: 6px 16px; border-radius: 30px; background: rgba(255,255,255,0.55);
+        border: 1px solid {p['accent1']}; color: {p['accent1']}; font-size: 13px; letter-spacing: 1px; font-weight: 700;
     }}
 
-    /* ---------- STAT CARDS ---------- */
+    .navbar-wrap {{
+        background: rgba(255,255,255,0.55); border: 1px solid {p['cardBorder']}; border-radius: 20px;
+        padding: 10px 14px; backdrop-filter: blur(16px); margin-bottom: 22px; z-index: 2; position: relative;
+    }}
+    div[data-testid="stHorizontalBlock"] div[role="radiogroup"] {{
+        display: flex; flex-wrap: wrap; gap: 6px; justify-content: center;
+    }}
+    div[role="radiogroup"] label {{
+        background: rgba(255,255,255,0.6); border: 1px solid {p['cardBorder']}; border-radius: 14px;
+        padding: 8px 16px !important; font-weight: 600; transition: all 0.25s ease; cursor: pointer;
+    }}
+    div[role="radiogroup"] label:hover {{ transform: translateY(-2px); border-color: {p['accent2']}; }}
+
     .stat-card {{
-        background: rgba(255,255,255,0.55);
-        border: 1px solid {p['cardBorder']};
-        border-radius: 18px;
-        padding: 22px 10px;
-        text-align: center;
-        backdrop-filter: blur(14px);
-        animation: floaty 5s ease-in-out infinite;
+        background: rgba(255,255,255,0.55); border: 1px solid {p['cardBorder']}; border-radius: 18px;
+        padding: 22px 10px; text-align: center; backdrop-filter: blur(14px); animation: floaty 5s ease-in-out infinite;
+        position: relative; z-index: 1;
     }}
     .stat-card:nth-child(2) {{ animation-delay: 0.6s; }}
     .stat-card:nth-child(3) {{ animation-delay: 1.2s; }}
     @keyframes floaty {{ 0%,100%{{ transform: translateY(0);}} 50%{{ transform: translateY(-8px);}} }}
     .stat-number {{
-        font-size: 34px; font-weight: 800; font-family: 'Poppins', sans-serif;
-        background: {p['titleGrad']};
+        font-size: 34px; font-weight: 800; font-family: 'Poppins', sans-serif; background: {p['titleGrad']};
         -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
     }}
     .stat-label {{ font-size: 13px; color: {p['text']}; opacity:0.75; letter-spacing: 0.5px; text-transform: uppercase; margin-top: 4px;}}
 
-    /* ---------- BUTTONS ---------- */
     .stButton>button, .stFormSubmitButton>button {{
         background: linear-gradient(90deg, {p['accent1']}, {p['accent2']});
-        color: #fff; border: 1px solid rgba(255,255,255,0.5);
-        border-radius: 14px; padding: 12px 20px; font-weight: 700;
-        letter-spacing: 0.4px; width: 100%;
-        box-shadow: 0 8px 22px rgba(80,40,90,0.18);
+        color: #fff; border: 1px solid rgba(255,255,255,0.5); border-radius: 14px; padding: 12px 20px;
+        font-weight: 700; letter-spacing: 0.4px; width: 100%; box-shadow: 0 8px 22px rgba(80,40,90,0.18);
         transition: all 0.3s ease;
     }}
     .stButton>button:hover, .stFormSubmitButton>button:hover {{
         background: linear-gradient(90deg, {p['accent2']}, {p['accent3']});
-        box-shadow: 0 12px 30px rgba(80,40,90,0.26);
-        transform: translateY(-2px);
+        box-shadow: 0 12px 30px rgba(80,40,90,0.26); transform: translateY(-2px);
     }}
 
-    /* ---------- SIDEBAR ---------- */
-    [data-testid="stSidebar"] {{
-        background: linear-gradient(180deg, rgba(255,255,255,0.75), rgba(255,255,255,0.55));
-        border-right: 1px solid {p['cardBorder']};
-    }}
-    [data-testid="stSidebar"] * {{ color: {p['text']} !important; }}
-    [data-testid="stSidebar"] .stRadio label {{ font-size: 15.5px; }}
-
-    /* ---------- RESULT CARDS ---------- */
     .approved-hero {{
         background: linear-gradient(135deg, rgba(34,197,94,0.22), rgba(34,197,94,0.06));
-        border: 1px solid #16a34a;
-        border-radius: 24px; padding: 36px; text-align: center;
-        box-shadow: 0 0 44px rgba(34,197,94,0.30);
+        border: 1px solid #16a34a; border-radius: 24px; padding: 36px; text-align: center;
+        box-shadow: 0 0 44px rgba(34,197,94,0.30); position: relative; z-index: 2;
     }}
     .declined-hero {{
         background: linear-gradient(135deg, rgba(244,63,94,0.22), rgba(244,63,94,0.06));
-        border: 1px solid #dc2626;
-        border-radius: 24px; padding: 36px; text-align: center;
-        box-shadow: 0 0 44px rgba(244,63,94,0.30);
+        border: 1px solid #dc2626; border-radius: 24px; padding: 36px; text-align: center;
+        box-shadow: 0 0 44px rgba(244,63,94,0.30); position: relative; z-index: 2;
     }}
-    .verdict-title {{ font-family:'Poppins',sans-serif; font-size: 30px; font-weight: 800; margin-bottom: 6px;}}
+    .verdict-title {{ font-family:'Poppins',sans-serif; font-size: 32px; font-weight: 800; margin-bottom: 6px;}}
     .approved-hero .verdict-title {{ color: #0d7a3c; }}
     .declined-hero .verdict-title {{ color: #b91c1c; }}
+    .verdict-icon {{ font-size: 54px; animation: popIn 0.6s ease; }}
+    @keyframes popIn {{ 0%{{ transform: scale(0);}} 70%{{ transform: scale(1.2);}} 100%{{ transform: scale(1);}} }}
 
     .reason-chip {{
-        display: inline-block; margin: 5px 6px; padding: 8px 14px;
-        border-radius: 30px; background: rgba(255,255,255,0.65);
-        border: 1px solid {p['cardBorder']}; font-size: 13.5px; font-weight: 600;
+        display: inline-block; margin: 5px 6px; padding: 8px 14px; border-radius: 30px;
+        background: rgba(255,255,255,0.65); border: 1px solid {p['cardBorder']}; font-size: 13.5px; font-weight: 600;
     }}
 
-    /* ---------- TIMELINE ---------- */
-    .timeline-item {{
-        border-left: 3px solid {p['accent1']}; padding-left: 18px; margin-bottom: 18px; position: relative;
+    .cash-rain {{ position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 9999; }}
+    .cash-drop {{
+        position: absolute; top: -50px; font-size: 30px; animation-name: cashFall;
+        animation-timing-function: ease-in; animation-iteration-count: 1; animation-fill-mode: forwards;
     }}
+    @keyframes cashFall {{
+        0%   {{ transform: translateY(-10vh) rotate(0deg); opacity: 1; }}
+        100% {{ transform: translateY(105vh) rotate(400deg); opacity: 0.9; }}
+    }}
+
+    .decline-drop {{
+        position: absolute; top: -50px; font-size: 26px; animation-name: declineFall;
+        animation-timing-function: ease-in; animation-iteration-count: 1; animation-fill-mode: forwards;
+    }}
+    @keyframes declineFall {{
+        0%   {{ transform: translateY(-10vh) rotate(0deg); opacity: 0.9; }}
+        100% {{ transform: translateY(105vh) rotate(-200deg); opacity: 0.3; }}
+    }}
+
+    .timeline-item {{ border-left: 3px solid {p['accent1']}; padding-left: 18px; margin-bottom: 18px; position: relative; }}
     .timeline-item::before {{
-        content: ""; position: absolute; left: -8px; top: 2px;
-        width: 13px; height: 13px; border-radius: 50%;
+        content: ""; position: absolute; left: -8px; top: 2px; width: 13px; height: 13px; border-radius: 50%;
         background: {p['accent1']}; box-shadow: 0 0 10px {p['accent1']};
+    }}
+
+    .leader-row {{
+        display: flex; align-items: center; justify-content: space-between; padding: 14px 20px;
+        background: rgba(255,255,255,0.55); border: 1px solid {p['cardBorder']}; border-radius: 16px;
+        margin-bottom: 10px; transition: all 0.25s ease;
+    }}
+    .leader-row:hover {{ transform: translateX(6px); border-color: {p['accent2']}; }}
+    .leader-crown {{ font-size: 22px; margin-right: 10px; }}
+    .champion-badge {{
+        display: inline-block; padding: 20px 30px; border-radius: 22px;
+        background: linear-gradient(135deg, rgba(246,165,9,0.25), rgba(239,77,139,0.15));
+        border: 2px solid {p['accent1']}; text-align: center; animation: floaty 4s ease-in-out infinite;
     }}
 
     hr {{ border-color: {p['cardBorder']}; }}
     ::-webkit-scrollbar {{ width: 8px; }}
     ::-webkit-scrollbar-thumb {{ background: {p['accent2']}; border-radius: 10px; }}
     </style>
+    <div class="money-bg">{particles_html}</div>
     """, unsafe_allow_html=True)
+
+
+def cash_celebration(good=True, n=36):
+    """Full-screen falling cash / crypto glyphs shown once after a verdict."""
+    good_glyphs = ["💵", "💰", "🤑", "₹", "🪙", "💸", "₿", "Ξ", "🎉"]
+    bad_glyphs = ["📉", "💔", "🥀", "☔", "🪙", "🍂"]
+    glyphs = good_glyphs if good else bad_glyphs
+    cls = "cash-drop" if good else "decline-drop"
+    spans = ""
+    for i in range(n):
+        g = random.choice(glyphs)
+        left = random.randint(0, 98)
+        dur = random.uniform(2.2, 4.5)
+        delay = random.uniform(0, 1.6)
+        size = random.randint(22, 40)
+        spans += (f'<span class="{cls}" style="left:{left}vw; font-size:{size}px; '
+                  f'animation-duration:{dur}s; animation-delay:{delay}s;">{g}</span>')
+    st.markdown(f'<div class="cash-rain">{spans}</div>', unsafe_allow_html=True)
+
 
 apply_theme(st.session_state.mood)
 
@@ -237,9 +278,9 @@ FEATURE_COLS = ['purpose', 'int.rate', 'installment', 'log.annual.inc', 'dti', '
                 'delinq.2yrs', 'pub.rec']
 
 # =====================================================================================
-# 3. DATA + AUTO-HEALING MODEL LOADING 
+# 3. DATA + AUTO-HEALING MODEL LOADING
 # =====================================================================================
-@st.cache_resource(show_spinner="🏦 Booting Credit Spectrum AI Core (Auto-healing if needed)...")
+@st.cache_resource(show_spinner="💰 Booting Credit Spectrum AI Core (Auto-healing if needed)...")
 def load_pipeline():
     df_raw = pd.read_csv('loan_data.csv')
     df_processed = df_raw.copy()
@@ -262,20 +303,16 @@ def load_pipeline():
 
     model_path = 'model.pkl'
     model = None
-
-    # Attempt to load the model. If it's corrupted (Pickle error), train it fresh.
     if os.path.exists(model_path):
         try:
             with open(model_path, 'rb') as f:
                 model = pickle.load(f)
         except Exception:
-            pass # We will handle the fallback right below
+            pass
 
-    # If the model didn't load (missing or corrupted), train a new one and save it.
     if model is None:
         model = XGBClassifier(use_label_encoder=False, eval_metric='logloss', random_state=42)
         model.fit(X_train_scaled, y_train)
-        
         with open(model_path, 'wb') as f:
             pickle.dump(model, f)
 
@@ -289,67 +326,63 @@ if not os.path.exists('loan_data.csv'):
 df_raw, df_processed, le, scaler, model, X_test_scaled, y_test = load_pipeline()
 
 # =====================================================================================
-# 4. SIDEBAR NAVIGATION
+# 4. HERO / BRAND HEADER (with animated coin + orbiting money emojis)
 # =====================================================================================
-st.sidebar.markdown("## 🏦 Credit Spectrum <span style='color:#ef4d8b'>AI</span>", unsafe_allow_html=True)
-st.sidebar.caption("Secure • Intelligent • Trusted")
-st.sidebar.markdown("---")
+st.markdown("""
+<div class="hero-wrap">
+    <span class="hero-tag">POWERED BY EXPLAINABLE AI &nbsp;•&nbsp; XGBOOST &nbsp;•&nbsp; SECURE • INTELLIGENT • TRUSTED</span>
+    <div class="brand-row">
+        <span class="coin-spin">🪙</span>
+        <span class="hero-title">Credit Spectrum AI</span>
+        <span class="orbit-emoji">💵</span><span class="orbit-emoji d2">₿</span><span class="orbit-emoji d3">Ξ</span>
+    </div>
+    <div class="hero-sub">🪙 Next-Generation Loan Intelligence Platform for the Modern Digital Bank ₹💹</div>
+    <p style="max-width:680px; margin:0 auto; opacity:0.85;">
+        Analyze a customer's complete financial profile, quantify credit risk and predict
+        loan eligibility in milliseconds — with full transparency into every decision. 🔐🧾📈
+    </p>
+</div>
+""", unsafe_allow_html=True)
 
+# =====================================================================================
+# 5. TOP NAVIGATION BAR (moved from sidebar to a horizontal bar under the hero)
+# =====================================================================================
+st.markdown('<div class="navbar-wrap">', unsafe_allow_html=True)
 menu = [
-    "🏠 Home",
-    "📊 Dashboard",
-    "📈 Analytics",
-    "🧠 AI Predictor",
-    "📁 Dataset",
-    "👨‍💻 About the Model",
+    "🏠 Home", "📊 Dashboard", "📈 Analytics", "🧠 AI Predictor", "📁 Dataset", "👨‍💻 About the Model",
 ]
-choice = st.sidebar.radio("Navigate", menu, label_visibility="collapsed")
+choice = st.radio("Navigate", menu, horizontal=True, label_visibility="collapsed")
+st.markdown('</div>', unsafe_allow_html=True)
 
-if st.session_state.mood != "default" and choice != "🧠 AI Predictor":
-    if st.sidebar.button("🔄 Reset Theme to Default"):
-        st.session_state.mood = "default"
-        st.rerun()
+top_l, top_r = st.columns([3, 1])
+with top_r:
+    if st.session_state.mood != "default":
+        if st.button("🔄 Reset Theme to Default"):
+            st.session_state.mood = "default"
+            st.rerun()
 
-st.sidebar.markdown("---")
-st.sidebar.markdown("#### 📥 Download Center")
-if os.path.exists("model.pkl"):
-    with open("model.pkl", "rb") as f:
-        st.sidebar.download_button(
-            "⬇️ Download XGBoost Model", data=f, file_name="astrabank_xgboost_model.pkl",
-            mime="application/octet-stream", use_container_width=True,
-        )
-st.sidebar.download_button(
-    "⬇️ Download Dataset (CSV)", data=df_raw.to_csv(index=False),
-    file_name="loan_data.csv", mime="text/csv", use_container_width=True,
-)
-
-st.sidebar.markdown("---")
-st.sidebar.success("🟢 Core Status: ONLINE")
-st.sidebar.info("⚙️ Engine: XGBoost (Production)")
+with st.expander("📥 Download Center  •  🟢 Core Status: ONLINE  •  ⚙️ Engine: XGBoost (Production)"):
+    dc1, dc2 = st.columns(2)
+    with dc1:
+        if os.path.exists("model.pkl"):
+            with open("model.pkl", "rb") as f:
+                st.download_button("⬇️ Download XGBoost Model", data=f, file_name="astrabank_xgboost_model.pkl",
+                                    mime="application/octet-stream", use_container_width=True)
+    with dc2:
+        st.download_button("⬇️ Download Dataset (CSV)", data=df_raw.to_csv(index=False),
+                            file_name="loan_data.csv", mime="text/csv", use_container_width=True)
 
 # =====================================================================================
-# 5. HOME
+# 6. HOME
 # =====================================================================================
 if choice == "🏠 Home":
-    st.markdown("""
-    <div class="hero-wrap">
-        <span class="hero-tag">POWERED BY EXPLAINABLE AI &nbsp;•&nbsp; XGBOOST</span>
-        <div class="hero-title">🏦 Credit Spectrum AI</div>
-        <div class="hero-sub">🪙 Next-Generation Loan Intelligence Platform for the Modern Digital Bank</div>
-        <p style="max-width:640px; opacity:0.85;">
-            Analyze a customer's complete financial profile, quantify credit risk and predict
-            loan eligibility in milliseconds — with full transparency into every decision. 🔐🧾📈
-        </p>
-    </div>
-    """, unsafe_allow_html=True)
-
     c1, c2 = st.columns([1, 1])
     with c1:
         if st.button("🚀 Start Prediction"):
-            st.info("Use the sidebar → **🧠 AI Predictor** to analyze an applicant.")
+            st.info("Use the top navigation → **🧠 AI Predictor** to analyze an applicant.")
     with c2:
         if st.button("📊 Explore Dashboard"):
-            st.info("Use the sidebar → **📊 Dashboard** to explore the data holograms.")
+            st.info("Use the top navigation → **📊 Dashboard** to explore the data holograms.")
 
     st.markdown("### ")
     s1, s2, s3, s4 = st.columns(4)
@@ -361,11 +394,8 @@ if choice == "🏠 Home":
     ]
     for col, (num, lbl) in zip([s1, s2, s3, s4], stats):
         with col:
-            st.markdown(f"""
-            <div class="stat-card">
-                <div class="stat-number">{num}</div>
-                <div class="stat-label">{lbl}</div>
-            </div>""", unsafe_allow_html=True)
+            st.markdown(f"""<div class="stat-card"><div class="stat-number">{num}</div>
+                        <div class="stat-label">{lbl}</div></div>""", unsafe_allow_html=True)
 
     st.markdown("###  ")
     st.markdown("""
@@ -387,15 +417,18 @@ if choice == "🏠 Home":
         ],
     ):
         with col:
-            st.markdown(f"""
-            <div class="glass-card" style="text-align:center;">
+            st.markdown(f"""<div class="glass-card" style="text-align:center;">
                 <div style="font-size:34px;">{icon}</div>
                 <h3 style="font-size:18px;">{title}</h3>
                 <p style="font-size:13.5px;">{desc}</p>
             </div>""", unsafe_allow_html=True)
 
+    st.markdown("### 💹 The Journey of Money — From Application to Approval")
+    st.image("https://media.giphy.com/media/xT9IgzoKnwFNmISR8I/giphy.gif",
+              caption="Every approved application is a step toward financial freedom 💵", use_container_width=True)
+
 # =====================================================================================
-# 6. DASHBOARD (EDA)
+# 7. DASHBOARD (EDA)
 # =====================================================================================
 elif choice == "📊 Dashboard":
     st.markdown('<div class="hero-title" style="font-size:32px;">📊 Finance Holograms</div>', unsafe_allow_html=True)
@@ -450,7 +483,7 @@ elif choice == "📊 Dashboard":
     st.plotly_chart(fig4, use_container_width=True)
 
 # =====================================================================================
-# 7. ANALYTICS
+# 8. ANALYTICS  (Leaderboard + Champion model)
 # =====================================================================================
 elif choice == "📈 Analytics":
     st.markdown('<div class="hero-title" style="font-size:32px;">📈 Model Analytics</div>', unsafe_allow_html=True)
@@ -496,21 +529,52 @@ elif choice == "📈 Analytics":
         fig_cm.update_layout(paper_bgcolor="rgba(0,0,0,0)")
         st.plotly_chart(fig_cm, use_container_width=True)
 
-    st.markdown("### ⚔️ Algo-Arena: Model Combat")
+    # ---------------- LEADERBOARD ----------------
+    st.markdown("### 🏆 Algo-Arena Leaderboard")
+    st.caption("Every architecture we trained, ranked by test-set performance.")
+    leaderboard = [
+        (1, "🥇", "XGBoost ⭐ (Deployed)", 0.9892, 0.9978),
+        (2, "🥈", "Random Forest", 0.9840, 0.9969),
+        (3, "🥉", "Decision Tree", 0.9881, 0.9829),
+        (4, "🎖️", "Logistic Regression", 0.8569, 0.9341),
+    ]
+    for rank, medal, name, accv, aucv in sorted(leaderboard, key=lambda r: -r[4]):
+        st.markdown(f"""
+        <div class="leader-row">
+            <div><span class="leader-crown">{medal}</span><b>{name}</b></div>
+            <div>Accuracy: <b>{accv*100:.2f}%</b> &nbsp;|&nbsp; ROC AUC: <b>{aucv*100:.2f}%</b></div>
+        </div>""", unsafe_allow_html=True)
+
+    ch1, ch2 = st.columns([1, 2])
+    with ch1:
+        st.markdown("""
+        <div style="text-align:center; margin-top:10px;">
+            <div class="champion-badge">
+                <div style="font-size:40px;">🏆👑</div>
+                <div style="font-weight:800; font-size:18px;">XGBoost</div>
+                <div style="font-size:12.5px; opacity:0.8;">Reigning Champion Model</div>
+            </div>
+        </div>""", unsafe_allow_html=True)
+    with ch2:
+        st.image("https://media.giphy.com/media/g9582DNuQppxC/giphy.gif",
+                  caption="🎉 XGBoost takes the crown — cha-ching! 💰", use_container_width=True)
+
     metrics_df = pd.DataFrame({
         "AI Architecture": ["Logistic Regression", "Decision Tree", "Random Forest", "XGBoost ⭐"],
         "Test Accuracy": [0.8569, 0.9881, 0.9840, 0.9892],
         "Test ROC AUC": [0.9341, 0.9829, 0.9969, 0.9978],
     })
     fig = px.bar(metrics_df, x='AI Architecture', y=['Test Accuracy', 'Test ROC AUC'],
-                 barmode='group', template='plotly_white', title="🏆 Combat Results",
+                 barmode='group', template='plotly_white', title="⚔️ Combat Results",
                  color_discrete_sequence=['#f6a509', '#ef4d8b'])
     fig.update_layout(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)")
     st.plotly_chart(fig, use_container_width=True)
     st.markdown("""
     <div class="glass-card">
-    🧬 <b>Radar Selection:</b> The tuned <b>XGBoost</b> model was promoted to production for its
-    superior ROC AUC generalization and stable precision–recall trade-off on unseen data streams.
+    🧬 <b>Why XGBoost Was Chosen:</b> The tuned <b>XGBoost</b> model was promoted to production for its
+    superior ROC AUC generalization, stable precision–recall trade-off on unseen data streams, native
+    handling of feature interactions, and resilience to the class imbalance addressed via SMOTE —
+    outperforming Logistic Regression, Decision Tree, and Random Forest across every holdout metric.
     </div>
     """, unsafe_allow_html=True)
 
@@ -528,7 +592,7 @@ elif choice == "📈 Analytics":
         st.info("Feature importance is unavailable for this model instance.")
 
 # =====================================================================================
-# 8. AI PREDICTOR
+# 9. AI PREDICTOR
 # =====================================================================================
 elif choice == "🧠 AI Predictor":
     st.markdown('<div class="hero-title" style="font-size:32px;">🔮 The AI Credit Radar</div>', unsafe_allow_html=True)
@@ -581,6 +645,7 @@ elif choice == "🧠 AI Predictor":
             "Loading XGBoost engine...",
             "Evaluating financial profile...",
             "Checking credit policy thresholds...",
+            "Counting the digital coins... 🪙",
             "Generating confidence score...",
             "Finalizing recommendation...",
         ]
@@ -588,7 +653,7 @@ elif choice == "🧠 AI Predictor":
         status = st.empty()
         for i, step in enumerate(steps):
             status.markdown(f"🛰️ **{step}**")
-            time.sleep(0.35)
+            time.sleep(0.3)
             prog.progress(int((i + 1) / len(steps) * 100))
         status.empty()
 
@@ -600,20 +665,23 @@ elif choice == "🧠 AI Predictor":
         prediction = model.predict(input_scaled)[0]
         confidence = model.predict_proba(input_scaled)[0]
 
-        # Flip the entire app's mood/theme based on the verdict, then re-render styles
         st.session_state.mood = "approved" if prediction == 1 else "declined"
         apply_theme(st.session_state.mood)
 
         st.markdown("---")
 
         if prediction == 1:
+            cash_celebration(good=True)
             st.balloons()
             st.markdown(f"""
             <div class="approved-hero">
-                <div style="font-size:44px;">✅🎉</div>
-                <div class="verdict-title">Congratulations! Loan Approved</div>
+                <div class="verdict-icon">🤑💵🎉</div>
+                <div class="verdict-title">✅ ELIGIBLE FOR LOAN!</div>
                 <p style="font-size:16px;">Confidence Score: <b>{confidence[1]*100:.2f}%</b></p>
+                <p style="font-size:15px;">₹💰 Cha-ching! This applicant meets the credit policy. 💰₹</p>
             </div>""", unsafe_allow_html=True)
+            st.image("https://media.giphy.com/media/xT9IgzoKnwFNmISR8I/giphy.gif",
+                      caption="💸 Making it rain — loan approved!", use_container_width=True)
 
             reasons = []
             if fico >= 700: reasons.append("✔ Excellent FICO Score")
@@ -627,13 +695,17 @@ elif choice == "🧠 AI Predictor":
                         "".join(f"<span class='reason-chip'>{r}</span>" for r in reasons) +
                         "</div>", unsafe_allow_html=True)
         else:
+            cash_celebration(good=False)
             st.snow()
             st.markdown(f"""
             <div class="declined-hero">
-                <div style="font-size:44px;">🚫💔</div>
-                <div class="verdict-title">Loan Not Approved</div>
+                <div class="verdict-icon">💔📉🚫</div>
+                <div class="verdict-title">🚫 NOT ELIGIBLE FOR LOAN</div>
                 <p style="font-size:16px;">Risk Confidence: <b>{confidence[0]*100:.2f}%</b></p>
+                <p style="font-size:15px;">The financial profile falls short of the credit policy threshold.</p>
             </div>""", unsafe_allow_html=True)
+            st.image("https://media.giphy.com/media/d2Z9QYzA2aidiWn6/giphy.gif",
+                      caption="📉 No cha-ching this time — but there's a path forward.", use_container_width=True)
 
             tips = []
             if fico < 700: tips.append("📈 Improve your FICO score")
@@ -671,11 +743,11 @@ elif choice == "🧠 AI Predictor":
         st.download_button("📄 Download Prediction Report (CSV)", data=report_df.to_csv(index=False),
                             file_name="astrabank_prediction_report.csv", mime="text/csv")
 
-        st.info("🔄 Theme is now reflecting this verdict. Use **Reset Theme to Default** in the sidebar, "
+        st.info("🔄 Theme is now reflecting this verdict. Use **Reset Theme to Default** above the navigation, "
                 "or run a new prediction, to change it back.")
 
 # =====================================================================================
-# 9. DATASET
+# 10. DATASET
 # =====================================================================================
 elif choice == "📁 Dataset":
     st.markdown('<div class="hero-title" style="font-size:32px;">📁 Dataset Vault</div>', unsafe_allow_html=True)
@@ -700,7 +772,7 @@ elif choice == "📁 Dataset":
                         file_name="loan_data.csv", mime="text/csv")
 
 # =====================================================================================
-# 10. ABOUT THE MODEL
+# 11. ABOUT THE MODEL
 # =====================================================================================
 elif choice == "👨‍💻 About the Model":
     st.markdown('<div class="hero-title" style="font-size:32px;">🧭 About Credit Spectrum AI</div>', unsafe_allow_html=True)
@@ -738,9 +810,19 @@ elif choice == "👨‍💻 About the Model":
     st.dataframe(pd.DataFrame(glossary.items(), columns=["Feature", "Description"]),
                  use_container_width=True, hide_index=True)
 
-    st.markdown("### 🏆 Final Model Comparison")
+    st.markdown("### 🏆 Final Model Comparison & Why XGBoost Won")
     st.dataframe(pd.DataFrame({
         "Model": ["Logistic Regression", "Decision Tree", "Random Forest", "XGBoost ⭐ (Deployed)"],
         "Test Accuracy": [0.8569, 0.9881, 0.9840, 0.9892],
         "Test ROC AUC": [0.9341, 0.9829, 0.9969, 0.9978],
     }), use_container_width=True, hide_index=True)
+
+    st.markdown("""
+    <div class="glass-card">
+    💡 <b>Selection Rationale:</b> XGBoost was chosen for production because gradient-boosted trees
+    capture non-linear interactions between financial signals (like FICO × DTI × utilization) far
+    better than Logistic Regression, while its regularization keeps it more stable on unseen data
+    than a single Decision Tree or even Random Forest. Combined with SMOTE-balanced training data,
+    it delivered the best accuracy <b>and</b> the best ROC AUC of every architecture tested. 🏆
+    </div>
+    """, unsafe_allow_html=True)
