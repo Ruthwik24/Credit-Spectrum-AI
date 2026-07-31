@@ -484,7 +484,7 @@ def apply_theme(mood="default"):
     }}
 
     /* ================= STRICT EXPANDER / DOWNLOAD CENTER FIX ================= */
-    [data-testid="stExpander"] {
+    [data-testid="stExpander"] {{
         background: rgba(15, 15, 15, 0.6) !important; 
         background-color: rgba(15, 15, 15, 0.6) !important; 
         border: 1px solid {p['cardBorder']} !important;
@@ -492,7 +492,7 @@ def apply_theme(mood="default"):
         backdrop-filter: blur(14px) !important; 
         -webkit-backdrop-filter: blur(14px) !important;
         overflow: hidden !important;
-    }
+    }}
     
     /* Target the summary (header) and all its states to PREVENT white background */
     [data-testid="stExpander"] > details > summary,
