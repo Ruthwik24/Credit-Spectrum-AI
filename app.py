@@ -87,7 +87,12 @@ def apply_theme(mood="default"):
         background: {p['bg']};
         background-attachment: fixed; color: {p['text']}; transition: background 1.2s ease;
     }}
-    .block-container {{ padding-top: 1.2rem; max-width: 1300px; }}
+    .block-container {{
+        padding-top: 1.2rem; max-width: 1600px; width: 100%;
+        margin-left: auto; margin-right: auto;
+    }}
+    section.main > div.block-container {{ margin-left: auto; margin-right: auto; }}
+    [data-testid="stAppViewContainer"] {{ display: flex; justify-content: center; }}
 
     .stApp::before {{
         content: ""; position: fixed; inset: 0;
@@ -184,28 +189,69 @@ def apply_theme(mood="default"):
     .credit-card .num {{ color: #fff; font-family: 'Orbitron', monospace; letter-spacing: 2px; font-size: 15px; margin-top: 14px; text-shadow: 0 0 6px rgba(0,0,0,0.4); }}
     .credit-card .brand {{ position:absolute; bottom: 12px; right: 16px; font-size: 20px; }}
 
-    /* ---------- TOP NAV BAR (futuristic pill tabs) ---------- */
+    /* ---------- TOP NAV BAR (glassy, futuristic pill tabs) ---------- */
     .navbar-wrap {{
-        background: rgba(255,255,255,0.04); border: 1px solid {p['cardBorder']}; border-radius: 24px;
-        padding: 12px 16px; backdrop-filter: blur(18px); margin-bottom: 22px; z-index: 2; position: sticky; top: 8px;
-        box-shadow: 0 0 26px {p['glow']};
+        background: linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.015));
+        border: 1px solid {p['cardBorder']}; border-radius: 26px;
+        padding: 14px 18px; backdrop-filter: blur(26px) saturate(160%); -webkit-backdrop-filter: blur(26px) saturate(160%);
+        margin: 0 auto 22px; z-index: 20; position: sticky; top: 8px; max-width: 1400px;
+        box-shadow: 0 0 30px {p['glow']}, 0 8px 32px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.08);
+        position: relative; overflow: hidden;
     }}
+    .navbar-wrap::before {{
+        content: ""; position: absolute; inset: -2px; z-index: -1; border-radius: 26px; padding: 1px;
+        background: linear-gradient(120deg, {p['accent1']}, {p['accent2']}, {p['accent3']}, {p['accent1']});
+        background-size: 300% 300%; animation: navBorderFlow 8s linear infinite;
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor; mask-composite: exclude; opacity: 0.55;
+    }}
+    @keyframes navBorderFlow {{ 0%{{background-position:0% 50%;}} 100%{{background-position:300% 50%;}} }}
+
     div[data-testid="stHorizontalBlock"] div[role="radiogroup"] {{
-        display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
+        display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;
     }}
     div[role="radiogroup"] label {{
-        background: rgba(255,255,255,0.03); border: 1px solid {p['cardBorder']}; border-radius: 30px;
-        padding: 10px 20px !important; font-weight: 700; font-size: 14.5px; letter-spacing: 0.3px;
-        transition: all 0.25s ease; cursor: pointer;
+        background: rgba(255,255,255,0.035); border: 1px solid {p['cardBorder']}; border-radius: 30px;
+        padding: 11px 22px !important; font-weight: 700; font-size: 14.5px; letter-spacing: 0.3px;
+        color: {p['text']} !important; opacity: 0.85;
+        transition: transform 0.25s cubic-bezier(.34,1.56,.64,1), box-shadow 0.3s ease, border-color 0.3s ease, opacity 0.3s ease;
+        cursor: pointer; position: relative; overflow: hidden; z-index: 1;
+    }}
+    div[role="radiogroup"] label p {{ color: inherit !important; }}
+    div[role="radiogroup"] label::before {{
+        content: ""; position: absolute; inset: 0; border-radius: 30px; z-index: -1;
+        background: conic-gradient(from 0deg, {p['accent1']}, {p['accent2']}, {p['accent3']}, {p['accent1']});
+        opacity: 0; transform: scale(0.4); transition: opacity 0.35s ease, transform 0.45s cubic-bezier(.34,1.56,.64,1);
+        filter: blur(10px);
+    }}
+    div[role="radiogroup"] label::after {{
+        content: ""; position: absolute; left: 50%; bottom: 6px; width: 0; height: 2px; border-radius: 2px;
+        background: {p['accent1']}; box-shadow: 0 0 8px {p['accent1']};
+        transition: width 0.3s ease, left 0.3s ease; opacity: 0;
     }}
     div[role="radiogroup"] label:hover {{
-        transform: translateY(-3px) scale(1.03); border-color: {p['accent1']};
-        box-shadow: 0 0 18px {p['glow']}; color: {p['accent1']} !important;
+        transform: translateY(-4px) scale(1.05); border-color: {p['accent1']};
+        box-shadow: 0 6px 20px {p['glow']}; color: {p['accent1']} !important; opacity: 1;
     }}
     div[role="radiogroup"] label:has(input:checked) {{
-        background: linear-gradient(90deg, {p['accent1']}33, {p['accent2']}33);
-        border-color: {p['accent1']}; box-shadow: 0 0 22px {p['glow']}, 0 0 6px {p['glow']} inset;
-        color: {p['accent1']} !important;
+        background: rgba(10,12,26,0.85);
+        border-color: transparent; opacity: 1;
+        color: {p['accent1']} !important; font-weight: 800;
+        transform: translateY(-2px) scale(1.06);
+        box-shadow: 0 0 26px {p['glow']}, inset 0 0 14px {p['glow']};
+        animation: navSelectPulse 0.55s cubic-bezier(.34,1.56,.64,1);
+    }}
+    div[role="radiogroup"] label:has(input:checked)::before {{
+        opacity: 0.35; transform: scale(1); animation: navConicSpin 5s linear infinite;
+    }}
+    div[role="radiogroup"] label:has(input:checked)::after {{
+        width: 60%; left: 20%; opacity: 1;
+    }}
+    @keyframes navConicSpin {{ from{{ filter: blur(10px) hue-rotate(0deg); }} to{{ filter: blur(10px) hue-rotate(360deg); }} }}
+    @keyframes navSelectPulse {{
+        0% {{ transform: scale(0.9) translateY(0); box-shadow: 0 0 0 {p['glow']}; }}
+        55% {{ transform: scale(1.12) translateY(-4px); }}
+        100% {{ transform: scale(1.06) translateY(-2px); box-shadow: 0 0 26px {p['glow']}, inset 0 0 14px {p['glow']}; }}
     }}
     div[role="radiogroup"] input {{ display:none; }}
 
@@ -314,6 +360,109 @@ def apply_theme(mood="default"):
     hr {{ border-color: {p['cardBorder']}; }}
     ::-webkit-scrollbar {{ width: 8px; }}
     ::-webkit-scrollbar-thumb {{ background: {p['accent2']}; border-radius: 10px; }}
+
+    /* ================= WIDGET TEXT VISIBILITY FIXES ================= */
+    label, .stMarkdown, .stCaption, [data-testid="stWidgetLabel"] p,
+    [data-testid="stMetricLabel"], [data-testid="stMetricValue"],
+    [data-testid="stMetricDelta"], .stTabs [data-baseweb="tab"] p,
+    .stTabs [data-baseweb="tab"] div, .streamlit-expanderHeader, .streamlit-expanderHeader p {{
+        color: {p['text']} !important;
+    }}
+    [data-testid="stCaptionContainer"] {{ color: {p['text']} !important; opacity: 0.7; }}
+
+    /* text / number inputs */
+    .stTextInput input, .stNumberInput input, .stTextArea textarea {{
+        background: rgba(255,255,255,0.05) !important; color: {p['text']} !important;
+        border: 1px solid {p['cardBorder']} !important; border-radius: 12px !important;
+    }}
+    .stNumberInput button {{ background: rgba(255,255,255,0.05) !important; color: {p['text']} !important; }}
+    .stTextInput input::placeholder, .stTextArea textarea::placeholder {{ color: {p['text']}; opacity: 0.45; }}
+
+    /* select boxes / multiselect (BaseWeb) */
+    [data-baseweb="select"] > div {{
+        background: rgba(255,255,255,0.05) !important; color: {p['text']} !important;
+        border: 1px solid {p['cardBorder']} !important; border-radius: 12px !important;
+    }}
+    [data-baseweb="select"] span, [data-baseweb="select"] div {{ color: {p['text']} !important; }}
+    [data-baseweb="popover"] ul, [data-baseweb="menu"] {{
+        background: #0c1024 !important; border: 1px solid {p['cardBorder']} !important;
+    }}
+    [data-baseweb="popover"] li, [data-baseweb="menu"] li {{ color: {p['text']} !important; }}
+    [data-baseweb="popover"] li:hover, [data-baseweb="menu"] li:hover {{
+        background: rgba(255,255,255,0.08) !important; color: {p['accent1']} !important;
+    }}
+    [data-baseweb="tag"] {{ background: {p['accent1']}33 !important; color: {p['text']} !important; }}
+
+    /* slider */
+    .stSlider [data-baseweb="slider"] div {{ color: {p['text']} !important; }}
+    .stSlider [role="slider"] {{ background: {p['accent1']} !important; box-shadow: 0 0 10px {p['glow']}; }}
+    div[data-testid="stTickBar"] {{ color: {p['text']} !important; }}
+
+    /* checkboxes / toggles */
+    .stCheckbox label p, .stToggle label p, .stRadio label p {{ color: {p['text']} !important; }}
+
+    /* tabs */
+    .stTabs [data-baseweb="tab-list"] {{ gap: 8px; }}
+    .stTabs [data-baseweb="tab"] {{
+        background: rgba(255,255,255,0.04) !important; border: 1px solid {p['cardBorder']} !important;
+        border-radius: 14px 14px 0 0 !important; color: {p['text']} !important;
+    }}
+    .stTabs [aria-selected="true"] {{
+        background: rgba(255,255,255,0.09) !important; color: {p['accent1']} !important;
+        border-bottom: 2px solid {p['accent1']} !important;
+    }}
+
+    /* expander */
+    [data-testid="stExpander"] {{
+        background: rgba(255,255,255,0.035) !important; border: 1px solid {p['cardBorder']} !important;
+        border-radius: 16px !important; backdrop-filter: blur(14px);
+    }}
+    [data-testid="stExpander"] summary {{ color: {p['text']} !important; }}
+
+    /* alerts (info/success/warning/error) */
+    [data-testid="stAlertContainer"], .stAlert {{
+        background: rgba(255,255,255,0.05) !important; border: 1px solid {p['cardBorder']} !important;
+        border-radius: 14px !important; backdrop-filter: blur(10px);
+    }}
+    [data-testid="stAlertContainer"] p, .stAlert p, .stAlert div {{ color: {p['text']} !important; }}
+
+    /* file uploader text */
+    [data-testid="stFileUploaderDropzone"] * {{ color: {p['text']} !important; }}
+    [data-testid="stFileUploaderDropzone"] button {{
+        background: rgba(255,255,255,0.08) !important; color: {p['text']} !important;
+        border: 1px solid {p['cardBorder']} !important;
+    }}
+
+    /* code blocks */
+    code {{ color: {p['accent1']} !important; background: rgba(255,255,255,0.06) !important; }}
+
+    /* ================= GLASSY THEMED TABLES (replaces default st.dataframe) ================= */
+    .glass-table-wrap {{
+        background: rgba(255,255,255,0.035); border: 1px solid {p['cardBorder']}; border-radius: 18px;
+        padding: 4px; backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+        box-shadow: 0 0 24px rgba(0,0,0,0.35), 0 0 14px {p['glow']} inset;
+        overflow: auto; margin-bottom: 16px; position: relative; z-index: 1;
+    }}
+    .glass-table {{
+        width: 100%; border-collapse: separate; border-spacing: 0; font-size: 14px;
+        font-family: 'Inter', sans-serif; color: {p['text']} !important;
+    }}
+    .glass-table thead th {{
+        position: sticky; top: 0; text-align: left; padding: 13px 16px; font-weight: 800;
+        font-size: 12.5px; letter-spacing: 0.6px; text-transform: uppercase;
+        color: {p['accent1']} !important; background: rgba(255,255,255,0.055);
+        border-bottom: 1px solid {p['cardBorder']}; backdrop-filter: blur(18px); z-index: 2;
+    }}
+    .glass-table tbody td {{
+        padding: 11px 16px; border-bottom: 1px solid rgba(255,255,255,0.06);
+        color: {p['text']} !important; white-space: nowrap;
+    }}
+    .glass-table tbody tr {{ transition: background 0.2s ease, transform 0.15s ease; }}
+    .glass-table tbody tr:hover {{
+        background: rgba(255,255,255,0.06);
+    }}
+    .glass-table tbody tr:nth-child(even) {{ background: rgba(255,255,255,0.015); }}
+    .glass-table tbody tr:last-child td {{ border-bottom: none; }}
     </style>
     <div class="money-bg">{particles_html}</div>
     """, unsafe_allow_html=True)
@@ -335,6 +484,20 @@ def cash_celebration(good=True, n=36):
         spans += (f'<span class="{cls}" style="left:{left}vw; font-size:{size}px; '
                   f'animation-duration:{dur}s; animation-delay:{delay}s;">{g}</span>')
     st.markdown(f'<div class="cash-rain">{spans}</div>', unsafe_allow_html=True)
+
+
+def render_glass_table(df, max_height=420, max_rows=500):
+    """Render a DataFrame as a theme-matched glassy HTML table (replaces default white st.dataframe)."""
+    show_df = df.head(max_rows)
+    html = show_df.to_html(classes="glass-table", index=False, border=0, escape=True)
+    note = ""
+    if len(df) > max_rows:
+        note = (f'<div style="padding:8px 4px 2px; font-size:12px; opacity:0.6;">'
+                f'Showing first {max_rows:,} of {len(df):,} rows — use the download button for the full dataset.</div>')
+    st.markdown(
+        f'<div class="glass-table-wrap" style="max-height:{max_height}px;">{html}</div>{note}',
+        unsafe_allow_html=True,
+    )
 
 
 def panel_header(icon, title, subtitle=""):
@@ -428,9 +591,7 @@ st.markdown('<div class="navbar-wrap">', unsafe_allow_html=True)
 menu = [
     "🏠 Home", "📊 Dashboard", "📈 Analytics", "🧠 AI Predictor", "📁 Dataset", "👨‍💻 About the Model",
 ]
-choice = st.radio("Navigate", menu, index=menu.index(st.session_state.page),
-                   horizontal=True, label_visibility="collapsed")
-st.session_state.page = choice
+choice = st.radio("Navigate", menu, horizontal=True, label_visibility="collapsed", key="page")
 st.markdown('</div>', unsafe_allow_html=True)
 
 top_l, top_r = st.columns([3, 1])
@@ -854,7 +1015,7 @@ elif choice == "🧠 AI Predictor":
         if uploaded is not None:
             try:
                 batch_df = pd.read_csv(uploaded)
-                st.dataframe(batch_df.head(), use_container_width=True)
+                render_glass_table(batch_df.head(), max_height=260)
                 if st.button("⚡ Run Batch Prediction"):
                     with st.spinner("💠 Scoring the entire portfolio..."):
                         work = batch_df.copy()
@@ -879,7 +1040,7 @@ elif choice == "🧠 AI Predictor":
             b1.metric("📦 Total Scored", n_total)
             b2.metric("✅ Eligible", int(n_eligible))
             b3.metric("🚫 Not Eligible", int(n_total - n_eligible))
-            st.dataframe(res, use_container_width=True, height=380)
+            render_glass_table(res, max_height=380)
             st.download_button("📥 Download Batch Results (CSV)", data=res.to_csv(index=False),
                                 file_name="batch_prediction_results.csv", mime="text/csv")
 
@@ -903,7 +1064,7 @@ elif choice == "📁 Dataset":
     st.markdown("### 🔎 Search & Explore")
     search = st.text_input("Filter by purpose (leave blank for all):", "")
     display_df = df_raw if not search else df_raw[df_raw['purpose'].str.contains(search, case=False, na=False)]
-    st.dataframe(display_df, use_container_width=True, height=420)
+    render_glass_table(display_df, max_height=420)
 
     st.download_button("📥 Download Full Dataset (CSV)", data=df_raw.to_csv(index=False),
                         file_name="loan_data.csv", mime="text/csv")
@@ -944,15 +1105,14 @@ elif choice == "👨‍💻 About the Model":
         "delinq.2yrs": "Delinquencies in the last 2 years",
         "pub.rec": "Derogatory public records",
     }
-    st.dataframe(pd.DataFrame(glossary.items(), columns=["Feature", "Description"]),
-                 use_container_width=True, hide_index=True)
+    render_glass_table(pd.DataFrame(glossary.items(), columns=["Feature", "Description"]), max_height=340)
 
     st.markdown("### 🏆 Final Model Comparison & Why XGBoost Won")
-    st.dataframe(pd.DataFrame({
+    render_glass_table(pd.DataFrame({
         "Model": ["Logistic Regression", "Decision Tree", "Random Forest", "XGBoost ⭐ (Deployed)"],
         "Test Accuracy": [0.8569, 0.9881, 0.9840, 0.9892],
         "Test ROC AUC": [0.9341, 0.9829, 0.9969, 0.9978],
-    }), use_container_width=True, hide_index=True)
+    }), max_height=260)
 
     st.markdown("""
     <div class="glass-card">
