@@ -436,10 +436,10 @@ def apply_theme(mood="default"):
     [data-testid="stVirtualDropdown"],
     ul[role="listbox"],
     div[role="listbox"] {{
-        background: rgba(15, 15, 15, 0.6) !important;
-        background-color: rgba(15, 15, 15, 0.6) !important;
-        backdrop-filter: blur(16px) !important;
-        -webkit-backdrop-filter: blur(16px) !important;
+        background: rgba(10, 10, 10, 0.3) !important;
+        background-color: rgba(10, 10, 10, 0.3) !important;
+        backdrop-filter: blur(24px) !important;
+        -webkit-backdrop-filter: blur(24px) !important;
         border: 1px solid {p['cardBorder']} !important;
         border-radius: 12px !important;
         box-shadow: 0 8px 32px rgba(0,0,0,0.8), 0 0 20px {p['glow']} !important;
@@ -452,20 +452,26 @@ def apply_theme(mood="default"):
         background-color: transparent !important;
     }}
 
+    /* Glass Tile Effect for Options */
     div[data-baseweb="popover"] li,
     ul[role="listbox"] li,
     div[role="listbox"] li,
     li[role="option"] {{
-        background: transparent !important;
-        background-color: transparent !important;
+        background: rgba(255, 255, 255, 0.05) !important;
+        background-color: rgba(255, 255, 255, 0.05) !important;
+        border: 1px solid rgba(255, 255, 255, 0.05) !important;
         color: {p['text']} !important;
-        transition: all 0.2s ease !important;
+        transition: all 0.3s ease !important;
         font-size: 14.5px !important;
-        padding: 8px 12px !important;
-        margin: 2px 4px !important;
-        border-radius: 8px !important;
+        padding: 10px 14px !important;
+        margin: 6px 8px !important;
+        border-radius: 10px !important;
+        backdrop-filter: blur(10px) !important;
+        -webkit-backdrop-filter: blur(10px) !important;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1) !important;
     }}
 
+    /* Hover and Selected states for tiles */
     div[data-baseweb="popover"] li:hover,
     ul[role="listbox"] li:hover,
     div[role="listbox"] li:hover,
@@ -474,10 +480,13 @@ def apply_theme(mood="default"):
     ul[role="listbox"] li[aria-selected="true"],
     div[role="listbox"] li[aria-selected="true"],
     li[role="option"][aria-selected="true"] {{
-        background: rgba(212,175,55,0.3) !important;
-        background-color: rgba(212,175,55,0.3) !important;
+        background: rgba(212,175,55,0.2) !important;
+        background-color: rgba(212,175,55,0.2) !important;
+        border: 1px solid {p['accent1']} !important;
         color: {p['accent1']} !important;
         font-weight: 800 !important;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.3), 0 0 10px {p['glow']} !important;
     }}
 
     /* Multiselect Tags */
@@ -1135,128 +1144,131 @@ elif choice == "🧠 AI Predictor":
             c1, c2, c3, c4 = st.columns(4)
             with c1:
                 purpose_options = list(le.classes_)
-                purpose = st.selectbox('💼 Purpose', purpose_options)
+                purpose = st.selectbox('💼 Purpose', options=purpose_options, index=None, placeholder="Choose options")
             with c2:
-                int_rate = st.number_input('💸 Interest Rate', min_value=0.0, max_value=1.0, value=0.10)
+                int_rate = st.number_input('💸 Interest Rate', min_value=0.0, max_value=1.0, value=0.00)
             with c3:
-                installment = st.number_input('💳 Monthly Installment ($)', min_value=0.0, max_value=2000.0, value=250.0)
+                installment = st.number_input('💳 Monthly Installment ($)', min_value=0.0, max_value=5000.0, value=0.00)
             with c4:
-                log_annual_inc = st.number_input('💰 Log Annual Income', min_value=0.0, max_value=15.0, value=10.5)
+                log_annual_inc = st.number_input('💰 Log Annual Income', min_value=0.0, max_value=20.0, value=0.00)
             st.markdown('</div>', unsafe_allow_html=True)
 
             st.markdown('<div class="glass-card"><h3>💎 Section 2 — Credit History</h3>', unsafe_allow_html=True)
             c5, c6, c7, c8 = st.columns(4)
             with c5:
-                fico = st.number_input('💎 FICO Score', min_value=300, max_value=850, value=700)
+                fico = st.number_input('💎 FICO Score', min_value=0, max_value=850, value=0)
             with c6:
-                dti = st.number_input('⚖️ Debt-to-Income (DTI)', min_value=0.0, max_value=50.0, value=15.0)
+                dti = st.number_input('⚖️ Debt-to-Income (DTI)', min_value=0.0, max_value=100.0, value=0.00)
             with c7:
-                days_with_cr_line = st.number_input('⏳ Credit Line Age (Days)', min_value=0.0, value=4000.0)
+                days_with_cr_line = st.number_input('⏳ Credit Line Age (Days)', min_value=0.0, value=0.00)
             with c8:
-                pub_rec = st.number_input('🚨 Public Records', min_value=0, max_value=10, value=0)
+                pub_rec = st.number_input('🚨 Public Records', min_value=0, max_value=20, value=0)
             st.markdown('</div>', unsafe_allow_html=True)
 
             st.markdown('<div class="glass-card"><h3>📈 Section 3 — Revolving & Inquiry Behavior</h3>', unsafe_allow_html=True)
             c9, c10, c11, c12 = st.columns(4)
             with c9:
-                revol_bal = st.number_input('🏦 Revolving Balance ($)', min_value=0.0, value=10000.0)
+                revol_bal = st.number_input('🏦 Revolving Balance ($)', min_value=0.0, value=0.00)
             with c10:
-                revol_util = st.number_input('📈 Revolving Utilization (%)', min_value=0.0, max_value=150.0, value=45.0)
+                revol_util = st.number_input('📈 Revolving Utilization (%)', min_value=0.0, max_value=200.0, value=0.00)
             with c11:
-                inq_last_6mths = st.number_input('🕵️ Inquiries (6M)', min_value=0, max_value=50, value=1)
+                inq_last_6mths = st.number_input('🕵️ Inquiries (6M)', min_value=0, max_value=100, value=0)
             with c12:
-                delinq_2yrs = st.number_input('⚠️ Delinquencies (2Y)', min_value=0, max_value=20, value=0)
+                delinq_2yrs = st.number_input('⚠️ Delinquencies (2Y)', min_value=0, max_value=50, value=0)
             st.markdown('</div>', unsafe_allow_html=True)
 
             st.markdown("<br>", unsafe_allow_html=True)
             submit_button = st.form_submit_button("🔍 ANALYZE APPLICANT")
 
         if submit_button:
-            with st.spinner("💠 Credit Spectrum AI is evaluating the financial profile..."):
-                time.sleep(0.8)
-
-            purp_enc = le.transform([purpose])[0]
-            input_data = np.array([[purp_enc, int_rate, installment, log_annual_inc, dti, fico,
-                                     days_with_cr_line, revol_bal, revol_util, inq_last_6mths,
-                                     delinq_2yrs, pub_rec]])
-            input_scaled = scaler.transform(input_data)
-            prediction = model.predict(input_scaled)[0]
-            confidence = model.predict_proba(input_scaled)[0]
-
-            st.session_state.mood = "approved" if prediction == 1 else "declined"
-            PALETTE = apply_theme(st.session_state.mood)
-
-            st.markdown("---")
-
-            if prediction == 1:
-                cash_celebration(good=True)
-                st.markdown(f"""
-                <div class="approved-hero">
-                    <div class="verdict-icon">🤑💵🎉</div>
-                    <div class="verdict-title">✅ ELIGIBLE FOR LOAN!</div>
-                    <p style="font-size:16px;">Confidence Score: <b>{confidence[1]*100:.2f}%</b></p>
-                    <p style="font-size:15px; color: {PALETTE['accent2']};">₹💰 Cha-ching! This applicant meets the credit policy. 💰₹</p>
-                </div>""", unsafe_allow_html=True)
-
-                reasons = []
-                if fico >= 700: reasons.append("✔ Excellent FICO Score")
-                if dti <= 15: reasons.append("✔ Low Debt-to-Income Ratio")
-                if delinq_2yrs == 0: reasons.append("✔ No Recent Delinquencies")
-                if revol_util <= 50: reasons.append("✔ Healthy Credit Utilization")
-                if inq_last_6mths <= 2: reasons.append("✔ Low Recent Credit Inquiries")
-                if not reasons: reasons = ["✔ Overall Profile Within Policy Thresholds"]
-
-                st.markdown("<div style='text-align:center; margin-top:14px;'>" +
-                            "".join(f"<span class='reason-chip'>{r}</span>" for r in reasons) +
-                            "</div>", unsafe_allow_html=True)
+            if purpose is None:
+                st.warning("⚠️ Please select a **Purpose** before analyzing the applicant.")
             else:
-                cash_celebration(good=False)
-                st.markdown(f"""
-                <div class="declined-hero">
-                    <div class="verdict-icon">💔📉🚫</div>
-                    <div class="verdict-title">🚫 NOT ELIGIBLE FOR LOAN</div>
-                    <p style="font-size:16px;">Risk Confidence: <b>{confidence[0]*100:.2f}%</b></p>
-                    <p style="font-size:15px; color: {PALETTE['accent2']};">The financial profile falls short of the credit policy threshold.</p>
-                </div>""", unsafe_allow_html=True)
-
-                tips = []
-                if fico < 700: tips.append("📈 Improve your FICO score")
-                if dti > 15: tips.append("⚖️ Reduce debt-to-income ratio")
-                if revol_util > 50: tips.append("💳 Lower credit utilization")
-                if inq_last_6mths > 2: tips.append("🕵️ Avoid multiple recent inquiries")
-                if delinq_2yrs > 0: tips.append("⚠️ Maintain a clean repayment history")
-                if not tips: tips = ["🧭 Re-evaluate overall financial profile"]
-
-                st.markdown("<div style='text-align:center; margin-top:14px;'>" +
-                            "".join(f"<span class='reason-chip'>{t}</span>" for t in tips) +
-                            "</div>", unsafe_allow_html=True)
-
-            g_val = confidence[1] * 100
-            fig_g = go.Figure(go.Indicator(
-                mode="gauge+number", value=g_val, title={'text': "Eligibility Meter"},
-                gauge={'axis': {'range': [0, 100]},
-                       'bar': {'color': "#00ffa3" if prediction == 1 else "#ff2e5b"},
-                       'steps': [{'range': [0, 40], 'color': 'rgba(255,46,91,0.20)'},
-                                 {'range': [40, 70], 'color': 'rgba(212,175,55,0.20)'},
-                                 {'range': [70, 100], 'color': 'rgba(0,255,163,0.20)'}],
-                       'bgcolor': "rgba(0,0,0,0)"}))
-            fig_g.update_layout(template="plotly_dark", height=300, paper_bgcolor="rgba(0,0,0,0)")
-            st.plotly_chart(fig_g, use_container_width=True, config=PLOTLY_CONFIG, theme=None)
-
-            report_df = pd.DataFrame([{
-                "purpose": purpose, "int.rate": int_rate, "installment": installment,
-                "log.annual.inc": log_annual_inc, "dti": dti, "fico": fico,
-                "days.with.cr.line": days_with_cr_line, "revol.bal": revol_bal,
-                "revol.util": revol_util, "inq.last.6mths": inq_last_6mths,
-                "delinq.2yrs": delinq_2yrs, "pub.rec": pub_rec,
-                "prediction": "Approved" if prediction == 1 else "Declined",
-                "confidence_%": round(confidence[1] * 100 if prediction == 1 else confidence[0] * 100, 2),
-            }])
-            st.download_button("📄 Download Prediction Report (CSV)", data=report_df.to_csv(index=False),
-                                file_name="astrabank_prediction_report.csv", mime="text/csv")
-
-            st.info("🔄 Theme is now reflecting this verdict. Use **🧹 Clear & Reset** above, "
-                    "or **Reset Theme to Default**, to return to the default look.")
+                with st.spinner("💠 Credit Spectrum AI is evaluating the financial profile..."):
+                    time.sleep(0.8)
+    
+                purp_enc = le.transform([purpose])[0]
+                input_data = np.array([[purp_enc, int_rate, installment, log_annual_inc, dti, fico,
+                                         days_with_cr_line, revol_bal, revol_util, inq_last_6mths,
+                                         delinq_2yrs, pub_rec]])
+                input_scaled = scaler.transform(input_data)
+                prediction = model.predict(input_scaled)[0]
+                confidence = model.predict_proba(input_scaled)[0]
+    
+                st.session_state.mood = "approved" if prediction == 1 else "declined"
+                PALETTE = apply_theme(st.session_state.mood)
+    
+                st.markdown("---")
+    
+                if prediction == 1:
+                    cash_celebration(good=True)
+                    st.markdown(f"""
+                    <div class="approved-hero">
+                        <div class="verdict-icon">🤑💵🎉</div>
+                        <div class="verdict-title">✅ ELIGIBLE FOR LOAN!</div>
+                        <p style="font-size:16px;">Confidence Score: <b>{confidence[1]*100:.2f}%</b></p>
+                        <p style="font-size:15px; color: {PALETTE['accent2']};">₹💰 Cha-ching! This applicant meets the credit policy. 💰₹</p>
+                    </div>""", unsafe_allow_html=True)
+    
+                    reasons = []
+                    if fico >= 700: reasons.append("✔ Excellent FICO Score")
+                    if dti <= 15: reasons.append("✔ Low Debt-to-Income Ratio")
+                    if delinq_2yrs == 0: reasons.append("✔ No Recent Delinquencies")
+                    if revol_util <= 50: reasons.append("✔ Healthy Credit Utilization")
+                    if inq_last_6mths <= 2: reasons.append("✔ Low Recent Credit Inquiries")
+                    if not reasons: reasons = ["✔ Overall Profile Within Policy Thresholds"]
+    
+                    st.markdown("<div style='text-align:center; margin-top:14px;'>" +
+                                "".join(f"<span class='reason-chip'>{r}</span>" for r in reasons) +
+                                "</div>", unsafe_allow_html=True)
+                else:
+                    cash_celebration(good=False)
+                    st.markdown(f"""
+                    <div class="declined-hero">
+                        <div class="verdict-icon">💔📉🚫</div>
+                        <div class="verdict-title">🚫 NOT ELIGIBLE FOR LOAN</div>
+                        <p style="font-size:16px;">Risk Confidence: <b>{confidence[0]*100:.2f}%</b></p>
+                        <p style="font-size:15px; color: {PALETTE['accent2']};">The financial profile falls short of the credit policy threshold.</p>
+                    </div>""", unsafe_allow_html=True)
+    
+                    tips = []
+                    if fico < 700: tips.append("📈 Improve your FICO score")
+                    if dti > 15: tips.append("⚖️ Reduce debt-to-income ratio")
+                    if revol_util > 50: tips.append("💳 Lower credit utilization")
+                    if inq_last_6mths > 2: tips.append("🕵️ Avoid multiple recent inquiries")
+                    if delinq_2yrs > 0: tips.append("⚠️ Maintain a clean repayment history")
+                    if not tips: tips = ["🧭 Re-evaluate overall financial profile"]
+    
+                    st.markdown("<div style='text-align:center; margin-top:14px;'>" +
+                                "".join(f"<span class='reason-chip'>{t}</span>" for t in tips) +
+                                "</div>", unsafe_allow_html=True)
+    
+                g_val = confidence[1] * 100
+                fig_g = go.Figure(go.Indicator(
+                    mode="gauge+number", value=g_val, title={'text': "Eligibility Meter"},
+                    gauge={'axis': {'range': [0, 100]},
+                           'bar': {'color': "#00ffa3" if prediction == 1 else "#ff2e5b"},
+                           'steps': [{'range': [0, 40], 'color': 'rgba(255,46,91,0.20)'},
+                                     {'range': [40, 70], 'color': 'rgba(212,175,55,0.20)'},
+                                     {'range': [70, 100], 'color': 'rgba(0,255,163,0.20)'}],
+                           'bgcolor': "rgba(0,0,0,0)"}))
+                fig_g.update_layout(template="plotly_dark", height=300, paper_bgcolor="rgba(0,0,0,0)")
+                st.plotly_chart(fig_g, use_container_width=True, config=PLOTLY_CONFIG, theme=None)
+    
+                report_df = pd.DataFrame([{
+                    "purpose": purpose, "int.rate": int_rate, "installment": installment,
+                    "log.annual.inc": log_annual_inc, "dti": dti, "fico": fico,
+                    "days.with.cr.line": days_with_cr_line, "revol.bal": revol_bal,
+                    "revol.util": revol_util, "inq.last.6mths": inq_last_6mths,
+                    "delinq.2yrs": delinq_2yrs, "pub.rec": pub_rec,
+                    "prediction": "Approved" if prediction == 1 else "Declined",
+                    "confidence_%": round(confidence[1] * 100 if prediction == 1 else confidence[0] * 100, 2),
+                }])
+                st.download_button("📄 Download Prediction Report (CSV)", data=report_df.to_csv(index=False),
+                                    file_name="astrabank_prediction_report.csv", mime="text/csv")
+    
+                st.info("🔄 Theme is now reflecting this verdict. Use **🧹 Clear & Reset** above, "
+                        "or **Reset Theme to Default**, to return to the default look.")
 
     # ---------------- BATCH PROCESSING ----------------
     with tab_batch:
