@@ -189,11 +189,11 @@ def apply_theme(mood="default"):
     .credit-card .num {{ color: #000; font-family: 'Orbitron', monospace; letter-spacing: 2px; font-size: 15px; margin-top: 14px; text-shadow: 0 0 6px rgba(255,255,255,0.4); }}
     .credit-card .brand {{ position:absolute; bottom: 12px; right: 16px; font-size: 20px; }}
 
-    /* ---------- TOP NAV BAR (glassy, luxury pill tabs) ---------- */
+    /* ---------- TOP NAV BAR (glassy, luxury pill tabs, equal width, zero dots, no top bar) ---------- */
     .navbar-wrap {{
         background: linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
         border: 1px solid {p['cardBorder']}; border-radius: 26px;
-        padding: 16px 24px; backdrop-filter: blur(26px) saturate(160%); -webkit-backdrop-filter: blur(26px) saturate(160%);
+        padding: 12px 16px; backdrop-filter: blur(26px) saturate(160%); -webkit-backdrop-filter: blur(26px) saturate(160%);
         margin: 0 auto 22px; z-index: 20; position: sticky; top: 8px; width: 100%;
         box-shadow: 0 0 30px {p['glow']}, 0 8px 32px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.05);
         position: relative; overflow: hidden;
@@ -208,58 +208,49 @@ def apply_theme(mood="default"):
     @keyframes navBorderFlow {{ 0%{{background-position:0% 50%;}} 100%{{background-position:300% 50%;}} }}
 
     div[data-testid="stHorizontalBlock"] div[role="radiogroup"] {{
-        display: flex !important; flex-direction: row !important; flex-wrap: nowrap !important; gap: 10px !important; justify-content: space-between !important; width: 100% !important;
+        display: flex !important; flex-direction: row !important; flex-wrap: nowrap !important; gap: 10px !important; justify-content: space-between !important; width: 100% !important; margin: 0 !important; padding: 0 !important;
     }}
-    div[role="radiogroup"] label {{
-        background: rgba(255,255,255,0.02); border: 1px solid {p['cardBorder']}; border-radius: 30px;
-        padding: 13px 18px !important; font-weight: 700; font-size: 14.5px; letter-spacing: 0.3px;
-        color: {p['text']} !important; opacity: 0.85; flex: 1 1 0 !important; justify-content: center !important; text-align: center;
-        transition: transform 0.25s cubic-bezier(.34,1.56,.64,1), box-shadow 0.3s ease, border-color 0.3s ease, opacity 0.3s ease, background 0.3s ease;
-        cursor: pointer; position: relative; overflow: hidden; z-index: 1; display: flex !important; align-items: center !important;
-    }}
-    /* Kill Streamlit's native circular radio marker entirely */
-    div[role="radiogroup"] label > div:first-child {{
-        display: none !important; width: 0 !important; height: 0 !important;
+    div[role="radiogroup"] {{
         margin: 0 !important; padding: 0 !important;
     }}
-    div[role="radiogroup"] label p {{ color: inherit !important; margin: 0 !important; }}
+    div[role="radiogroup"] label {{
+        background: rgba(255,255,255,0.02); border: 1px solid {p['cardBorder']}; border-radius: 20px;
+        padding: 12px 10px !important; font-weight: 700; font-size: 13.5px; letter-spacing: 0.3px;
+        color: {p['text']} !important; opacity: 0.85; flex: 1 1 0 !important; justify-content: center !important; text-align: center;
+        transition: transform 0.25s cubic-bezier(.34,1.56,.64,1), box-shadow 0.3s ease, border-color 0.3s ease, opacity 0.3s ease, background 0.3s ease;
+        cursor: pointer; position: relative; overflow: hidden; z-index: 1; display: flex !important; align-items: center !important; min-height: 48px !important;
+    }}
+    /* Completely kill the radio button indicator dots and active bars */
+    div[role="radiogroup"] label > div:first-child,
+    div[role="radiogroup"] label div[data-testid="stMarkdownContainer"] ~ div,
+    div[role="radiogroup"] label::after {{
+        display: none !important; width: 0 !important; height: 0 !important;
+        margin: 0 !important; padding: 0 !important; opacity: 0 !important; content: none !important;
+    }}
+    div[role="radiogroup"] label p {{ color: inherit !important; margin: 0 !important; text-align: center !important; width: 100% !important; }}
     div[role="radiogroup"] label::before {{
-        content: ""; position: absolute; inset: 0; border-radius: 30px; z-index: -1;
+        content: ""; position: absolute; inset: 0; border-radius: 20px; z-index: -1;
         background: conic-gradient(from 0deg, {p['accent1']}, {p['accent2']}, {p['accent3']}, {p['accent1']});
         opacity: 0; transform: scale(0.4); transition: opacity 0.35s ease, transform 0.45s cubic-bezier(.34,1.56,.64,1);
         filter: blur(10px);
     }}
-    div[role="radiogroup"] label::after {{
-        content: ""; position: absolute; left: 50%; bottom: 6px; width: 0; height: 2px; border-radius: 2px;
-        background: {p['accent1']}; box-shadow: 0 0 8px {p['accent1']};
-        transition: width 0.3s ease, left 0.3s ease; opacity: 0;
-    }}
     div[role="radiogroup"] label:hover {{
-        transform: translateY(-4px) scale(1.02); border-color: {p['accent1']};
-        background: rgba(212, 175, 55, 0.1);
+        transform: translateY(-3px) scale(1.02); border-color: {p['accent1']};
+        background: rgba(212, 175, 55, 0.12);
         box-shadow: 0 6px 20px {p['glow']}; color: {p['accent1']} !important; opacity: 1;
     }}
     div[role="radiogroup"] label:has(input:checked) {{
-        background: rgba(10,10,10,0.85);
-        border-color: transparent; opacity: 1;
+        background: rgba(10,10,10,0.9);
+        border-color: {p['accent1']}; opacity: 1;
         color: {p['accent1']} !important; font-weight: 800;
-        transform: translateY(-2px) scale(1.04);
+        transform: translateY(-2px) scale(1.03);
         box-shadow: 0 0 26px {p['glow']}, inset 0 0 14px {p['glow']};
-        animation: navSelectPulse 0.55s cubic-bezier(.34,1.56,.64,1);
     }}
     div[role="radiogroup"] label:has(input:checked)::before {{
         opacity: 0.35; transform: scale(1); animation: navConicSpin 5s linear infinite;
     }}
-    div[role="radiogroup"] label:has(input:checked)::after {{
-        width: 60%; left: 20%; opacity: 1;
-    }}
     @keyframes navConicSpin {{ from{{ filter: blur(10px) hue-rotate(0deg); }} to{{ filter: blur(10px) hue-rotate(360deg); }} }}
-    @keyframes navSelectPulse {{
-        0% {{ transform: scale(0.9) translateY(0); box-shadow: 0 0 0 {p['glow']}; }}
-        55% {{ transform: scale(1.08) translateY(-4px); }}
-        100% {{ transform: scale(1.04) translateY(-2px); box-shadow: 0 0 26px {p['glow']}, inset 0 0 14px {p['glow']}; }}
-    }}
-    div[role="radiogroup"] input {{ display:none; }}
+    div[role="radiogroup"] input {{ display:none !important; }}
 
     /* ---------- STAT / METRIC CARDS ---------- */
     .stat-card {{
@@ -425,8 +416,7 @@ def apply_theme(mood="default"):
         box-shadow: none !important;
     }}
 
-    /* ================= STRICT DROPDOWN MENU / POPOVER FIX ================= */
-    /* Streamlit mounts dropdowns in a portal at the end of the body, so we must be very aggressive */
+    /* ================= STRICT GLASSY DROPDOWN TILES (NO OPAQUE BOXES) ================= */
     div[data-baseweb="popover"] {{
         background-color: transparent !important;
     }}
@@ -436,42 +426,40 @@ def apply_theme(mood="default"):
     [data-testid="stVirtualDropdown"],
     ul[role="listbox"],
     div[role="listbox"] {{
-        background: rgba(10, 10, 10, 0.3) !important;
-        background-color: rgba(10, 10, 10, 0.3) !important;
+        background: rgba(12, 12, 12, 0.55) !important;
+        background-color: rgba(12, 12, 12, 0.55) !important;
         backdrop-filter: blur(24px) !important;
         -webkit-backdrop-filter: blur(24px) !important;
         border: 1px solid {p['cardBorder']} !important;
-        border-radius: 12px !important;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.8), 0 0 20px {p['glow']} !important;
+        border-radius: 14px !important;
+        box-shadow: 0 12px 40px rgba(0,0,0,0.85), 0 0 20px {p['glow']} inset !important;
+        padding: 6px !important;
     }}
 
-    /* Force all child elements of the dropdown portal to avoid inheriting white backgrounds */
     [data-testid="stVirtualDropdown"] > div,
     [data-testid="stVirtualDropdown"] > div > div,
     [data-testid="stVirtualDropdown"] > ul {{
         background-color: transparent !important;
     }}
 
-    /* Glass Tile Effect for Options */
     div[data-baseweb="popover"] li,
     ul[role="listbox"] li,
     div[role="listbox"] li,
     li[role="option"] {{
-        background: rgba(255, 255, 255, 0.05) !important;
-        background-color: rgba(255, 255, 255, 0.05) !important;
-        border: 1px solid rgba(255, 255, 255, 0.05) !important;
+        background: rgba(255, 255, 255, 0.04) !important;
+        background-color: rgba(255, 255, 255, 0.04) !important;
+        border: 1px solid rgba(255, 255, 255, 0.08) !important;
         color: {p['text']} !important;
-        transition: all 0.3s ease !important;
+        transition: all 0.25s cubic-bezier(.34,1.56,.64,1) !important;
         font-size: 14.5px !important;
         padding: 10px 14px !important;
-        margin: 6px 8px !important;
+        margin: 4px 6px !important;
         border-radius: 10px !important;
-        backdrop-filter: blur(10px) !important;
-        -webkit-backdrop-filter: blur(10px) !important;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1) !important;
+        backdrop-filter: blur(12px) !important;
+        -webkit-backdrop-filter: blur(12px) !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
     }}
 
-    /* Hover and Selected states for tiles */
     div[data-baseweb="popover"] li:hover,
     ul[role="listbox"] li:hover,
     div[role="listbox"] li:hover,
@@ -480,13 +468,13 @@ def apply_theme(mood="default"):
     ul[role="listbox"] li[aria-selected="true"],
     div[role="listbox"] li[aria-selected="true"],
     li[role="option"][aria-selected="true"] {{
-        background: rgba(212,175,55,0.2) !important;
-        background-color: rgba(212,175,55,0.2) !important;
+        background: linear-gradient(135deg, {p['accent1']}33, {p['accent2']}22) !important;
+        background-color: rgba(212,175,55,0.25) !important;
         border: 1px solid {p['accent1']} !important;
         color: {p['accent1']} !important;
         font-weight: 800 !important;
-        transform: translateY(-2px);
-        box-shadow: 0 6px 12px rgba(0,0,0,0.3), 0 0 10px {p['glow']} !important;
+        transform: translateY(-2px) scale(1.01) !important;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.5), 0 0 12px {p['glow']} !important;
     }}
 
     /* Multiselect Tags */
@@ -541,7 +529,6 @@ def apply_theme(mood="default"):
         overflow: hidden !important;
     }}
     
-    /* Target the summary (header) and all its states to PREVENT white background */
     [data-testid="stExpander"] > details > summary,
     [data-testid="stExpander"] > details > summary:hover,
     [data-testid="stExpander"] > details > summary:focus,
@@ -555,14 +542,12 @@ def apply_theme(mood="default"):
         outline: none !important;
     }}
 
-    /* Specific hover for the header */
     [data-testid="stExpander"] > details > summary:hover {{
         background: rgba(212, 175, 55, 0.15) !important;
         background-color: rgba(212, 175, 55, 0.15) !important;
         color: {p['accent1']} !important;
     }}
 
-    /* Force all inner elements of the header to be transparent so no white divs sneak in */
     [data-testid="stExpander"] > details > summary * {{
         background: transparent !important;
         background-color: transparent !important;
@@ -792,7 +777,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # =====================================================================================
-# 5. TOP NAVIGATION BAR (glassy, luxury pill tabs)
+# 5. TOP NAVIGATION BAR (glassy, luxury pill tabs, equal width, zero dots, no top bar)
 # =====================================================================================
 st.markdown('<div class="navbar-wrap">', unsafe_allow_html=True)
 menu = [
@@ -1353,7 +1338,7 @@ elif choice == "👨‍💻 About the Model":
     <div class="glass-card">
     <p>Credit Spectrum AI is an intelligent credit-eligibility platform that evaluates demographic
     and financial telemetry to assess loan risk and predict credit-policy compliance,
-    using a premium production-grade <b>XGBoost</b> classifier.</p>
+    using a production-grade <b>XGBoost</b> classifier.</p>
     </div>
     """, unsafe_allow_html=True)
 
