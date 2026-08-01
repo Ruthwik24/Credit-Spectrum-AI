@@ -264,15 +264,12 @@ def apply_theme(mood="default"):
     }}
     
     /* FIX: Completely remove the native radio graphic/white square from the nav bar */
-    div[data-testid="stRadio"] div[role="radiogroup"] label > div:first-child,
-    div[data-testid="stRadio"] div[role="radiogroup"] label div[data-baseweb="radio"] {{
+    div[data-testid="stRadio"] div[role="radiogroup"] label > div:not(:has(p)) {{
         display: none !important;
+        width: 0px !important;
+        height: 0px !important;
         opacity: 0 !important;
-        width: 0 !important;
-        height: 0 !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        border: none !important;
+        visibility: hidden !important;
         pointer-events: none !important;
     }}
     
@@ -308,7 +305,6 @@ def apply_theme(mood="default"):
         opacity: 0.35; animation: navConicSpin 5s linear infinite;
     }}
     @keyframes navConicSpin {{ from{{ filter: blur(10px) hue-rotate(0deg); }} to{{ filter: blur(10px) hue-rotate(360deg); }} }}
-    div[role="radiogroup"] input {{ display:none !important; }}
 
     /* ---------- STAT / METRIC CARDS ---------- */
     .stat-card {{
@@ -479,23 +475,10 @@ def apply_theme(mood="default"):
         box-shadow: none !important;
     }}
 
-    /* ================= TRANSLUCENT DARK GLASS DROPDOWN (readable text, not opaque white, not see-through) ================= */
-    /* Nuclear catch-all first: strip out whatever default (often white) background BaseWeb sets on its portal wrappers. */
-    div[data-baseweb="popover"],
-    div[data-baseweb="popover"] *,
-    [data-testid="stVirtualDropdown"],
-    [data-testid="stVirtualDropdown"] * {{
-        background: transparent !important;
-        background-color: transparent !important;
-    }}
-
-    /* The dropdown shell itself: dark translucent glass so the menu is legible against any page content behind it */
+    /* ================= SAFE DROPDOWN CSS (FIXED CLICK EVENTS) ================= */
+    /* Only target the main wrapper to avoid breaking BaseWeb's invisible click-capture layers */
     div[data-baseweb="popover"] > div,
-    [data-testid="stVirtualDropdown"] > div,
-    [data-testid="stVirtualDropdown"] > div > div,
-    ul[data-baseweb="menu"],
-    ul[role="listbox"],
-    div[role="listbox"] {{
+    [data-testid="stVirtualDropdown"] > div {{
         background: #141414 !important;
         background-color: #141414 !important;
         border: 1px solid {p['cardBorder']} !important;
@@ -503,32 +486,22 @@ def apply_theme(mood="default"):
         box-shadow: 0 10px 40px rgba(0,0,0,0.8), 0 0 20px {p['glow']} !important;
     }}
 
-    /* INDIVIDUAL OPTION TILES — softly translucent, clearly legible text, thin gold-tinted rim.
-       Covers both <li role="option"> (standard menu) and <div role="option"> (virtualized list rows). */
-    div[data-baseweb="popover"] li,
-    ul[role="listbox"] li,
-    div[role="listbox"] li,
+    /* INDIVIDUAL OPTION TILES — strict native structure */
     li[role="option"],
-    div[role="option"],
-    [data-testid="stVirtualDropdown"] [role="option"] {{
-        background: transparent !important;
+    div[role="option"] {{
+        background-color: transparent !important;
         color: {p['text']} !important;
         font-family: 'EB Garamond', serif !important;
         font-size: 16px !important;
+        cursor: pointer !important;
     }}
 
     /* Hover and Selected states for tiles */
-    div[data-baseweb="popover"] li:hover,
-    ul[role="listbox"] li:hover,
-    div[role="listbox"] li:hover,
     li[role="option"]:hover,
     div[role="option"]:hover,
-    div[data-baseweb="popover"] li[aria-selected="true"],
-    ul[role="listbox"] li[aria-selected="true"],
-    div[role="listbox"] li[aria-selected="true"],
     li[role="option"][aria-selected="true"],
     div[role="option"][aria-selected="true"] {{
-        background: rgba(212, 175, 55, 0.2) !important;
+        background-color: rgba(212, 175, 55, 0.2) !important;
         color: {p['accent1']} !important;
         font-weight: 700 !important;
     }}
