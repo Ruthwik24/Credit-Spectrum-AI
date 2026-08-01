@@ -139,7 +139,7 @@ def apply_theme(mood="default"):
     h1, h2, h3 {{ font-family: 'Playfair Display', serif !important; color: {p['text']} !important; font-weight: 800 !important; letter-spacing: 0.5px; }}
     p, span, div, label {{ color: {p['text']}; }}
 
-    /* ---------- GLASS CARD ---------- */
+    /* ---------- GLASS CARD (retro plaque edition — vintage frame, letterpress emboss) ---------- */
     .glass-card {{
         background: rgba(255,255,255,0.03); border: 1px double {p['cardBorder']};
         outline: 1px solid rgba(0,0,0,0.5); outline-offset: -6px;
@@ -166,7 +166,7 @@ def apply_theme(mood="default"):
     }}
     .glass-card h3 {{ font-family: 'Playfair Display', serif !important; letter-spacing: 0.5px; border-bottom: 1px solid {p['cardBorder']}; padding-bottom: 10px; }}
 
-    /* ---------- PANEL ---------- */
+    /* ---------- PANEL (for dashboard/analytics grid boxes) ---------- */
     div[data-testid="stVerticalBlockBorderWrapper"] {{
         background: rgba(255,255,255,0.02) !important;
         border: 1px double {p['cardBorder']} !important;
@@ -232,7 +232,9 @@ def apply_theme(mood="default"):
     .credit-card .num {{ color: #000; font-family: 'Special Elite', monospace; letter-spacing: 2px; font-size: 14px; margin-top: 14px; text-shadow: 0 0 6px rgba(255,255,255,0.4); }}
     .credit-card .brand {{ position:absolute; bottom: 12px; right: 16px; font-size: 20px; }}
 
-    /* ---------- TOP NAV BAR ---------- */
+    /* ---------- TOP NAV BAR (rectangle vintage tabs, equal width) ---------- */
+    /* NOTE: styling is applied directly to Streamlit's own stRadio container —
+       the markdown wrapper div below never actually nests around the widget in the DOM. */
     div[data-testid="stRadio"] {{
         background: linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01)) !important;
         border: 1px solid {p['cardBorder']} !important; border-radius: 4px !important;
@@ -249,7 +251,7 @@ def apply_theme(mood="default"):
         display: flex !important; flex-direction: row !important; flex-wrap: nowrap !important;
         gap: 10px !important; width: 100% !important; margin: 0 !important; padding: 0 !important;
         background: transparent !important; border: none !important;
-        align-items: stretch !important;
+        align-items: stretch !important; /* Fix for uneven box heights */
     }}
     div[role="radiogroup"] label {{
         background: rgba(255,255,255,0.02); border: 1px solid {p['cardBorder']};
@@ -261,16 +263,16 @@ def apply_theme(mood="default"):
         cursor: pointer; position: relative; overflow: visible; z-index: 1; display: flex !important; box-sizing: border-box !important;
     }}
     
-    /* FIX: SURGICALLY REMOVE THE NATIVE RADIO WHITE BOX INDICATOR */
-    div[role="radiogroup"] label input[type="radio"] + div,
-    div[role="radiogroup"] label > div:first-of-type:not(:has(p)),
-    div[data-baseweb="radio"] > div:first-child {{
+    /* FIX: Completely remove the native radio graphic/white square from the nav bar */
+    div[data-testid="stRadio"] div[role="radiogroup"] label > div:first-child,
+    div[data-testid="stRadio"] div[role="radiogroup"] label div[data-baseweb="radio"] {{
         display: none !important;
         opacity: 0 !important;
-        visibility: hidden !important;
         width: 0 !important;
         height: 0 !important;
-        position: absolute !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: none !important;
         pointer-events: none !important;
     }}
     
@@ -306,6 +308,7 @@ def apply_theme(mood="default"):
         opacity: 0.35; animation: navConicSpin 5s linear infinite;
     }}
     @keyframes navConicSpin {{ from{{ filter: blur(10px) hue-rotate(0deg); }} to{{ filter: blur(10px) hue-rotate(360deg); }} }}
+    div[role="radiogroup"] input {{ display:none !important; }}
 
     /* ---------- STAT / METRIC CARDS ---------- */
     .stat-card {{
@@ -476,45 +479,56 @@ def apply_theme(mood="default"):
         box-shadow: none !important;
     }}
 
-    /* ================= SAFE DROPDOWN CSS (FIXED BACKGROUND & CLICK EVENTS) ================= */
-    /* Target the popover wrapper directly. Do not use wildcard `*` which breaks the backdrop layer. */
+    /* ================= TRANSLUCENT DARK GLASS DROPDOWN (readable text, not opaque white, not see-through) ================= */
+    /* Nuclear catch-all first: strip out whatever default (often white) background BaseWeb sets on its portal wrappers. */
+    div[data-baseweb="popover"],
+    div[data-baseweb="popover"] *,
+    [data-testid="stVirtualDropdown"],
+    [data-testid="stVirtualDropdown"] * {{
+        background: transparent !important;
+        background-color: transparent !important;
+    }}
+
+    /* The dropdown shell itself: dark translucent glass so the menu is legible against any page content behind it */
     div[data-baseweb="popover"] > div,
     [data-testid="stVirtualDropdown"] > div,
     [data-testid="stVirtualDropdown"] > div > div,
     ul[data-baseweb="menu"],
     ul[role="listbox"],
     div[role="listbox"] {{
-        background: rgba(12, 11, 8, 0.95) !important;
-        background-color: rgba(12, 11, 8, 0.95) !important;
-        backdrop-filter: blur(18px) saturate(160%) !important;
-        -webkit-backdrop-filter: blur(18px) saturate(160%) !important;
+        background: #141414 !important;
+        background-color: #141414 !important;
         border: 1px solid {p['cardBorder']} !important;
         border-radius: 6px !important;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.8), 0 0 20px {p['glow']} !important;
     }}
 
-    div[data-baseweb="popover"] > div {{
-        padding: 8px !important;
-        box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 20px {p['glow']} !important;
-    }}
-
-    /* INDIVIDUAL OPTION TILES — strict native structure (no custom margins/padding to prevent virtualization from breaking clicks!) */
+    /* INDIVIDUAL OPTION TILES — softly translucent, clearly legible text, thin gold-tinted rim.
+       Covers both <li role="option"> (standard menu) and <div role="option"> (virtualized list rows). */
+    div[data-baseweb="popover"] li,
+    ul[role="listbox"] li,
+    div[role="listbox"] li,
     li[role="option"],
     div[role="option"],
     [data-testid="stVirtualDropdown"] [role="option"] {{
-        background-color: transparent !important;
+        background: transparent !important;
         color: {p['text']} !important;
         font-family: 'EB Garamond', serif !important;
         font-size: 16px !important;
-        cursor: pointer !important;
     }}
 
     /* Hover and Selected states for tiles */
+    div[data-baseweb="popover"] li:hover,
+    ul[role="listbox"] li:hover,
+    div[role="listbox"] li:hover,
     li[role="option"]:hover,
     div[role="option"]:hover,
+    div[data-baseweb="popover"] li[aria-selected="true"],
+    ul[role="listbox"] li[aria-selected="true"],
+    div[role="listbox"] li[aria-selected="true"],
     li[role="option"][aria-selected="true"],
     div[role="option"][aria-selected="true"] {{
-        background: linear-gradient(160deg, {p['accent1']}26 0%, transparent 100%) !important;
-        background-color: rgba(212, 175, 55, 0.2) !important;
+        background: rgba(212, 175, 55, 0.2) !important;
         color: {p['accent1']} !important;
         font-weight: 700 !important;
     }}
