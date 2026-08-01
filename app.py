@@ -417,44 +417,42 @@ def apply_theme(mood="default"):
         background: #0a0a0a; border: 3px solid {p['accent1']}; box-shadow: 0 0 10px {p['glow']};
     }}
 
-    /* ---------- ROADMAP (winding highlighted-road map style) ---------- */
+    /* ---------- ROADMAP (3D winding road, teardrop pin markers) ---------- */
     .roadmap-wrap {{
-        position: relative; width: 100%; aspect-ratio: 1000 / 460;
-        margin: 34px 0 24px 0;
+        position: relative; width: 100%; aspect-ratio: 1000 / 560;
+        margin: 34px 0 24px 0; overflow: visible;
         background:
             radial-gradient(circle at 15% 15%, rgba(212,175,55,0.06) 0%, transparent 40%),
             radial-gradient(circle at 85% 85%, rgba(212,175,55,0.05) 0%, transparent 40%);
         border: 1px solid {p['cardBorder']}; border-radius: 14px;
     }}
-    .roadmap-svg {{ position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; }}
+    .roadmap-svg {{ position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; overflow: visible; }}
     .roadmap-stop {{
-        position: absolute; display: flex; align-items: center; gap: 10px;
-        transform: translate(-50%, -50%); max-width: 210px; z-index: 2;
+        position: absolute; display: flex; flex-direction: column; align-items: center;
+        width: 168px; z-index: 2;
     }}
-    .roadmap-stop.side-left {{ flex-direction: row-reverse; text-align: right; }}
-    .roadmap-pin {{
-        flex: 0 0 auto; width: 42px; height: 42px; border-radius: 50%;
-        background: radial-gradient(circle at 35% 30%, {p['accent2']}, {p['accent1']} 70%);
-        color: #0a0a0a; display: flex; align-items: center; justify-content: center;
-        font-weight: 800; font-size: 14px; box-shadow: 0 0 0 5px rgba(10,10,10,0.95), 0 0 14px {p['glow']};
-        border: 2px solid rgba(255,255,255,0.35);
+    .roadmap-stop.above {{ transform: translate(-50%, -100%); }}
+    .roadmap-stop.below {{ transform: translate(-50%, 0%); }}
+    .roadmap-text {{
+        text-align: center; background: rgba(10,10,10,0.62); border: 1px solid {p['cardBorder']};
+        border-radius: 8px; padding: 5px 9px; backdrop-filter: blur(6px);
+        transition: border-color 0.25s ease;
+    }}
+    .roadmap-title {{ font-weight: 800; font-size: 12.5px; color: {p['text']}; line-height: 1.2; }}
+    .roadmap-desc {{ font-size: 10px; color: rgba(255,255,255,0.55); margin-top: 2px; line-height: 1.25; }}
+    .roadmap-bubble {{
+        width: 46px; height: 46px; border-radius: 50%; display: flex; align-items: center;
+        justify-content: center; font-size: 19px; margin: 6px 0; color: #0a0a0a; font-weight: 800;
+        border: 2px solid rgba(255,255,255,0.4); box-shadow: 0 0 0 5px rgba(10,10,10,0.95), 0 4px 10px rgba(0,0,0,0.5);
         transition: transform 0.25s ease, box-shadow 0.25s ease;
     }}
-    .roadmap-stop.roadmap-final .roadmap-pin {{
-        background: radial-gradient(circle at 35% 30%, #fff8dc, {p['accent1']} 70%);
-        box-shadow: 0 0 0 5px rgba(10,10,10,0.95), 0 0 24px {p['glow']}, 0 0 42px {p['accent1']};
+    .roadmap-tail-down {{ width: 0; height: 0; border-left: 7px solid transparent; border-right: 7px solid transparent; border-top: 12px solid currentColor; margin-top: -2px; }}
+    .roadmap-tail-up {{ width: 0; height: 0; border-left: 7px solid transparent; border-right: 7px solid transparent; border-bottom: 12px solid currentColor; margin-bottom: -2px; }}
+    .roadmap-stop.roadmap-final .roadmap-bubble {{
+        box-shadow: 0 0 0 5px rgba(10,10,10,0.95), 0 0 20px {p['glow']}, 0 0 36px {p['accent1']};
     }}
-    .roadmap-label {{
-        font-size: 12.5px; font-weight: 700; line-height: 1.25; color: {p['text']};
-        background: rgba(10,10,10,0.6); padding: 5px 10px; border-radius: 6px;
-        border: 1px solid {p['cardBorder']}; backdrop-filter: blur(6px);
-        transition: border-color 0.25s ease, color 0.25s ease;
-    }}
-    .roadmap-stop:hover .roadmap-pin {{
-        transform: scale(1.1);
-        box-shadow: 0 0 0 5px rgba(10,10,10,0.95), 0 0 22px {p['glow']};
-    }}
-    .roadmap-stop:hover .roadmap-label {{ border-color: {p['accent2']}; color: {p['accent1']}; }}
+    .roadmap-stop:hover .roadmap-bubble {{ transform: scale(1.1); }}
+    .roadmap-stop:hover .roadmap-text {{ border-color: {p['accent2']}; }}
 
     /* ---------- LEADERBOARD ---------- */
     .leader-row {{
@@ -1469,14 +1467,27 @@ elif choice == "👨‍💻 About the Model":
     steps = ["Dataset Collection", "Data Cleaning", "Label Encoding", "Feature Scaling",
              "SMOTE Class Balancing", "Train / Test Split", "Hyperparameter Tuning (RandomizedSearchCV)",
              "XGBoost Training", "Evaluation (ROC AUC / Accuracy)", "Production Deployment"]
+    descriptions = [
+        "Gather raw applicant & loan records",
+        "Handle missing values & outliers",
+        "Convert categorical fields to numeric",
+        "Normalize numeric feature ranges",
+        "Balance the minority default class",
+        "Partition data for validation",
+        "Search optimal XGBoost parameters",
+        "Fit gradient-boosted decision trees",
+        "Benchmark ROC AUC & accuracy",
+        "Ship the model behind this app",
+    ]
 
+    VIEW_W, VIEW_H = 1000, 560
     n = len(steps)
-    pad = 60
-    span = 1000 - 2 * pad
+    pad = 70
+    span = VIEW_W - 2 * pad
     step_x = span / (n - 1)
     xs = [pad + i * step_x for i in range(n)]
-    ys = [160 if i % 2 == 0 else 300 for i in range(n)]      # road bends: top / bottom
-    pys = [50 if i % 2 == 0 else 410 for i in range(n)]      # pin sits further out from the bend
+    road_y_top, road_y_bottom = 220, 360        # road bends: top / bottom
+    ys = [road_y_top if i % 2 == 0 else road_y_bottom for i in range(n)]
 
     # smooth wavy road path through the bend points
     path_d = f"M {xs[0]:.1f} {ys[0]:.1f}"
@@ -1484,40 +1495,76 @@ elif choice == "👨‍💻 About the Model":
         midx = (xs[i - 1] + xs[i]) / 2
         path_d += f" C {midx:.1f} {ys[i-1]:.1f}, {midx:.1f} {ys[i]:.1f}, {xs[i]:.1f} {ys[i]:.1f}"
 
+    # 3D-look shadow copy of the road, offset down-right
+    shadow_d = f"M {xs[0]:.1f} {ys[0]+9:.1f}"
+    for i in range(1, n):
+        midx = (xs[i - 1] + xs[i]) / 2
+        shadow_d += f" C {midx+4:.1f} {ys[i-1]+9:.1f}, {midx+4:.1f} {ys[i]+9:.1f}, {xs[i]+4:.1f} {ys[i]+9:.1f}"
+
     dots_svg = "".join(
-        f'<circle cx="{x:.1f}" cy="{y:.1f}" r="7" fill="#0a0a0a" stroke="{PALETTE["accent1"]}" stroke-width="3"/>'
+        f'<circle cx="{x:.1f}" cy="{y:.1f}" r="6" fill="#0a0a0a" stroke="{PALETTE["accent1"]}" stroke-width="3"/>'
         for x, y in zip(xs, ys)
     )
-    stems_svg = "".join(
-        f'<line x1="{x:.1f}" y1="{y:.1f}" x2="{x:.1f}" y2="{py:.1f}" '
-        f'stroke="{PALETTE["accent1"]}" stroke-width="2" stroke-dasharray="4 4" opacity="0.55"/>'
-        for x, y, py in zip(xs, ys, pys)
+
+    # arrowhead at the final point, angled along the incoming road direction
+    import math as _math
+    ax, ay = xs[-1], ys[-1]
+    pax, pay = xs[-2], ys[-2]
+    ang = _math.atan2(ay - pay, ax - pax)
+    tip = (ax + 26 * _math.cos(ang), ay + 26 * _math.sin(ang))
+    left_pt = (ax + 12 * _math.cos(ang + 2.5), ay + 12 * _math.sin(ang + 2.5))
+    right_pt = (ax + 12 * _math.cos(ang - 2.5), ay + 12 * _math.sin(ang - 2.5))
+    arrow_svg = (
+        f'<polygon points="{tip[0]:.1f},{tip[1]:.1f} {left_pt[0]:.1f},{left_pt[1]:.1f} '
+        f'{right_pt[0]:.1f},{right_pt[1]:.1f}" fill="{PALETTE["accent1"]}"/>'
     )
 
     road_svg = (
-        f'<svg class="roadmap-svg" viewBox="0 0 1000 460" preserveAspectRatio="none">'
-        f'<defs><filter id="roadGlow" x="-50%" y="-50%" width="200%" height="200%">'
-        f'<feGaussianBlur stdDeviation="7"/></filter></defs>'
-        f'<path d="{path_d}" fill="none" stroke="{PALETTE["accent1"]}" stroke-width="40" opacity="0.28" filter="url(#roadGlow)" stroke-linecap="round"/>'
-        f'<path d="{path_d}" fill="none" stroke="#141414" stroke-width="30" stroke-linecap="round"/>'
-        f'<path d="{path_d}" fill="none" stroke="{PALETTE["accent1"]}" stroke-width="3" stroke-dasharray="14 12" opacity="0.85" stroke-linecap="round"/>'
-        f'{stems_svg}{dots_svg}'
+        f'<svg class="roadmap-svg" viewBox="0 0 {VIEW_W} {VIEW_H}" preserveAspectRatio="none">'
+        f'<defs>'
+        f'<linearGradient id="roadGrad" x1="0" y1="0" x2="0" y2="1">'
+        f'<stop offset="0%" stop-color="#4a4a4a"/><stop offset="45%" stop-color="#1c1c1c"/>'
+        f'<stop offset="100%" stop-color="#050505"/>'
+        f'</linearGradient>'
+        f'<filter id="roadGlow" x="-50%" y="-50%" width="200%" height="200%">'
+        f'<feGaussianBlur stdDeviation="7"/></filter>'
+        f'</defs>'
+        f'<path d="{shadow_d}" fill="none" stroke="rgba(0,0,0,0.55)" stroke-width="32" stroke-linecap="round"/>'
+        f'<path d="{path_d}" fill="none" stroke="{PALETTE["accent1"]}" stroke-width="42" opacity="0.22" filter="url(#roadGlow)" stroke-linecap="round"/>'
+        f'<path d="{path_d}" fill="none" stroke="url(#roadGrad)" stroke-width="30" stroke-linecap="round"/>'
+        f'<path d="{path_d}" fill="none" stroke="rgba(255,255,255,0.14)" stroke-width="30" stroke-linecap="round" '
+        f'stroke-dasharray="1 46" stroke-dashoffset="-6"/>'
+        f'<path d="{path_d}" fill="none" stroke="#f4f4f4" stroke-width="2.5" stroke-dasharray="13 12" opacity="0.9" stroke-linecap="round"/>'
+        f'{dots_svg}{arrow_svg}'
         f'</svg>'
     )
 
+    bubble_colors = [PALETTE["accent1"], PALETTE["accent2"]]
     stops_html = ""
-    for i, s in enumerate(steps):
-        final_class = " roadmap-final" if i == n - 1 else ""
-        icon = "🏁" if i == n - 1 else str(i + 1)
-        side = "right" if xs[i] <= 500 else "left"
-        left_pct = xs[i] / 1000 * 100
-        top_pct = pys[i] / 460 * 100
+    for i, (s, desc) in enumerate(zip(steps, descriptions)):
+        is_final = i == n - 1
+        final_class = " roadmap-final" if is_final else ""
+        icon = "🏁" if is_final else str(i + 1)
+        above = (i % 2 == 0)
+        orientation = "above" if above else "below"
+        if is_final:
+            bubble_style = f'background: radial-gradient(circle at 35% 30%, #fff8dc, {PALETTE["accent1"]} 70%);'
+        else:
+            bg = bubble_colors[i % 2]
+            bubble_style = f'background: radial-gradient(circle at 35% 30%, #fff, {bg} 70%);'
+        text_block = f'<div class="roadmap-text"><div class="roadmap-title">{s}</div><div class="roadmap-desc">{desc}</div></div>'
+        bubble_block = f'<div class="roadmap-bubble" style="{bubble_style}">{icon}</div>'
+        tail_block = (
+            f'<div class="roadmap-tail-down" style="color:{PALETTE["accent1"] if is_final else bubble_colors[i % 2]}"></div>'
+            if above else
+            f'<div class="roadmap-tail-up" style="color:{bubble_colors[i % 2]}"></div>'
+        )
+        left_pct = xs[i] / VIEW_W * 100
+        top_pct = ys[i] / VIEW_H * 100
+        inner = f'{text_block}{bubble_block}{tail_block}' if above else f'{tail_block}{bubble_block}{text_block}'
         stops_html += (
-            f'<div class="roadmap-stop side-{side}{final_class}" '
-            f'style="left:{left_pct:.2f}%; top:{top_pct:.2f}%;">'
-            f'<div class="roadmap-pin">{icon}</div>'
-            f'<div class="roadmap-label">{s}</div>'
-            f'</div>'
+            f'<div class="roadmap-stop {orientation}{final_class}" '
+            f'style="left:{left_pct:.2f}%; top:{top_pct:.2f}%;">{inner}</div>'
         )
 
     st.markdown(
