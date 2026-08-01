@@ -217,43 +217,30 @@ def apply_theme(mood="default"):
     .credit-card .num {{ color: #000; font-family: 'Special Elite', monospace; letter-spacing: 2px; font-size: 14px; margin-top: 14px; text-shadow: 0 0 6px rgba(255,255,255,0.4); }}
     .credit-card .brand {{ position:absolute; bottom: 12px; right: 16px; font-size: 20px; }}
 
-    /* ---------- TOP NAV BAR (glassy, luxury pill tabs, equal width, zero dots, no top bar) ---------- */
-    .navbar-wrap {{
-        background: linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
-        border: 1px solid {p['cardBorder']}; border-radius: 8px;
-        padding: 12px 16px; backdrop-filter: blur(26px) saturate(160%); -webkit-backdrop-filter: blur(26px) saturate(160%);
-        margin: 0 auto 22px; z-index: 20; position: sticky; top: 8px; width: 100%;
-        box-shadow: 0 0 30px {p['glow']}, 0 8px 32px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.05);
-        position: relative; overflow: hidden;
-    }}
-    .navbar-wrap::before {{
-        content: ""; position: absolute; inset: -2px; z-index: -1; border-radius: 8px; padding: 1px;
-        background: linear-gradient(120deg, {p['accent1']}, {p['accent2']}, {p['accent3']}, {p['accent1']});
-        background-size: 300% 300%; animation: navBorderFlow 8s linear infinite;
-        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-        -webkit-mask-composite: xor; mask-composite: exclude; opacity: 0.55;
-    }}
-    @keyframes navBorderFlow {{ 0%{{background-position:0% 50%;}} 100%{{background-position:300% 50%;}} }}
-
-    /* Fully reset the stRadio wrapper so no empty bar/box shows above the pills */
+    /* ---------- TOP NAV BAR (rectangle vintage tabs, equal width) ---------- */
+    /* NOTE: styling is applied directly to Streamlit's own stRadio container —
+       the markdown wrapper div below never actually nests around the widget in the DOM. */
     div[data-testid="stRadio"] {{
-        background: transparent !important; border: none !important; box-shadow: none !important;
-        padding: 0 !important; margin: 0 !important; width: 100% !important;
+        background: linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01)) !important;
+        border: 1px solid {p['cardBorder']} !important; border-radius: 4px !important;
+        padding: 10px !important; backdrop-filter: blur(26px) saturate(160%) !important; -webkit-backdrop-filter: blur(26px) saturate(160%) !important;
+        margin: 0 0 22px 0 !important; z-index: 20; position: relative; width: 100% !important;
+        box-shadow: 0 0 30px {p['glow']}, 0 8px 32px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.05) !important;
+        overflow: visible !important;
     }}
     div[data-testid="stRadio"] > label,
     div[data-testid="stWidgetLabel"] {{
         display: none !important; height: 0 !important; padding: 0 !important; margin: 0 !important;
     }}
-    div[data-testid="stHorizontalBlock"] div[role="radiogroup"] {{
-        display: flex !important; flex-direction: row !important; flex-wrap: nowrap !important; gap: 10px !important; justify-content: space-between !important; width: 100% !important; margin: 0 !important; padding: 0 !important;
-    }}
     div[role="radiogroup"] {{
-        margin: 0 !important; padding: 0 !important; background: transparent !important; border: none !important;
+        display: flex !important; flex-direction: row !important; flex-wrap: nowrap !important;
+        gap: 8px !important; width: 100% !important; margin: 0 !important; padding: 0 !important;
+        background: transparent !important; border: none !important;
     }}
     div[role="radiogroup"] label {{
         background: rgba(255,255,255,0.02); border: 1px solid {p['cardBorder']}; border-radius: 4px;
-        padding: 12px 10px !important; font-family: 'Playfair Display', serif; font-weight: 700; font-size: 13.5px; letter-spacing: 0.3px;
-        color: {p['text']} !important; opacity: 0.85; flex: 1 1 0 !important; width: 0 !important; max-width: none !important;
+        padding: 12px 6px !important; font-family: 'Playfair Display', serif; font-weight: 700; font-size: 12.5px; letter-spacing: 0.2px;
+        color: {p['text']} !important; opacity: 0.85; flex: 1 1 0 !important; min-width: 0 !important; max-width: none !important;
         justify-content: center !important; align-items: center !important; text-align: center;
         transition: box-shadow 0.3s ease, border-color 0.3s ease, opacity 0.3s ease, background 0.3s ease, color 0.3s ease;
         cursor: pointer; position: relative; overflow: hidden; z-index: 1; display: flex !important; min-height: 48px !important; box-sizing: border-box !important;
@@ -268,9 +255,12 @@ def apply_theme(mood="default"):
         margin: 0 !important; padding: 0 !important; opacity: 0 !important; content: none !important;
     }}
     div[role="radiogroup"] label div[data-testid="stMarkdownContainer"] {{
-        width: 100% !important; flex: 1 1 auto !important;
+        width: 100% !important; flex: 1 1 auto !important; min-width: 0 !important;
     }}
-    div[role="radiogroup"] label p {{ color: inherit !important; margin: 0 !important; text-align: center !important; width: 100% !important; white-space: nowrap !important; }}
+    div[role="radiogroup"] label p {{
+        color: inherit !important; margin: 0 !important; text-align: center !important; width: 100% !important;
+        white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important;
+    }}
     div[role="radiogroup"] label::before {{
         content: ""; position: absolute; inset: 0; border-radius: 4px; z-index: -1;
         background: conic-gradient(from 0deg, {p['accent1']}, {p['accent2']}, {p['accent3']}, {p['accent1']});
@@ -294,9 +284,11 @@ def apply_theme(mood="default"):
     @keyframes navConicSpin {{ from{{ filter: blur(10px) hue-rotate(0deg); }} to{{ filter: blur(10px) hue-rotate(360deg); }} }}
     div[role="radiogroup"] input {{ display:none !important; }}
 
+
+
     /* ---------- STAT / METRIC CARDS ---------- */
     .stat-card {{
-        background: rgba(255,255,255,0.02); border: 1px solid {p['cardBorder']}; border-radius: 18px;
+        background: rgba(255,255,255,0.02); border: 1px solid {p['cardBorder']}; border-radius: 6px;
         padding: 22px 10px; text-align: center; backdrop-filter: blur(14px); animation: floaty 5s ease-in-out infinite;
         position: relative; z-index: 1; box-shadow: 0 0 16px {p['glow']};
     }}
@@ -310,7 +302,7 @@ def apply_theme(mood="default"):
     .stat-label {{ font-size: 12.5px; color: {p['text']}; opacity:0.7; letter-spacing: 0.6px; text-transform: uppercase; margin-top: 4px;}}
 
     [data-testid="stMetric"] {{
-        background: rgba(255,255,255,0.02); border: 1px solid {p['cardBorder']}; border-radius: 16px;
+        background: rgba(255,255,255,0.02); border: 1px solid {p['cardBorder']}; border-radius: 6px;
         padding: 14px 10px; box-shadow: 0 0 14px {p['glow']};
     }}
     [data-testid="stMetricValue"] {{ color: {p['accent1']} !important; }}
@@ -404,13 +396,13 @@ def apply_theme(mood="default"):
     /* ---------- LEADERBOARD ---------- */
     .leader-row {{
         display: flex; align-items: center; justify-content: space-between; padding: 14px 20px;
-        background: rgba(255,255,255,0.02); border: 1px solid {p['cardBorder']}; border-radius: 16px;
+        background: rgba(255,255,255,0.02); border: 1px solid {p['cardBorder']}; border-radius: 6px;
         margin-bottom: 10px; transition: all 0.25s ease;
     }}
     .leader-row:hover {{ transform: translateX(6px); border-color: {p['accent2']}; box-shadow: 0 0 16px {p['glow']}; }}
     .leader-crown {{ font-size: 22px; margin-right: 10px; }}
     .champion-badge {{
-        display: inline-block; padding: 20px 30px; border-radius: 22px;
+        display: inline-block; padding: 20px 30px; border-radius: 6px;
         background: linear-gradient(135deg, rgba(212,175,55,0.1), rgba(229,228,226,0.1));
         border: 2px solid {p['accent1']}; text-align: center; animation: floaty 4s ease-in-out infinite;
         box-shadow: 0 0 26px {p['glow']};
@@ -419,7 +411,7 @@ def apply_theme(mood="default"):
     /* ---------- FILE UPLOADER (drag & drop) ---------- */
     [data-testid="stFileUploaderDropzone"] {{
         background: rgba(255,255,255,0.02) !important; border: 2px dashed {p['accent1']} !important;
-        border-radius: 18px !important; box-shadow: 0 0 16px {p['glow']};
+        border-radius: 6px !important; box-shadow: 0 0 16px {p['glow']};
     }}
 
     hr {{ border-color: {p['cardBorder']}; }}
@@ -447,7 +439,7 @@ def apply_theme(mood="default"):
         backdrop-filter: blur(16px) !important;
         -webkit-backdrop-filter: blur(16px) !important;
         border: 1px solid {p['cardBorder']} !important;
-        border-radius: 12px !important;
+        border-radius: 6px !important;
         color: {p['text']} !important;
         box-shadow: inset 0 2px 6px rgba(0,0,0,0.6), 0 0 10px rgba(0,0,0,0.2) !important;
     }}
@@ -475,51 +467,51 @@ def apply_theme(mood="default"):
     ul[data-baseweb="menu"],
     ul[role="listbox"],
     div[role="listbox"] {{
-        background: rgba(20, 18, 12, 0.35) !important;
-        background-color: rgba(20, 18, 12, 0.35) !important;
+        background: rgba(15, 13, 9, 0.16) !important;
+        background-color: rgba(15, 13, 9, 0.16) !important;
         border: none !important;
     }}
 
     div[data-baseweb="popover"] > div {{
-        backdrop-filter: blur(28px) saturate(180%) !important;
-        -webkit-backdrop-filter: blur(28px) saturate(180%) !important;
+        backdrop-filter: blur(20px) saturate(180%) !important;
+        -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
         border: 1px solid {p['cardBorder']} !important;
-        border-radius: 16px !important;
-        box-shadow: 0 20px 50px rgba(0,0,0,0.85), 0 0 24px {p['glow']}, inset 0 1px 0 rgba(255,255,255,0.15) !important;
-        padding: 10px !important;
-        background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(0,0,0,0.1)) !important;
+        border-radius: 6px !important;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.75), 0 0 24px {p['glow']}, inset 0 1px 0 rgba(255,255,255,0.12) !important;
+        padding: 8px !important;
+        background: rgba(15,13,9,0.1) !important;
     }}
 
-    /* INDIVIDUAL GLASS TILES — layered gloss: frosted glass base + soft top sheen + light rim */
+    /* INDIVIDUAL GLASS TILES — thin, near-transparent panes with a crisp rim and faint top sheen */
     div[data-baseweb="popover"] li,
     ul[role="listbox"] li,
     div[role="listbox"] li,
     li[role="option"] {{
-        background:
-            linear-gradient(160deg, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.06) 38%, rgba(255,255,255,0.02) 60%, rgba(255,255,255,0.08) 100%) !important;
-        border: 1px solid rgba(255, 255, 255, 0.22) !important;
-        border-top: 1px solid rgba(255,255,255,0.45) !important;
+        background: rgba(255, 255, 255, 0.05) !important;
+        border: 1px solid rgba(255, 255, 255, 0.18) !important;
+        border-top: 1px solid rgba(255,255,255,0.32) !important;
         color: {p['text']} !important;
         transition: all 0.25s cubic-bezier(.34,1.56,.64,1) !important;
-        font-size: 14.5px !important;
-        padding: 12px 16px !important;
-        margin: 6px 8px !important;
-        border-radius: 12px !important;
-        backdrop-filter: blur(18px) saturate(180%) !important;
-        -webkit-backdrop-filter: blur(18px) saturate(180%) !important;
-        box-shadow: 0 6px 16px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.35), inset 0 -8px 14px rgba(0,0,0,0.18) !important;
+        font-family: 'Cormorant Garamond', serif !important;
+        font-size: 16px !important;
+        padding: 11px 16px !important;
+        margin: 5px 6px !important;
+        border-radius: 4px !important;
+        backdrop-filter: blur(8px) saturate(160%) !important;
+        -webkit-backdrop-filter: blur(8px) saturate(160%) !important;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.18) !important;
         display: block !important;
         position: relative !important;
         overflow: hidden !important;
     }}
-    /* Glossy highlight streak across the top of each tile */
+    /* Faint glossy highlight streak across the top of each tile — subtle, not opaque */
     div[data-baseweb="popover"] li::before,
     ul[role="listbox"] li::before,
     div[role="listbox"] li::before,
     li[role="option"]::before {{
-        content: ""; position: absolute; top: 0; left: 0; right: 0; height: 55%;
-        background: linear-gradient(180deg, rgba(255,255,255,0.35), rgba(255,255,255,0) 100%);
-        pointer-events: none; border-radius: 12px 12px 40% 40% / 12px 12px 100% 100%;
+        content: ""; position: absolute; top: 0; left: 0; right: 0; height: 50%;
+        background: linear-gradient(180deg, rgba(255,255,255,0.14), rgba(255,255,255,0) 100%);
+        pointer-events: none;
     }}
 
     /* Hover and Selected states for tiles */
@@ -531,14 +523,13 @@ def apply_theme(mood="default"):
     ul[role="listbox"] li[aria-selected="true"],
     div[role="listbox"] li[aria-selected="true"],
     li[role="option"][aria-selected="true"] {{
-        background:
-            linear-gradient(160deg, {p['accent1']}66 0%, {p['accent2']}33 40%, rgba(255,255,255,0.05) 65%, {p['accent1']}33 100%) !important;
+        background: linear-gradient(160deg, {p['accent1']}3a 0%, {p['accent2']}22 60%, transparent 100%) !important;
         border: 1px solid {p['accent1']} !important;
-        border-top: 1px solid rgba(255,255,255,0.6) !important;
+        border-top: 1px solid rgba(255,255,255,0.55) !important;
         color: {p['accent1']} !important;
-        font-weight: 800 !important;
-        transform: translateY(-2px) scale(1.02) !important;
-        box-shadow: 0 10px 26px rgba(0,0,0,0.6), 0 0 18px {p['glow']}, inset 0 1px 0 rgba(255,255,255,0.5) !important;
+        font-weight: 700 !important;
+        transform: translateY(-1px) !important;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.5), 0 0 16px {p['glow']}, inset 0 1px 0 rgba(255,255,255,0.4) !important;
     }}
 
     /* Multiselect Tags */
@@ -575,7 +566,7 @@ def apply_theme(mood="default"):
     .stTabs [data-baseweb="tab-list"] {{ gap: 8px; }}
     .stTabs [data-baseweb="tab"] {{
         background: rgba(255,255,255,0.02) !important; border: 1px solid {p['cardBorder']} !important;
-        border-radius: 14px 14px 0 0 !important; color: {p['text']} !important;
+        border-radius: 6px 14px 0 0 !important; color: {p['text']} !important;
     }}
     .stTabs [aria-selected="true"] {{
         background: rgba(212,175,55,0.1) !important; color: {p['accent1']} !important;
@@ -587,7 +578,7 @@ def apply_theme(mood="default"):
         background: rgba(15, 15, 15, 0.6) !important; 
         background-color: rgba(15, 15, 15, 0.6) !important; 
         border: 1px solid {p['cardBorder']} !important;
-        border-radius: 16px !important; 
+        border-radius: 6px !important; 
         backdrop-filter: blur(14px) !important; 
         -webkit-backdrop-filter: blur(14px) !important;
         overflow: hidden !important;
@@ -632,7 +623,7 @@ def apply_theme(mood="default"):
     /* alerts (info/success/warning/error) */
     [data-testid="stAlertContainer"], .stAlert {{
         background: rgba(255,255,255,0.05) !important; border: 1px solid {p['cardBorder']} !important;
-        border-radius: 14px !important; backdrop-filter: blur(10px);
+        border-radius: 6px !important; backdrop-filter: blur(10px);
     }}
     [data-testid="stAlertContainer"] p, .stAlert p, .stAlert div {{ color: {p['text']} !important; }}
 
@@ -648,7 +639,7 @@ def apply_theme(mood="default"):
 
     /* ================= GLASSY THEMED TABLES (replaces default st.dataframe) ================= */
     .glass-table-wrap {{
-        background: rgba(255,255,255,0.02); border: 1px solid {p['cardBorder']}; border-radius: 18px;
+        background: rgba(255,255,255,0.02); border: 1px solid {p['cardBorder']}; border-radius: 6px;
         padding: 4px; backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
         box-shadow: 0 0 24px rgba(0,0,0,0.5), 0 0 14px {p['glow']} inset;
         overflow: auto; margin-bottom: 16px; position: relative; z-index: 1;
@@ -841,14 +832,12 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # =====================================================================================
-# 5. TOP NAVIGATION BAR (glassy, luxury pill tabs)
+# 5. TOP NAVIGATION BAR (rectangle vintage tabs)
 # =====================================================================================
-st.markdown('<div class="navbar-wrap">', unsafe_allow_html=True)
 menu = [
     "🏠 Home", "📊 Dashboard", "📈 Analytics", "🧠 AI Predictor", "📁 Dataset", "👨‍💻 About the Model",
 ]
 choice = st.radio("Navigate", menu, horizontal=True, label_visibility="collapsed", key="page")
-st.markdown('</div>', unsafe_allow_html=True)
 
 top_l, top_r = st.columns([3, 1])
 with top_r:
