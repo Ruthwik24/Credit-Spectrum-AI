@@ -438,6 +438,18 @@ def apply_theme(mood="default"):
         border-radius: 6px !important; box-shadow: 0 0 16px {p['glow']};
     }}
 
+    /* Make uploaded file item translucent instead of solid white */
+    [data-testid="stFileUploaderDropzone"] section, 
+    [data-testid="stUploadedFile"], 
+    div.stUploadedFile {{
+        background: rgba(15, 15, 15, 0.6) !important;
+        background-color: rgba(15, 15, 15, 0.6) !important;
+        backdrop-filter: blur(14px) !important;
+        -webkit-backdrop-filter: blur(14px) !important;
+        border: 1px solid {p['cardBorder']} !important;
+        border-radius: 6px !important;
+    }}
+
     hr {{ border-color: {p['cardBorder']}; }}
     ::-webkit-scrollbar {{ width: 8px; }}
     ::-webkit-scrollbar-thumb {{ background: {p['accent2']}; border-radius: 10px; }}
@@ -1340,6 +1352,8 @@ elif choice == "🧠 AI Predictor":
                         st.session_state.batch_result = batch_df
             except Exception as e:
                 st.error(f"⚠️ Could not process file: {e}")
+        else:
+            st.session_state.batch_result = None
 
         if st.session_state.batch_result is not None:
             res = st.session_state.batch_result
