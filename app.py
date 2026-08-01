@@ -21,7 +21,7 @@ import random
 # =====================================================================================
 st.set_page_config(
     page_title="Credit Spectrum AI | Intelligent Credit Eligibility Platform",
-    page_icon="💠",
+    page_icon="🏛️",
     layout="wide",
     initial_sidebar_state="collapsed",
 )
@@ -254,32 +254,31 @@ def apply_theme(mood="default"):
     }}
     div[role="radiogroup"] label {{
         background: rgba(255,255,255,0.02); border: 1px solid {p['cardBorder']};
-        padding: 16px 10px !important; font-family: 'Cinzel', 'Playfair Display', serif; font-weight: 600; font-size: 13px; letter-spacing: 1.4px;
+        padding: 16px 14px !important; font-family: 'Cinzel', 'Playfair Display', serif; font-weight: 600; font-size: 12.5px; letter-spacing: 0.8px;
         text-transform: uppercase;
         color: {p['text']} !important; opacity: 0.85; flex: 1 1 0 !important; min-width: 0 !important; max-width: none !important;
         justify-content: center !important; align-items: center !important; text-align: center;
         transition: box-shadow 0.3s ease, border-color 0.3s ease, opacity 0.3s ease, background 0.3s ease, color 0.3s ease;
-        cursor: pointer; position: relative; overflow: hidden; z-index: 1; display: flex !important; min-height: 56px !important; box-sizing: border-box !important;
+        cursor: pointer; position: relative; overflow: visible; z-index: 1; display: flex !important; min-height: 56px !important; box-sizing: border-box !important;
     }}
-    /* Kill the radio button indicator circle entirely — BaseWeb nests it as label > div[data-baseweb="radio"] > div (the visible dot) plus a hidden input */
-    div[role="radiogroup"] label div[data-baseweb="radio"],
-    div[role="radiogroup"] label div[data-baseweb="radio"] *,
-    div[role="radiogroup"] label > div:first-child,
-    div[role="radiogroup"] label > span:first-child,
-    div[role="radiogroup"] label div[data-testid="stMarkdownContainer"] ~ div,
-    div[role="radiogroup"] label svg,
-    div[role="radiogroup"] label::after {{
+    /* Kill the radio button indicator (dot/square) entirely — hide EVERY child of the label except the text container */
+    div[role="radiogroup"] label > *:not([data-testid="stMarkdownContainer"]) {{
         display: none !important; width: 0 !important; height: 0 !important;
-        min-width: 0 !important; min-height: 0 !important;
-        margin: 0 !important; padding: 0 !important; opacity: 0 !important; content: none !important;
-        border: none !important; background: none !important;
+        min-width: 0 !important; min-height: 0 !important; max-width: 0 !important; max-height: 0 !important;
+        margin: 0 !important; padding: 0 !important; opacity: 0 !important; visibility: hidden !important;
+        border: none !important; background: none !important; box-shadow: none !important;
+        position: absolute !important; overflow: hidden !important; pointer-events: none !important;
     }}
+    div[role="radiogroup"] label::after,
+    div[role="radiogroup"] label::before {{ content: none !important; }}
     div[role="radiogroup"] label div[data-testid="stMarkdownContainer"] {{
         width: 100% !important; flex: 1 1 auto !important; min-width: 0 !important;
+        display: block !important; visibility: visible !important; opacity: 1 !important; position: relative !important;
     }}
     div[role="radiogroup"] label p {{
         color: inherit !important; margin: 0 !important; text-align: center !important; width: 100% !important;
-        white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important;
+        white-space: normal !important; overflow: visible !important; text-overflow: unset !important;
+        line-height: 1.3 !important; word-break: keep-all !important;
     }}
     div[role="radiogroup"] label::before {{
         content: ""; position: absolute; inset: 0; border-radius: 4px; z-index: -1;
@@ -476,8 +475,21 @@ def apply_theme(mood="default"):
     }}
 
     /* ================= STRICT GLASSY DROPDOWN TILES (NO OPAQUE BOXES) ================= */
-    div[data-baseweb="popover"] {{
+    /* Nuclear catch-all: whatever wrapper markup BaseWeb renders inside the popover portal,
+       every single element in it must be transparent — no solid white boxes, no blur. */
+    div[data-baseweb="popover"],
+    div[data-baseweb="popover"] * {{
+        background: transparent !important;
         background-color: transparent !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }}
+    [data-testid="stVirtualDropdown"],
+    [data-testid="stVirtualDropdown"] * {{
+        background: transparent !important;
+        background-color: transparent !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
     }}
     
     div[data-baseweb="popover"] > div,
@@ -501,11 +513,14 @@ def apply_theme(mood="default"):
         background: transparent !important;
     }}
 
-    /* INDIVIDUAL GLASS TILES — thin, near-transparent panes with a crisp rim and faint top sheen */
+    /* INDIVIDUAL GLASS TILES — thin, near-transparent panes with a crisp rim and faint top sheen.
+       Covers both <li role="option"> (standard menu) and <div role="option"> (virtualized list rows). */
     div[data-baseweb="popover"] li,
     ul[role="listbox"] li,
     div[role="listbox"] li,
-    li[role="option"] {{
+    li[role="option"],
+    div[role="option"],
+    [data-testid="stVirtualDropdown"] [role="option"] {{
         background: transparent !important;
         border: 1px solid rgba(255, 255, 255, 0.14) !important;
         color: {p['text']} !important;
@@ -527,10 +542,12 @@ def apply_theme(mood="default"):
     ul[role="listbox"] li:hover,
     div[role="listbox"] li:hover,
     li[role="option"]:hover,
+    div[role="option"]:hover,
     div[data-baseweb="popover"] li[aria-selected="true"],
     ul[role="listbox"] li[aria-selected="true"],
     div[role="listbox"] li[aria-selected="true"],
-    li[role="option"][aria-selected="true"] {{
+    li[role="option"][aria-selected="true"],
+    div[role="option"][aria-selected="true"] {{
         background: linear-gradient(160deg, {p['accent1']}26 0%, transparent 100%) !important;
         border: 1px solid {p['accent1']} !important;
         color: {p['accent1']} !important;
