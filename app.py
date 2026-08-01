@@ -78,10 +78,18 @@ def apply_theme(mood="default"):
 
     st.markdown(f"""
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700;800;900&family=Cormorant+Garamond:wght@400;500;600;700&family=Special+Elite&family=Orbitron:wght@500;700;900&family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
 
-    html, body, [class*="css"] {{ font-family: 'Inter', 'Poppins', sans-serif; }}
+    html, body, [class*="css"] {{ font-family: 'Cormorant Garamond', 'Poppins', serif; }}
     #MainMenu, footer, header {{ visibility: hidden; }}
+
+    /* ---------- VINTAGE GRAIN + VIGNETTE OVERLAY (retro texture, colors untouched) ---------- */
+    .stApp::after {{
+        content: ""; position: fixed; inset: 0; z-index: 9998; pointer-events: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+        mix-blend-mode: overlay; opacity: 0.5;
+        box-shadow: inset 0 0 140px 60px rgba(0,0,0,0.65), inset 0 0 40px 10px rgba(0,0,0,0.4);
+    }}
 
     /* CRITICAL FIX: Ensure the underlying DOM body is completely black. 
        This prevents popovers (which render outside .stApp) from revealing a white background through their transparency! */
@@ -125,48 +133,59 @@ def apply_theme(mood="default"):
         100% {{ transform: translateY(115vh) translateX(-25px) rotate(360deg); }}
     }}
 
-    h1, h2, h3 {{ font-family: 'Poppins', sans-serif !important; color: {p['text']} !important; font-weight: 700 !important; }}
+    h1, h2, h3 {{ font-family: 'Playfair Display', serif !important; color: {p['text']} !important; font-weight: 800 !important; letter-spacing: 0.5px; }}
     p, span, div, label {{ color: {p['text']}; }}
 
-    /* ---------- GLASS CARD (luxury edition) ---------- */
+    /* ---------- GLASS CARD (retro plaque edition — vintage frame, letterpress emboss) ---------- */
     .glass-card {{
         background: rgba(255,255,255,0.03); border: 1px solid {p['cardBorder']};
-        border-radius: 20px; padding: 26px; backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
-        box-shadow: 0 0 30px rgba(0,0,0,0.6), 0 0 12px {p['glow']} inset; transition: all 0.35s ease;
+        outline: 1px solid rgba(0,0,0,0.5); outline-offset: -5px;
+        border-radius: 6px; padding: 26px; backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+        box-shadow: 0 0 30px rgba(0,0,0,0.6), 0 0 12px {p['glow']} inset, inset 0 1px 0 rgba(255,255,255,0.12), inset 0 -1px 0 rgba(0,0,0,0.5);
+        transition: all 0.35s ease;
         margin-bottom: 18px; position: relative; z-index: 1;
     }}
     .glass-card:hover {{
-        transform: translateY(-6px); border-color: {p['accent2']};
-        box-shadow: 0 0 40px {p['glow']}, 0 0 16px {p['glow']} inset;
+        transform: translateY(-4px); border-color: {p['accent2']};
+        box-shadow: 0 0 40px {p['glow']}, 0 0 16px {p['glow']} inset, inset 0 1px 0 rgba(255,255,255,0.16), inset 0 -1px 0 rgba(0,0,0,0.5);
     }}
+    .glass-card h3 {{ font-family: 'Playfair Display', serif !important; letter-spacing: 0.5px; border-bottom: 1px solid {p['cardBorder']}; padding-bottom: 10px; }}
 
     /* ---------- PANEL (for dashboard/analytics grid boxes) ---------- */
     div[data-testid="stVerticalBlockBorderWrapper"] {{
         background: rgba(255,255,255,0.02) !important;
-        border: 1px solid {p['cardBorder']} !important; border-radius: 20px !important;
-        backdrop-filter: blur(16px); box-shadow: 0 0 24px rgba(0,0,0,0.5); position: relative; z-index: 1;
+        border: 1px solid {p['cardBorder']} !important; border-radius: 6px !important;
+        outline: 1px solid rgba(0,0,0,0.5) !important; outline-offset: -5px !important;
+        backdrop-filter: blur(16px); box-shadow: 0 0 24px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1); position: relative; z-index: 1;
         transition: box-shadow 0.3s ease, transform 0.3s ease;
     }}
     div[data-testid="stVerticalBlockBorderWrapper"]:hover {{
         box-shadow: 0 0 24px {p['glow']}; transform: translateY(-3px);
     }}
     .panel-title {{
-        font-family:'Poppins',sans-serif; font-weight:800; font-size:18px; margin-bottom:2px;
-        color:{p['accent1']} !important;
+        font-family:'Playfair Display',serif; font-weight:800; font-size:18px; margin-bottom:2px;
+        color:{p['accent1']} !important; letter-spacing: 0.4px;
     }}
-    .panel-sub {{ font-size:12.5px; opacity:0.65; margin-bottom:10px; }}
+    .panel-sub {{ font-family: 'Special Elite', monospace; font-size:12px; opacity:0.65; margin-bottom:10px; letter-spacing: 0.5px; }}
 
     /* ---------- HERO / TITLE ---------- */
     .hero-wrap {{
-        background: {p['heroGrad']}; border: 1px solid {p['cardBorder']}; border-radius: 28px;
+        background: {p['heroGrad']}; border: 3px double {p['cardBorder']}; border-radius: 8px;
         padding: 50px 42px; backdrop-filter: blur(22px); margin-bottom: 22px; position: relative;
-        overflow: hidden; z-index: 1; text-align: center; box-shadow: 0 0 50px {p['glow']};
+        overflow: hidden; z-index: 1; text-align: center; box-shadow: 0 0 50px {p['glow']}, inset 0 0 0 8px rgba(0,0,0,0.25);
+    }}
+    .hero-wrap::before {{
+        content: "❧"; position: absolute; top: 10px; left: 18px; font-size: 22px; color: {p['accent1']}; opacity: 0.55;
+    }}
+    .hero-wrap::after {{
+        content: "❧"; position: absolute; bottom: 10px; right: 18px; font-size: 22px; color: {p['accent1']}; opacity: 0.55; transform: rotate(180deg);
     }}
     .brand-row {{ display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap; }}
     .coin-spin {{ display: inline-block; font-size: 44px; animation: spinCoin 3.2s linear infinite; filter: drop-shadow(0 0 10px {p['glow']}); }}
     @keyframes spinCoin {{ 0%{{ transform: rotateY(0deg); }} 100%{{ transform: rotateY(360deg); }} }}
     .hero-title {{
-        font-family: 'Orbitron', 'Poppins', sans-serif; font-size: 52px; font-weight: 900; letter-spacing: 1px;
+        font-family: 'Playfair Display', serif; font-size: 52px; font-weight: 900; letter-spacing: 2px;
+        text-transform: uppercase;
         background: {p['titleGrad']}; background-size: 300% auto;
         -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
         margin-bottom: 4px; animation: shimmer 6s linear infinite;
@@ -177,36 +196,38 @@ def apply_theme(mood="default"):
     .orbit-emoji.d2 {{ animation-delay: 0.4s; }}
     .orbit-emoji.d3 {{ animation-delay: 0.8s; }}
     @keyframes bob {{ 0%,100%{{ transform: translateY(0) rotate(-4deg); }} 50%{{ transform: translateY(-9px) rotate(4deg); }} }}
-    .hero-sub {{ font-size: 19px; color: {p['text']}; opacity: 0.85; font-weight: 400; margin: 10px 0 14px; }}
+    .hero-sub {{ font-family: 'Cormorant Garamond', serif; font-size: 21px; color: {p['text']}; opacity: 0.85; font-weight: 500; font-style: italic; margin: 10px 0 14px; }}
     .hero-tag {{
-        display: inline-block; padding: 6px 18px; border-radius: 30px; background: rgba(255,255,255,0.05);
-        border: 1px solid {p['accent1']}; color: {p['accent1']}; font-size: 12.5px; letter-spacing: 1.5px; font-weight: 700;
+        display: inline-block; padding: 6px 18px; border-radius: 2px; background: rgba(255,255,255,0.05);
+        border: 1px solid {p['accent1']}; color: {p['accent1']}; font-family: 'Special Elite', monospace;
+        font-size: 11.5px; letter-spacing: 1.8px; font-weight: 400;
         box-shadow: 0 0 14px {p['glow']};
     }}
 
-    /* ---------- FLOATING 3D CREDIT CARD ---------- */
+    /* ---------- FLOATING VINTAGE PLAQUE CARD ---------- */
     .credit-card {{
-        width: 230px; height: 140px; margin: 22px auto 0; border-radius: 16px; position: relative;
+        width: 230px; height: 140px; margin: 22px auto 0; border-radius: 6px; position: relative;
         background: linear-gradient(135deg, {p['accent2']}, {p['accent1']} 60%, {p['accent3']});
-        box-shadow: 0 0 30px {p['glow']}, 0 12px 30px rgba(0,0,0,0.6);
+        border: 1px solid rgba(0,0,0,0.4);
+        box-shadow: 0 0 30px {p['glow']}, 0 12px 30px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.5), inset 0 -3px 6px rgba(0,0,0,0.25);
         animation: cardFloat 4.5s ease-in-out infinite; padding: 16px; text-align: left;
     }}
     @keyframes cardFloat {{ 0%,100%{{ transform: translateY(0) rotate(-2deg);}} 50%{{ transform: translateY(-10px) rotate(2deg);}} }}
     .credit-card .chip {{ font-size: 26px; }}
-    .credit-card .num {{ color: #000; font-family: 'Orbitron', monospace; letter-spacing: 2px; font-size: 15px; margin-top: 14px; text-shadow: 0 0 6px rgba(255,255,255,0.4); }}
+    .credit-card .num {{ color: #000; font-family: 'Special Elite', monospace; letter-spacing: 2px; font-size: 14px; margin-top: 14px; text-shadow: 0 0 6px rgba(255,255,255,0.4); }}
     .credit-card .brand {{ position:absolute; bottom: 12px; right: 16px; font-size: 20px; }}
 
     /* ---------- TOP NAV BAR (glassy, luxury pill tabs, equal width, zero dots, no top bar) ---------- */
     .navbar-wrap {{
         background: linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
-        border: 1px solid {p['cardBorder']}; border-radius: 26px;
+        border: 1px solid {p['cardBorder']}; border-radius: 8px;
         padding: 12px 16px; backdrop-filter: blur(26px) saturate(160%); -webkit-backdrop-filter: blur(26px) saturate(160%);
         margin: 0 auto 22px; z-index: 20; position: sticky; top: 8px; width: 100%;
         box-shadow: 0 0 30px {p['glow']}, 0 8px 32px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.05);
         position: relative; overflow: hidden;
     }}
     .navbar-wrap::before {{
-        content: ""; position: absolute; inset: -2px; z-index: -1; border-radius: 26px; padding: 1px;
+        content: ""; position: absolute; inset: -2px; z-index: -1; border-radius: 8px; padding: 1px;
         background: linear-gradient(120deg, {p['accent1']}, {p['accent2']}, {p['accent3']}, {p['accent1']});
         background-size: 300% 300%; animation: navBorderFlow 8s linear infinite;
         -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
@@ -214,35 +235,50 @@ def apply_theme(mood="default"):
     }}
     @keyframes navBorderFlow {{ 0%{{background-position:0% 50%;}} 100%{{background-position:300% 50%;}} }}
 
+    /* Fully reset the stRadio wrapper so no empty bar/box shows above the pills */
+    div[data-testid="stRadio"] {{
+        background: transparent !important; border: none !important; box-shadow: none !important;
+        padding: 0 !important; margin: 0 !important; width: 100% !important;
+    }}
+    div[data-testid="stRadio"] > label,
+    div[data-testid="stWidgetLabel"] {{
+        display: none !important; height: 0 !important; padding: 0 !important; margin: 0 !important;
+    }}
     div[data-testid="stHorizontalBlock"] div[role="radiogroup"] {{
         display: flex !important; flex-direction: row !important; flex-wrap: nowrap !important; gap: 10px !important; justify-content: space-between !important; width: 100% !important; margin: 0 !important; padding: 0 !important;
     }}
     div[role="radiogroup"] {{
-        margin: 0 !important; padding: 0 !important;
+        margin: 0 !important; padding: 0 !important; background: transparent !important; border: none !important;
     }}
     div[role="radiogroup"] label {{
-        background: rgba(255,255,255,0.02); border: 1px solid {p['cardBorder']}; border-radius: 20px;
-        padding: 12px 10px !important; font-weight: 700; font-size: 13.5px; letter-spacing: 0.3px;
-        color: {p['text']} !important; opacity: 0.85; flex: 1 1 0 !important; justify-content: center !important; text-align: center;
-        transition: transform 0.25s cubic-bezier(.34,1.56,.64,1), box-shadow 0.3s ease, border-color 0.3s ease, opacity 0.3s ease, background 0.3s ease;
-        cursor: pointer; position: relative; overflow: hidden; z-index: 1; display: flex !important; align-items: center !important; min-height: 48px !important;
+        background: rgba(255,255,255,0.02); border: 1px solid {p['cardBorder']}; border-radius: 4px;
+        padding: 12px 10px !important; font-family: 'Playfair Display', serif; font-weight: 700; font-size: 13.5px; letter-spacing: 0.3px;
+        color: {p['text']} !important; opacity: 0.85; flex: 1 1 0 !important; width: 0 !important; max-width: none !important;
+        justify-content: center !important; align-items: center !important; text-align: center;
+        transition: box-shadow 0.3s ease, border-color 0.3s ease, opacity 0.3s ease, background 0.3s ease, color 0.3s ease;
+        cursor: pointer; position: relative; overflow: hidden; z-index: 1; display: flex !important; min-height: 48px !important; box-sizing: border-box !important;
     }}
-    /* Kill the radio button indicator dots and active bars */
+    /* Kill the radio button indicator circle entirely (BaseWeb renders it as div[data-baseweb="radio"]) */
+    div[role="radiogroup"] label div[data-baseweb="radio"],
     div[role="radiogroup"] label > div:first-child,
     div[role="radiogroup"] label div[data-testid="stMarkdownContainer"] ~ div,
+    div[role="radiogroup"] label svg,
     div[role="radiogroup"] label::after {{
         display: none !important; width: 0 !important; height: 0 !important;
         margin: 0 !important; padding: 0 !important; opacity: 0 !important; content: none !important;
     }}
-    div[role="radiogroup"] label p {{ color: inherit !important; margin: 0 !important; text-align: center !important; width: 100% !important; }}
+    div[role="radiogroup"] label div[data-testid="stMarkdownContainer"] {{
+        width: 100% !important; flex: 1 1 auto !important;
+    }}
+    div[role="radiogroup"] label p {{ color: inherit !important; margin: 0 !important; text-align: center !important; width: 100% !important; white-space: nowrap !important; }}
     div[role="radiogroup"] label::before {{
-        content: ""; position: absolute; inset: 0; border-radius: 20px; z-index: -1;
+        content: ""; position: absolute; inset: 0; border-radius: 4px; z-index: -1;
         background: conic-gradient(from 0deg, {p['accent1']}, {p['accent2']}, {p['accent3']}, {p['accent1']});
-        opacity: 0; transform: scale(0.4); transition: opacity 0.35s ease, transform 0.45s cubic-bezier(.34,1.56,.64,1);
+        opacity: 0; transition: opacity 0.35s ease;
         filter: blur(10px);
     }}
     div[role="radiogroup"] label:hover {{
-        transform: translateY(-3px) scale(1.02); border-color: {p['accent1']};
+        border-color: {p['accent1']};
         background: rgba(212, 175, 55, 0.12);
         box-shadow: 0 6px 20px {p['glow']}; color: {p['accent1']} !important; opacity: 1;
     }}
@@ -250,11 +286,10 @@ def apply_theme(mood="default"):
         background: rgba(10,10,10,0.9);
         border-color: {p['accent1']}; opacity: 1;
         color: {p['accent1']} !important; font-weight: 800;
-        transform: translateY(-2px) scale(1.03);
         box-shadow: 0 0 26px {p['glow']}, inset 0 0 14px {p['glow']};
     }}
     div[role="radiogroup"] label:has(input:checked)::before {{
-        opacity: 0.35; transform: scale(1); animation: navConicSpin 5s linear infinite;
+        opacity: 0.35; animation: navConicSpin 5s linear infinite;
     }}
     @keyframes navConicSpin {{ from{{ filter: blur(10px) hue-rotate(0deg); }} to{{ filter: blur(10px) hue-rotate(360deg); }} }}
     div[role="radiogroup"] input {{ display:none !important; }}
@@ -282,47 +317,52 @@ def apply_theme(mood="default"):
 
     /* ---------- BUTTONS (glassy) ---------- */
     .stButton>button, .stFormSubmitButton>button, .stDownloadButton>button {{
-        background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01)) !important;
+        background: linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.01) 45%, rgba(0,0,0,0.15)) !important;
         color: {p['text']} !important; 
-        border: 1px solid {p['accent1']}55 !important; 
-        border-radius: 14px !important; 
+        border: 1px solid {p['accent1']}66 !important; 
+        border-top: 1px solid {p['accent1']}aa !important;
+        border-radius: 4px !important; 
         padding: 12px 20px !important;
+        font-family: 'Playfair Display', serif !important;
         font-weight: 800 !important; 
-        letter-spacing: 0.4px !important; 
+        letter-spacing: 1.2px !important; 
+        text-transform: uppercase !important;
+        font-size: 13.5px !important;
         width: 100% !important;
         backdrop-filter: blur(16px) !important; 
         -webkit-backdrop-filter: blur(16px) !important;
-        box-shadow: 0 0 18px {p['glow']}, inset 0 1px 0 rgba(255,255,255,0.05) !important;
+        box-shadow: 0 0 18px {p['glow']}, inset 0 1px 0 rgba(255,255,255,0.18), inset 0 -2px 4px rgba(0,0,0,0.35) !important;
         transition: all 0.3s ease !important;
     }}
     .stButton>button:hover, .stFormSubmitButton>button:hover, .stDownloadButton>button:hover {{
-        background: linear-gradient(135deg, {p['accent1']}33, {p['accent2']}33) !important;
+        background: linear-gradient(180deg, {p['accent1']}44, {p['accent2']}22) !important;
         border-color: {p['accent1']} !important; 
         color: {p['accent1']} !important;
-        box-shadow: 0 0 28px {p['glow']} !important; 
-        transform: translateY(-2px) !important;
+        box-shadow: 0 0 28px {p['glow']}, inset 0 1px 0 rgba(255,255,255,0.3) !important; 
+        transform: translateY(-1px) !important;
     }}
 
     /* ---------- RESULT CARDS ---------- */
     .approved-hero {{
         background: linear-gradient(135deg, rgba(0,255,163,0.16), rgba(0,255,163,0.04));
-        border: 1px solid #00ffa3; border-radius: 24px; padding: 36px; text-align: center;
-        box-shadow: 0 0 55px rgba(0,255,163,0.45); position: relative; z-index: 2;
+        border: 3px double #00ffa3; border-radius: 8px; padding: 36px; text-align: center;
+        box-shadow: 0 0 55px rgba(0,255,163,0.45), inset 0 0 0 6px rgba(0,0,0,0.2); position: relative; z-index: 2;
     }}
     .declined-hero {{
         background: linear-gradient(135deg, rgba(255,46,91,0.16), rgba(255,46,91,0.04));
-        border: 1px solid #ff2e5b; border-radius: 24px; padding: 36px; text-align: center;
-        box-shadow: 0 0 55px rgba(255,46,91,0.45); position: relative; z-index: 2;
+        border: 3px double #ff2e5b; border-radius: 8px; padding: 36px; text-align: center;
+        box-shadow: 0 0 55px rgba(255,46,91,0.45), inset 0 0 0 6px rgba(0,0,0,0.2); position: relative; z-index: 2;
     }}
-    .verdict-title {{ font-family:'Orbitron',sans-serif; font-size: 30px; font-weight: 900; margin-bottom: 6px;}}
+    .verdict-title {{ font-family:'Playfair Display',serif; font-size: 30px; font-weight: 900; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px;}}
     .approved-hero .verdict-title {{ color: #00ffa3; text-shadow: 0 0 18px rgba(0,255,163,0.6); }}
     .declined-hero .verdict-title {{ color: #ff6b6b; text-shadow: 0 0 18px rgba(255,46,91,0.6); }}
     .verdict-icon {{ font-size: 54px; animation: popIn 0.6s ease; }}
     @keyframes popIn {{ 0%{{ transform: scale(0);}} 70%{{ transform: scale(1.2);}} 100%{{ transform: scale(1);}} }}
 
     .reason-chip {{
-        display: inline-block; margin: 5px 6px; padding: 8px 14px; border-radius: 30px;
-        background: rgba(255,255,255,0.05); border: 1px solid {p['cardBorder']}; font-size: 13.5px; font-weight: 600;
+        display: inline-block; margin: 5px 6px; padding: 8px 14px; border-radius: 3px;
+        background: rgba(255,255,255,0.05); border: 1px solid {p['cardBorder']};
+        font-family: 'Special Elite', monospace; font-size: 12.5px; font-weight: 400; letter-spacing: 0.3px;
     }}
 
     /* ---------- CASH RAIN ---------- */
@@ -435,38 +475,51 @@ def apply_theme(mood="default"):
     ul[data-baseweb="menu"],
     ul[role="listbox"],
     div[role="listbox"] {{
-        background: rgba(12, 12, 12, 0.85) !important;
-        background-color: rgba(12, 12, 12, 0.85) !important;
+        background: rgba(20, 18, 12, 0.35) !important;
+        background-color: rgba(20, 18, 12, 0.35) !important;
         border: none !important;
     }}
 
     div[data-baseweb="popover"] > div {{
-        backdrop-filter: blur(24px) !important;
-        -webkit-backdrop-filter: blur(24px) !important;
+        backdrop-filter: blur(28px) saturate(180%) !important;
+        -webkit-backdrop-filter: blur(28px) saturate(180%) !important;
         border: 1px solid {p['cardBorder']} !important;
-        border-radius: 14px !important;
-        box-shadow: 0 12px 40px rgba(0,0,0,0.9), 0 0 20px {p['glow']} inset !important;
-        padding: 8px !important;
+        border-radius: 16px !important;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.85), 0 0 24px {p['glow']}, inset 0 1px 0 rgba(255,255,255,0.15) !important;
+        padding: 10px !important;
+        background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(0,0,0,0.1)) !important;
     }}
 
-    /* INDIVIDUAL GLASS TILES */
+    /* INDIVIDUAL GLASS TILES — layered gloss: frosted glass base + soft top sheen + light rim */
     div[data-baseweb="popover"] li,
     ul[role="listbox"] li,
     div[role="listbox"] li,
     li[role="option"] {{
-        background: rgba(255, 255, 255, 0.05) !important;
-        background-color: rgba(255, 255, 255, 0.05) !important;
-        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        background:
+            linear-gradient(160deg, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.06) 38%, rgba(255,255,255,0.02) 60%, rgba(255,255,255,0.08) 100%) !important;
+        border: 1px solid rgba(255, 255, 255, 0.22) !important;
+        border-top: 1px solid rgba(255,255,255,0.45) !important;
         color: {p['text']} !important;
         transition: all 0.25s cubic-bezier(.34,1.56,.64,1) !important;
         font-size: 14.5px !important;
         padding: 12px 16px !important;
         margin: 6px 8px !important;
-        border-radius: 10px !important;
-        backdrop-filter: blur(12px) !important;
-        -webkit-backdrop-filter: blur(12px) !important;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1) !important;
+        border-radius: 12px !important;
+        backdrop-filter: blur(18px) saturate(180%) !important;
+        -webkit-backdrop-filter: blur(18px) saturate(180%) !important;
+        box-shadow: 0 6px 16px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.35), inset 0 -8px 14px rgba(0,0,0,0.18) !important;
         display: block !important;
+        position: relative !important;
+        overflow: hidden !important;
+    }}
+    /* Glossy highlight streak across the top of each tile */
+    div[data-baseweb="popover"] li::before,
+    ul[role="listbox"] li::before,
+    div[role="listbox"] li::before,
+    li[role="option"]::before {{
+        content: ""; position: absolute; top: 0; left: 0; right: 0; height: 55%;
+        background: linear-gradient(180deg, rgba(255,255,255,0.35), rgba(255,255,255,0) 100%);
+        pointer-events: none; border-radius: 12px 12px 40% 40% / 12px 12px 100% 100%;
     }}
 
     /* Hover and Selected states for tiles */
@@ -478,13 +531,14 @@ def apply_theme(mood="default"):
     ul[role="listbox"] li[aria-selected="true"],
     div[role="listbox"] li[aria-selected="true"],
     li[role="option"][aria-selected="true"] {{
-        background: linear-gradient(135deg, {p['accent1']}44, {p['accent2']}22) !important;
-        background-color: rgba(212,175,55,0.25) !important;
+        background:
+            linear-gradient(160deg, {p['accent1']}66 0%, {p['accent2']}33 40%, rgba(255,255,255,0.05) 65%, {p['accent1']}33 100%) !important;
         border: 1px solid {p['accent1']} !important;
+        border-top: 1px solid rgba(255,255,255,0.6) !important;
         color: {p['accent1']} !important;
         font-weight: 800 !important;
         transform: translateY(-2px) scale(1.02) !important;
-        box-shadow: 0 8px 20px rgba(0,0,0,0.6), 0 0 12px {p['glow']} !important;
+        box-shadow: 0 10px 26px rgba(0,0,0,0.6), 0 0 18px {p['glow']}, inset 0 1px 0 rgba(255,255,255,0.5) !important;
     }}
 
     /* Multiselect Tags */
