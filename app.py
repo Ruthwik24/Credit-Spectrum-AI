@@ -867,31 +867,37 @@ PALETTE = apply_theme(st.session_state.mood)
 # Auto-close the multiselect dropdown menus (Dashboard "Purpose" filter, Dataset Vault
 # "Purpose" filter) once an option is picked, instead of staying open. Purely behavioral —
 # no styling/colors are touched.
+#
+# BaseWeb (the widget library Streamlit uses under the hood) renders the option list in a
+# portal appended to <body>, NOT nested inside the [data-testid="stMultiSelect"] wrapper.
+# So instead of scoping to that wrapper, we use one delegated listener on the whole document
+# that catches clicks on any option row, wherever BaseWeb happens to mount it.
 st.components.v1.html(
     """
     <script>
     (function() {
-        function bindAutoClose() {
-            var doc = window.parent.document;
-            var options = doc.querySelectorAll('[data-testid="stMultiSelect"] [role="option"]');
-            options.forEach(function(opt) {
-                if (!opt.dataset.acBound) {
-                    opt.dataset.acBound = "1";
-                    opt.addEventListener('mousedown', function() {
-                        setTimeout(function() {
-                            var esc = new KeyboardEvent('keydown', {
-                                key: 'Escape', code: 'Escape', keyCode: 27, which: 27, bubbles: true
-                            });
-                            doc.dispatchEvent(esc);
-                            if (doc.activeElement && doc.activeElement.blur) {
-                                doc.activeElement.blur();
-                            }
-                        }, 120);
-                    });
-                }
+        var doc = window.parent.document;
+        if (doc.__acMultiselectBound) { return; }
+        doc.__acMultiselectBound = true;
+
+        function closeOpenDropdown() {
+            var active = doc.activeElement;
+            var esc = new KeyboardEvent('keydown', {
+                key: 'Escape', code: 'Escape', keyCode: 27, which: 27, bubbles: true, cancelable: true
             });
+            if (active) { active.dispatchEvent(esc); }
+            doc.dispatchEvent(esc);
+            if (active && active.blur) { active.blur(); }
+            // Fallback: BaseWeb popovers also close on an outside click.
+            doc.body.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
         }
-        setInterval(bindAutoClose, 700);
+
+        doc.addEventListener('click', function(e) {
+            var opt = e.target.closest('li[role="option"]');
+            if (opt) {
+                setTimeout(closeOpenDropdown, 150);
+            }
+        }, true);
     })();
     </script>
     """,
