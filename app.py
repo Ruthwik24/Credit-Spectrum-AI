@@ -731,6 +731,49 @@ def apply_theme(mood="default"):
     }}
     .glass-table tbody tr:nth-child(even) {{ background: rgba(255,255,255,0.015); }}
     .glass-table tbody tr:last-child td {{ border-bottom: none; }}
+
+    /* ================= RESPONSIVE / MULTI-DEVICE LAYOUT ================= */
+    html, body {{ overflow-x: hidden; }}
+    [data-testid="stAppViewContainer"], [data-testid="stMain"] {{ overflow-x: hidden; }}
+    img, svg, video {{ max-width: 100%; height: auto; }}
+
+    /* Tablets and small laptops */
+    @media (max-width: 992px) {{
+        .block-container {{ padding-left: 1.2rem !important; padding-right: 1.2rem !important; }}
+        .hero-title {{ font-size: 26px !important; }}
+        .stat-number {{ font-size: 26px !important; }}
+        .glass-table {{ font-size: 12.5px; }}
+        .roadmap-title {{ font-size: 11.5px !important; }}
+        .roadmap-desc {{ font-size: 9px !important; }}
+    }}
+
+    /* Tablets (portrait) and large phones */
+    @media (max-width: 768px) {{
+        .block-container {{ padding-left: 0.8rem !important; padding-right: 0.8rem !important; }}
+        .hero-title {{ font-size: 22px !important; line-height: 1.3 !important; }}
+        .verdict-title {{ font-size: 22px !important; }}
+        .stat-card, .glass-card {{ padding: 14px !important; }}
+        .leader-row {{ flex-wrap: wrap !important; gap: 6px; padding: 10px 12px !important; }}
+        div[data-testid="column"] {{ min-width: 100% !important; flex: 1 1 100% !important; }}
+        .roadmap-wrap {{ aspect-ratio: 1000 / 760 !important; }}
+        .roadmap-stop {{ width: 128px !important; }}
+        .roadmap-title {{ font-size: 10.5px !important; }}
+        .roadmap-desc {{ display: none !important; }}
+        .roadmap-bubble {{ width: 36px !important; height: 36px !important; font-size: 15px !important; }}
+    }}
+
+    /* Phones */
+    @media (max-width: 480px) {{
+        .block-container {{ padding-left: 0.5rem !important; padding-right: 0.5rem !important; }}
+        .hero-title {{ font-size: 18px !important; }}
+        .stat-number {{ font-size: 20px !important; }}
+        .glass-table {{ font-size: 11px; }}
+        .glass-table thead th, .glass-table tbody td {{ padding: 8px 10px !important; }}
+        .roadmap-wrap {{ aspect-ratio: 1000 / 900 !important; }}
+        .roadmap-stop {{ width: 100px !important; }}
+        .roadmap-bubble {{ width: 30px !important; height: 30px !important; font-size: 12px !important; }}
+        .roadmap-title {{ font-size: 9px !important; }}
+    }}
     </style>
     <div class="money-bg">{particles_html}</div>
     """, unsafe_allow_html=True)
@@ -820,6 +863,40 @@ PLOTLY_CONFIG = {
 
 
 PALETTE = apply_theme(st.session_state.mood)
+
+# Auto-close the multiselect dropdown menus (Dashboard "Purpose" filter, Dataset Vault
+# "Purpose" filter) once an option is picked, instead of staying open. Purely behavioral —
+# no styling/colors are touched.
+st.components.v1.html(
+    """
+    <script>
+    (function() {
+        function bindAutoClose() {
+            var doc = window.parent.document;
+            var options = doc.querySelectorAll('[data-testid="stMultiSelect"] [role="option"]');
+            options.forEach(function(opt) {
+                if (!opt.dataset.acBound) {
+                    opt.dataset.acBound = "1";
+                    opt.addEventListener('mousedown', function() {
+                        setTimeout(function() {
+                            var esc = new KeyboardEvent('keydown', {
+                                key: 'Escape', code: 'Escape', keyCode: 27, which: 27, bubbles: true
+                            });
+                            doc.dispatchEvent(esc);
+                            if (doc.activeElement && doc.activeElement.blur) {
+                                doc.activeElement.blur();
+                            }
+                        }, 120);
+                    });
+                }
+            });
+        }
+        setInterval(bindAutoClose, 700);
+    })();
+    </script>
+    """,
+    height=0,
+)
 
 FEATURE_COLS = ['purpose', 'int.rate', 'installment', 'log.annual.inc', 'dti', 'fico',
                 'days.with.cr.line', 'revol.bal', 'revol.util', 'inq.last.6mths',
@@ -1574,7 +1651,7 @@ elif choice == "👨‍💻 About the Model":
 
     st.markdown("### 📖 Feature Glossary")
     glossary = {
-        "credit.policy": "Target — meets Bank credit policy (1) or not (0)",
+        "credit.policy": "Target — meets AstraBank credit policy (1) or not (0)",
         "purpose": "Stated purpose of the loan",
         "int.rate": "Interest rate assigned to the loan",
         "installment": "Monthly installment payment",
