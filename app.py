@@ -249,28 +249,25 @@ def apply_theme(mood="default"):
     }}
     div[role="radiogroup"] {{
         display: flex !important; flex-direction: row !important; flex-wrap: nowrap !important;
-        gap: 8px !important; width: 100% !important; margin: 0 !important; padding: 0 !important;
+        gap: 10px !important; width: 100% !important; margin: 0 !important; padding: 0 !important;
         background: transparent !important; border: none !important;
     }}
     div[role="radiogroup"] label {{
         background: rgba(255,255,255,0.02); border: 1px solid {p['cardBorder']};
-        padding: 16px 14px !important; font-family: 'Cinzel', 'Playfair Display', serif; font-weight: 600; font-size: 12.5px; letter-spacing: 0.8px;
+        padding: 18px 16px !important; font-family: 'Cinzel', 'Playfair Display', serif; font-weight: 600; font-size: 15px; letter-spacing: 1px;
         text-transform: uppercase;
-        color: {p['text']} !important; opacity: 0.85; flex: 1 1 0 !important; min-width: 0 !important; max-width: none !important;
-        justify-content: center !important; align-items: center !important; text-align: center;
+        color: {p['text']} !important; opacity: 0.9; flex: 1 1 0 !important; min-width: 0 !important; max-width: none !important;
+        justify-content: center !important; align-items: center !important; text-align: center; gap: 0 !important;
         transition: box-shadow 0.3s ease, border-color 0.3s ease, opacity 0.3s ease, background 0.3s ease, color 0.3s ease;
-        cursor: pointer; position: relative; overflow: visible; z-index: 1; display: flex !important; min-height: 56px !important; box-sizing: border-box !important;
+        cursor: pointer; position: relative; overflow: visible; z-index: 1; display: flex !important; min-height: 64px !important; box-sizing: border-box !important;
     }}
-    /* Kill the radio button indicator (dot/square) entirely — hide EVERY child of the label except the text container */
-    div[role="radiogroup"] label > *:not([data-testid="stMarkdownContainer"]) {{
+    /* Kill ONLY the actual BaseWeb radio dot/indicator element — never touch unknown wrapper divs, or the text inside them vanishes too */
+    div[role="radiogroup"] label div[data-baseweb="radio"] {{
         display: none !important; width: 0 !important; height: 0 !important;
-        min-width: 0 !important; min-height: 0 !important; max-width: 0 !important; max-height: 0 !important;
-        margin: 0 !important; padding: 0 !important; opacity: 0 !important; visibility: hidden !important;
-        border: none !important; background: none !important; box-shadow: none !important;
-        position: absolute !important; overflow: hidden !important; pointer-events: none !important;
+        margin: 0 !important; padding: 0 !important; position: absolute !important; pointer-events: none !important;
     }}
-    div[role="radiogroup"] label::after,
-    div[role="radiogroup"] label::before {{ content: none !important; }}
+    div[role="radiogroup"] label input {{ display: none !important; }}
+    div[role="radiogroup"] label::after {{ content: none !important; }}
     div[role="radiogroup"] label div[data-testid="stMarkdownContainer"] {{
         width: 100% !important; flex: 1 1 auto !important; min-width: 0 !important;
         display: block !important; visibility: visible !important; opacity: 1 !important; position: relative !important;
@@ -278,10 +275,10 @@ def apply_theme(mood="default"):
     div[role="radiogroup"] label p {{
         color: inherit !important; margin: 0 !important; text-align: center !important; width: 100% !important;
         white-space: normal !important; overflow: visible !important; text-overflow: unset !important;
-        line-height: 1.3 !important; word-break: keep-all !important;
+        line-height: 1.35 !important; word-break: keep-all !important; visibility: visible !important; opacity: 1 !important;
     }}
     div[role="radiogroup"] label::before {{
-        content: ""; position: absolute; inset: 0; border-radius: 4px; z-index: -1;
+        content: ""; position: absolute; inset: 0; z-index: -1;
         background: conic-gradient(from 0deg, {p['accent1']}, {p['accent2']}, {p['accent3']}, {p['accent1']});
         opacity: 0; transition: opacity 0.35s ease;
         filter: blur(10px);
@@ -474,35 +471,27 @@ def apply_theme(mood="default"):
         box-shadow: none !important;
     }}
 
-    /* ================= STRICT GLASSY DROPDOWN TILES (NO OPAQUE BOXES) ================= */
-    /* Nuclear catch-all: whatever wrapper markup BaseWeb renders inside the popover portal,
-       every single element in it must be transparent — no solid white boxes, no blur. */
+    /* ================= TRANSLUCENT DARK GLASS DROPDOWN (readable text, not opaque white, not see-through) ================= */
+    /* Nuclear catch-all first: strip out whatever default (often white) background BaseWeb sets on its portal wrappers. */
     div[data-baseweb="popover"],
-    div[data-baseweb="popover"] * {{
-        background: transparent !important;
-        background-color: transparent !important;
-        backdrop-filter: none !important;
-        -webkit-backdrop-filter: none !important;
-    }}
+    div[data-baseweb="popover"] *,
     [data-testid="stVirtualDropdown"],
     [data-testid="stVirtualDropdown"] * {{
         background: transparent !important;
         background-color: transparent !important;
-        backdrop-filter: none !important;
-        -webkit-backdrop-filter: none !important;
     }}
-    
+
+    /* The dropdown shell itself: dark translucent glass so the menu is legible against any page content behind it */
     div[data-baseweb="popover"] > div,
-    [data-testid="stVirtualDropdown"],
     [data-testid="stVirtualDropdown"] > div,
     [data-testid="stVirtualDropdown"] > div > div,
     ul[data-baseweb="menu"],
     ul[role="listbox"],
     div[role="listbox"] {{
-        background: transparent !important;
-        background-color: transparent !important;
-        backdrop-filter: none !important;
-        -webkit-backdrop-filter: none !important;
+        background: rgba(12, 11, 8, 0.88) !important;
+        background-color: rgba(12, 11, 8, 0.88) !important;
+        backdrop-filter: blur(18px) saturate(160%) !important;
+        -webkit-backdrop-filter: blur(18px) saturate(160%) !important;
         border: none !important;
     }}
 
@@ -510,10 +499,10 @@ def apply_theme(mood="default"):
         border: 1px solid {p['cardBorder']} !important;
         box-shadow: 0 20px 50px rgba(0,0,0,0.75), 0 0 24px {p['glow']}, inset 0 1px 0 rgba(255,255,255,0.12) !important;
         padding: 8px !important;
-        background: transparent !important;
+        background: rgba(12, 11, 8, 0.88) !important;
     }}
 
-    /* INDIVIDUAL GLASS TILES — thin, near-transparent panes with a crisp rim and faint top sheen.
+    /* INDIVIDUAL OPTION TILES — softly translucent, clearly legible text, thin gold-tinted rim.
        Covers both <li role="option"> (standard menu) and <div role="option"> (virtualized list rows). */
     div[data-baseweb="popover"] li,
     ul[role="listbox"] li,
@@ -521,9 +510,10 @@ def apply_theme(mood="default"):
     li[role="option"],
     div[role="option"],
     [data-testid="stVirtualDropdown"] [role="option"] {{
-        background: transparent !important;
-        border: 1px solid rgba(255, 255, 255, 0.14) !important;
+        background: rgba(255, 255, 255, 0.045) !important;
+        border: 1px solid rgba(255, 255, 255, 0.16) !important;
         color: {p['text']} !important;
+        text-shadow: 0 1px 3px rgba(0,0,0,0.8) !important;
         transition: all 0.25s cubic-bezier(.34,1.56,.64,1) !important;
         font-family: 'EB Garamond', serif !important;
         font-size: 16px !important;
