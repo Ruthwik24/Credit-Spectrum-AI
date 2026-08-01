@@ -1574,7 +1574,7 @@ elif choice == "👨‍💻 About the Model":
 
     st.markdown("### 📖 Feature Glossary")
     glossary = {
-        "credit.policy": "Target — meets AstraBank credit policy (1) or not (0)",
+        "credit.policy": "Target — meets Bank credit policy (1) or not (0)",
         "purpose": "Stated purpose of the loan",
         "int.rate": "Interest rate assigned to the loan",
         "installment": "Monthly installment payment",
