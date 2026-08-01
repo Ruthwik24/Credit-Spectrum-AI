@@ -417,57 +417,44 @@ def apply_theme(mood="default"):
         background: #0a0a0a; border: 3px solid {p['accent1']}; box-shadow: 0 0 10px {p['glow']};
     }}
 
-    /* ---------- ROADMAP (map-with-a-highlighted-path style) ---------- */
+    /* ---------- ROADMAP (winding highlighted-road map style) ---------- */
     .roadmap-wrap {{
-        position: relative; margin: 30px 0 20px 0; padding: 30px 20px;
+        position: relative; width: 100%; aspect-ratio: 1000 / 460;
+        margin: 34px 0 24px 0;
         background:
-            radial-gradient(circle at 15% 20%, rgba(212,175,55,0.06) 0%, transparent 40%),
-            radial-gradient(circle at 85% 75%, rgba(212,175,55,0.05) 0%, transparent 40%),
-            rgba(255,255,255,0.015);
+            radial-gradient(circle at 15% 15%, rgba(212,175,55,0.06) 0%, transparent 40%),
+            radial-gradient(circle at 85% 85%, rgba(212,175,55,0.05) 0%, transparent 40%);
         border: 1px solid {p['cardBorder']}; border-radius: 14px;
-        background-image:
-            linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
-        background-size: 26px 26px;
     }}
-    .roadmap-line {{
-        position: absolute; left: 39px; top: 34px; bottom: 34px; width: 4px;
-        background: repeating-linear-gradient(
-            to bottom,
-            {p['accent1']} 0px, {p['accent1']} 10px,
-            transparent 10px, transparent 20px
-        );
-        box-shadow: 0 0 12px {p['glow']}, 0 0 4px {p['accent1']};
-        border-radius: 4px;
-        z-index: 1;
-    }}
+    .roadmap-svg {{ position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; }}
     .roadmap-stop {{
-        position: relative; display: flex; align-items: flex-start; gap: 18px;
-        padding: 12px 16px 12px 0; margin-bottom: 6px; z-index: 2;
+        position: absolute; display: flex; align-items: center; gap: 10px;
+        transform: translate(-50%, -50%); max-width: 210px; z-index: 2;
     }}
+    .roadmap-stop.side-left {{ flex-direction: row-reverse; text-align: right; }}
     .roadmap-pin {{
-        flex: 0 0 auto; width: 40px; height: 40px; border-radius: 50%;
+        flex: 0 0 auto; width: 42px; height: 42px; border-radius: 50%;
         background: radial-gradient(circle at 35% 30%, {p['accent2']}, {p['accent1']} 70%);
         color: #0a0a0a; display: flex; align-items: center; justify-content: center;
-        font-weight: 800; font-size: 15px; box-shadow: 0 0 0 4px rgba(10,10,10,0.9), 0 0 14px {p['glow']};
+        font-weight: 800; font-size: 14px; box-shadow: 0 0 0 5px rgba(10,10,10,0.95), 0 0 14px {p['glow']};
         border: 2px solid rgba(255,255,255,0.35);
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
     }}
     .roadmap-stop.roadmap-final .roadmap-pin {{
         background: radial-gradient(circle at 35% 30%, #fff8dc, {p['accent1']} 70%);
-        box-shadow: 0 0 0 4px rgba(10,10,10,0.9), 0 0 22px {p['glow']}, 0 0 40px {p['accent1']};
+        box-shadow: 0 0 0 5px rgba(10,10,10,0.95), 0 0 24px {p['glow']}, 0 0 42px {p['accent1']};
     }}
-    .roadmap-card {{
-        flex: 1 1 auto; background: rgba(255,255,255,0.03); border: 1px solid {p['cardBorder']};
-        border-radius: 10px; padding: 10px 16px; backdrop-filter: blur(10px);
-        transition: transform 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+    .roadmap-label {{
+        font-size: 12.5px; font-weight: 700; line-height: 1.25; color: {p['text']};
+        background: rgba(10,10,10,0.6); padding: 5px 10px; border-radius: 6px;
+        border: 1px solid {p['cardBorder']}; backdrop-filter: blur(6px);
+        transition: border-color 0.25s ease, color 0.25s ease;
     }}
-    .roadmap-card b {{ color: {p['text']}; font-size: 15px; }}
-    .roadmap-stop:hover .roadmap-card {{
-        transform: translateX(6px);
-        background: rgba(212, 175, 55, 0.1);
-        border-color: {p['accent2']};
+    .roadmap-stop:hover .roadmap-pin {{
+        transform: scale(1.1);
+        box-shadow: 0 0 0 5px rgba(10,10,10,0.95), 0 0 22px {p['glow']};
     }}
-    .roadmap-stop:hover .roadmap-pin {{ box-shadow: 0 0 0 4px rgba(10,10,10,0.9), 0 0 20px {p['glow']}; }}
+    .roadmap-stop:hover .roadmap-label {{ border-color: {p['accent2']}; color: {p['accent1']}; }}
 
     /* ---------- LEADERBOARD ---------- */
     .leader-row {{
@@ -1483,19 +1470,58 @@ elif choice == "👨‍💻 About the Model":
              "SMOTE Class Balancing", "Train / Test Split", "Hyperparameter Tuning (RandomizedSearchCV)",
              "XGBoost Training", "Evaluation (ROC AUC / Accuracy)", "Production Deployment"]
 
+    n = len(steps)
+    pad = 60
+    span = 1000 - 2 * pad
+    step_x = span / (n - 1)
+    xs = [pad + i * step_x for i in range(n)]
+    ys = [160 if i % 2 == 0 else 300 for i in range(n)]      # road bends: top / bottom
+    pys = [50 if i % 2 == 0 else 410 for i in range(n)]      # pin sits further out from the bend
+
+    # smooth wavy road path through the bend points
+    path_d = f"M {xs[0]:.1f} {ys[0]:.1f}"
+    for i in range(1, n):
+        midx = (xs[i - 1] + xs[i]) / 2
+        path_d += f" C {midx:.1f} {ys[i-1]:.1f}, {midx:.1f} {ys[i]:.1f}, {xs[i]:.1f} {ys[i]:.1f}"
+
+    dots_svg = "".join(
+        f'<circle cx="{x:.1f}" cy="{y:.1f}" r="7" fill="#0a0a0a" stroke="{p["accent1"]}" stroke-width="3"/>'
+        for x, y in zip(xs, ys)
+    )
+    stems_svg = "".join(
+        f'<line x1="{x:.1f}" y1="{y:.1f}" x2="{x:.1f}" y2="{py:.1f}" '
+        f'stroke="{p["accent1"]}" stroke-width="2" stroke-dasharray="4 4" opacity="0.55"/>'
+        for x, y, py in zip(xs, ys, pys)
+    )
+
+    road_svg = (
+        f'<svg class="roadmap-svg" viewBox="0 0 1000 460" preserveAspectRatio="none">'
+        f'<defs><filter id="roadGlow" x="-50%" y="-50%" width="200%" height="200%">'
+        f'<feGaussianBlur stdDeviation="7"/></filter></defs>'
+        f'<path d="{path_d}" fill="none" stroke="{p["accent1"]}" stroke-width="40" opacity="0.28" filter="url(#roadGlow)" stroke-linecap="round"/>'
+        f'<path d="{path_d}" fill="none" stroke="#141414" stroke-width="30" stroke-linecap="round"/>'
+        f'<path d="{path_d}" fill="none" stroke="{p["accent1"]}" stroke-width="3" stroke-dasharray="14 12" opacity="0.85" stroke-linecap="round"/>'
+        f'{stems_svg}{dots_svg}'
+        f'</svg>'
+    )
+
     stops_html = ""
-    for i, s in enumerate(steps, start=1):
-        final_class = " roadmap-final" if i == len(steps) else ""
-        icon = "🏁" if i == len(steps) else str(i)
+    for i, s in enumerate(steps):
+        final_class = " roadmap-final" if i == n - 1 else ""
+        icon = "🏁" if i == n - 1 else str(i + 1)
+        side = "right" if xs[i] <= 500 else "left"
+        left_pct = xs[i] / 1000 * 100
+        top_pct = pys[i] / 460 * 100
         stops_html += (
-            f'<div class="roadmap-stop{final_class}">'
+            f'<div class="roadmap-stop side-{side}{final_class}" '
+            f'style="left:{left_pct:.2f}%; top:{top_pct:.2f}%;">'
             f'<div class="roadmap-pin">{icon}</div>'
-            f'<div class="roadmap-card"><b>{s}</b></div>'
+            f'<div class="roadmap-label">{s}</div>'
             f'</div>'
         )
 
     st.markdown(
-        f'<div class="roadmap-wrap"><div class="roadmap-line"></div>{stops_html}</div>',
+        f'<div class="roadmap-wrap">{road_svg}{stops_html}</div>',
         unsafe_allow_html=True
     )
 
