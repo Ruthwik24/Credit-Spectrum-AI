@@ -495,6 +495,8 @@ def apply_theme(mood="default"):
     [data-testid="stFileUploader"] ul,
     [data-testid="stFileUploader"] li,
     [data-testid="stFileUploader"] li div,
+    [data-testid="stFileUploader"] div,
+    [data-testid="stFileUploader"] span,
     [data-testid="stFileUploaderFile"],
     [data-testid="stFileUploaderFileName"],
     [data-testid="stUploadedFile"],
@@ -504,6 +506,16 @@ def apply_theme(mood="default"):
         background: rgba(15, 15, 15, 0.8) !important;
         color: {p['text']} !important;
         border-radius: 6px !important;
+    }}
+
+    /* the dropzone itself must stay as-is, not the darker translucent fill above */
+    [data-testid="stFileUploader"] [data-testid="stFileUploaderDropzone"],
+    [data-testid="stFileUploader"] [data-testid="stFileUploaderDropzone"] * {{
+        background-color: transparent !important;
+        background: transparent !important;
+    }}
+    [data-testid="stFileUploaderDropzone"] {{
+        background: rgba(255,255,255,0.02) !important;
     }}
 
     hr {{ border-color: {p['cardBorder']}; }}
@@ -1475,18 +1487,17 @@ elif choice == "👨‍💻 About the Model":
     for i, s in enumerate(steps, start=1):
         final_class = " roadmap-final" if i == len(steps) else ""
         icon = "🏁" if i == len(steps) else str(i)
-        stops_html += f'''
-        <div class="roadmap-stop{final_class}">
-            <div class="roadmap-pin">{icon}</div>
-            <div class="roadmap-card"><b>{s}</b></div>
-        </div>'''
+        stops_html += (
+            f'<div class="roadmap-stop{final_class}">'
+            f'<div class="roadmap-pin">{icon}</div>'
+            f'<div class="roadmap-card"><b>{s}</b></div>'
+            f'</div>'
+        )
 
-    st.markdown(f'''
-    <div class="roadmap-wrap">
-        <div class="roadmap-line"></div>
-        {stops_html}
-    </div>
-    ''', unsafe_allow_html=True)
+    st.markdown(
+        f'<div class="roadmap-wrap"><div class="roadmap-line"></div>{stops_html}</div>',
+        unsafe_allow_html=True
+    )
 
     st.markdown("### 📖 Feature Glossary")
     glossary = {
