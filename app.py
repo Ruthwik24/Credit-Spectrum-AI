@@ -1330,8 +1330,8 @@ elif choice == "🧠 AI Predictor":
                         work = batch_df.copy()
                         work['purpose'] = work['purpose'].apply(
                             lambda v: v if v in le.classes_ else le.classes_[0])
-                        work['purpose_enc'] = le.transform(work['purpose'])
-                        X_batch = work[['purpose_enc'] + [c for c in FEATURE_COLS if c != 'purpose']]
+                        work['purpose'] = le.transform(work['purpose'])
+                        X_batch = work[FEATURE_COLS]
                         X_batch_scaled = scaler.transform(X_batch)
                         preds = model.predict(X_batch_scaled)
                         probs = model.predict_proba(X_batch_scaled)[:, 1]
