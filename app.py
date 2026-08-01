@@ -1485,12 +1485,12 @@ elif choice == "👨‍💻 About the Model":
         path_d += f" C {midx:.1f} {ys[i-1]:.1f}, {midx:.1f} {ys[i]:.1f}, {xs[i]:.1f} {ys[i]:.1f}"
 
     dots_svg = "".join(
-        f'<circle cx="{x:.1f}" cy="{y:.1f}" r="7" fill="#0a0a0a" stroke="{p["accent1"]}" stroke-width="3"/>'
+        f'<circle cx="{x:.1f}" cy="{y:.1f}" r="7" fill="#0a0a0a" stroke="{PALETTE["accent1"]}" stroke-width="3"/>'
         for x, y in zip(xs, ys)
     )
     stems_svg = "".join(
         f'<line x1="{x:.1f}" y1="{y:.1f}" x2="{x:.1f}" y2="{py:.1f}" '
-        f'stroke="{p["accent1"]}" stroke-width="2" stroke-dasharray="4 4" opacity="0.55"/>'
+        f'stroke="{PALETTE["accent1"]}" stroke-width="2" stroke-dasharray="4 4" opacity="0.55"/>'
         for x, y, py in zip(xs, ys, pys)
     )
 
@@ -1498,9 +1498,9 @@ elif choice == "👨‍💻 About the Model":
         f'<svg class="roadmap-svg" viewBox="0 0 1000 460" preserveAspectRatio="none">'
         f'<defs><filter id="roadGlow" x="-50%" y="-50%" width="200%" height="200%">'
         f'<feGaussianBlur stdDeviation="7"/></filter></defs>'
-        f'<path d="{path_d}" fill="none" stroke="{p["accent1"]}" stroke-width="40" opacity="0.28" filter="url(#roadGlow)" stroke-linecap="round"/>'
+        f'<path d="{path_d}" fill="none" stroke="{PALETTE["accent1"]}" stroke-width="40" opacity="0.28" filter="url(#roadGlow)" stroke-linecap="round"/>'
         f'<path d="{path_d}" fill="none" stroke="#141414" stroke-width="30" stroke-linecap="round"/>'
-        f'<path d="{path_d}" fill="none" stroke="{p["accent1"]}" stroke-width="3" stroke-dasharray="14 12" opacity="0.85" stroke-linecap="round"/>'
+        f'<path d="{path_d}" fill="none" stroke="{PALETTE["accent1"]}" stroke-width="3" stroke-dasharray="14 12" opacity="0.85" stroke-linecap="round"/>'
         f'{stems_svg}{dots_svg}'
         f'</svg>'
     )
