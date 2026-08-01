@@ -251,23 +251,31 @@ def apply_theme(mood="default"):
         display: flex !important; flex-direction: row !important; flex-wrap: nowrap !important;
         gap: 10px !important; width: 100% !important; margin: 0 !important; padding: 0 !important;
         background: transparent !important; border: none !important;
+        align-items: stretch !important; /* Fix for uneven box heights */
     }}
     div[role="radiogroup"] label {{
         background: rgba(255,255,255,0.02); border: 1px solid {p['cardBorder']};
-        padding: 18px 16px !important; font-family: 'Cinzel', 'Playfair Display', serif; font-weight: 600; font-size: 15px; letter-spacing: 1px;
-        text-transform: uppercase;
-        color: {p['text']} !important; opacity: 0.9; flex: 1 1 0 !important; min-width: 0 !important; max-width: none !important;
+        padding: 10px 8px !important; font-family: 'Cinzel', 'Playfair Display', serif; font-weight: 600; font-size: 15px; letter-spacing: 1px;
+        text-transform: uppercase; height: auto !important; min-height: 100% !important; 
+        color: {p['text']} !important; opacity: 0.9; flex: 1 1 0px !important; min-width: 0 !important; max-width: none !important;
         justify-content: center !important; align-items: center !important; text-align: center; gap: 0 !important;
         transition: box-shadow 0.3s ease, border-color 0.3s ease, opacity 0.3s ease, background 0.3s ease, color 0.3s ease;
-        cursor: pointer; position: relative; overflow: visible; z-index: 1; display: flex !important; min-height: 64px !important; box-sizing: border-box !important;
+        cursor: pointer; position: relative; overflow: visible; z-index: 1; display: flex !important; box-sizing: border-box !important;
     }}
     
     /* FIX: Completely remove the native radio graphic/white square from the nav bar */
-    div[role="radiogroup"] label div[data-baseweb="radio"],
-    div[role="radiogroup"] label > div:first-child {{
-        display: none !important; width: 0 !important; height: 0 !important;
-        margin: 0 !important; padding: 0 !important; position: absolute !important; pointer-events: none !important;
+    div[data-testid="stRadio"] div[role="radiogroup"] label > div:first-child,
+    div[data-testid="stRadio"] div[role="radiogroup"] label div[data-baseweb="radio"] {{
+        display: none !important;
+        opacity: 0 !important;
+        width: 0 !important;
+        height: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: none !important;
+        pointer-events: none !important;
     }}
+    
     div[role="radiogroup"] label input {{ display: none !important; }}
     div[role="radiogroup"] label::after {{ content: none !important; }}
     div[role="radiogroup"] label div[data-testid="stMarkdownContainer"] {{
@@ -471,16 +479,17 @@ def apply_theme(mood="default"):
         box-shadow: none !important;
     }}
 
-    /* ================= TRANSLUCENT DARK GLASS DROPDOWN FIXES ================= */
+    /* ================= TRANSLUCENT DARK GLASS DROPDOWN (readable text, not opaque white, not see-through) ================= */
     /* Nuclear catch-all first: strip out whatever default (often white) background BaseWeb sets on its portal wrappers. */
     div[data-baseweb="popover"],
     div[data-baseweb="popover"] *,
     [data-testid="stVirtualDropdown"],
     [data-testid="stVirtualDropdown"] * {{
+        background: transparent !important;
         background-color: transparent !important;
     }}
 
-    /* FIX: The dropdown shell itself (Solid background instead of backdrop-filter to prevent browser compositing loops/flickers) */
+    /* The dropdown shell itself: dark translucent glass so the menu is legible against any page content behind it */
     div[data-baseweb="popover"] > div,
     [data-testid="stVirtualDropdown"] > div,
     [data-testid="stVirtualDropdown"] > div > div,
@@ -494,8 +503,8 @@ def apply_theme(mood="default"):
         box-shadow: 0 10px 40px rgba(0,0,0,0.8), 0 0 20px {p['glow']} !important;
     }}
 
-    /* FIX: INDIVIDUAL OPTION TILES — keep margins/padding/transitions strictly native.
-       Customizing heights or margins breaks react-window virtualization and prevents selection! */
+    /* INDIVIDUAL OPTION TILES — softly translucent, clearly legible text, thin gold-tinted rim.
+       Covers both <li role="option"> (standard menu) and <div role="option"> (virtualized list rows). */
     div[data-baseweb="popover"] li,
     ul[role="listbox"] li,
     div[role="listbox"] li,
