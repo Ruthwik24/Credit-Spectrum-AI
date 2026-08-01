@@ -266,7 +266,8 @@ def apply_theme(mood="default"):
        versions, unlike guessing an internal BaseWeb attribute name. */
     div[role="radiogroup"] label > div:first-child,
     div[role="radiogroup"] label > div:first-child *,
-    div[role="radiogroup"] label input {{
+    div[role="radiogroup"] label input,
+    div[role="radiogroup"] label [aria-hidden="true"] {{
         display: none !important; width: 0 !important; height: 0 !important; min-width: 0 !important; min-height: 0 !important;
         margin: 0 !important; padding: 0 !important; opacity: 0 !important; visibility: hidden !important;
         border: none !important; background: transparent !important; box-shadow: none !important;
@@ -521,11 +522,12 @@ def apply_theme(mood="default"):
         border: 1px solid rgba(255, 255, 255, 0.16) !important;
         color: {p['text']} !important;
         text-shadow: 0 1px 3px rgba(0,0,0,0.8) !important;
-        transition: all 0.25s cubic-bezier(.34,1.56,.64,1) !important;
+        transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease !important;
         font-family: 'EB Garamond', serif !important;
         font-size: 16px !important;
-        padding: 11px 16px !important;
-        margin: 5px 6px !important;
+        padding: 10px 16px !important;
+        margin: 0 !important;
+        box-sizing: border-box !important;
         backdrop-filter: none !important;
         -webkit-backdrop-filter: none !important;
         box-shadow: none !important;
