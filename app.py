@@ -139,7 +139,7 @@ def apply_theme(mood="default"):
     h1, h2, h3 {{ font-family: 'Playfair Display', serif !important; color: {p['text']} !important; font-weight: 800 !important; letter-spacing: 0.5px; }}
     p, span, div, label {{ color: {p['text']}; }}
 
-    /* ---------- GLASS CARD (retro plaque edition — vintage frame, letterpress emboss) ---------- */
+    /* ---------- GLASS CARD ---------- */
     .glass-card {{
         background: rgba(255,255,255,0.03); border: 1px double {p['cardBorder']};
         outline: 1px solid rgba(0,0,0,0.5); outline-offset: -6px;
@@ -166,7 +166,7 @@ def apply_theme(mood="default"):
     }}
     .glass-card h3 {{ font-family: 'Playfair Display', serif !important; letter-spacing: 0.5px; border-bottom: 1px solid {p['cardBorder']}; padding-bottom: 10px; }}
 
-    /* ---------- PANEL (for dashboard/analytics grid boxes) ---------- */
+    /* ---------- PANEL ---------- */
     div[data-testid="stVerticalBlockBorderWrapper"] {{
         background: rgba(255,255,255,0.02) !important;
         border: 1px double {p['cardBorder']} !important;
@@ -232,9 +232,7 @@ def apply_theme(mood="default"):
     .credit-card .num {{ color: #000; font-family: 'Special Elite', monospace; letter-spacing: 2px; font-size: 14px; margin-top: 14px; text-shadow: 0 0 6px rgba(255,255,255,0.4); }}
     .credit-card .brand {{ position:absolute; bottom: 12px; right: 16px; font-size: 20px; }}
 
-    /* ---------- TOP NAV BAR (rectangle vintage tabs, equal width) ---------- */
-    /* NOTE: styling is applied directly to Streamlit's own stRadio container —
-       the markdown wrapper div below never actually nests around the widget in the DOM. */
+    /* ---------- TOP NAV BAR ---------- */
     div[data-testid="stRadio"] {{
         background: linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01)) !important;
         border: 1px solid {p['cardBorder']} !important; border-radius: 4px !important;
@@ -251,7 +249,7 @@ def apply_theme(mood="default"):
         display: flex !important; flex-direction: row !important; flex-wrap: nowrap !important;
         gap: 10px !important; width: 100% !important; margin: 0 !important; padding: 0 !important;
         background: transparent !important; border: none !important;
-        align-items: stretch !important; /* Fix for uneven box heights */
+        align-items: stretch !important;
     }}
     div[role="radiogroup"] label {{
         background: rgba(255,255,255,0.02); border: 1px solid {p['cardBorder']};
@@ -263,13 +261,16 @@ def apply_theme(mood="default"):
         cursor: pointer; position: relative; overflow: visible; z-index: 1; display: flex !important; box-sizing: border-box !important;
     }}
     
-    /* FIX: Completely remove the native radio graphic/white square from the nav bar */
-    div[data-testid="stRadio"] div[role="radiogroup"] label > div:not(:has(p)) {{
+    /* FIX: SURGICALLY REMOVE THE NATIVE RADIO WHITE BOX INDICATOR */
+    div[role="radiogroup"] label input[type="radio"] + div,
+    div[role="radiogroup"] label > div:first-of-type:not(:has(p)),
+    div[data-baseweb="radio"] > div:first-child {{
         display: none !important;
-        width: 0px !important;
-        height: 0px !important;
         opacity: 0 !important;
         visibility: hidden !important;
+        width: 0 !important;
+        height: 0 !important;
+        position: absolute !important;
         pointer-events: none !important;
     }}
     
@@ -475,20 +476,31 @@ def apply_theme(mood="default"):
         box-shadow: none !important;
     }}
 
-    /* ================= SAFE DROPDOWN CSS (FIXED CLICK EVENTS) ================= */
-    /* Only target the main wrapper to avoid breaking BaseWeb's invisible click-capture layers */
+    /* ================= SAFE DROPDOWN CSS (FIXED BACKGROUND & CLICK EVENTS) ================= */
+    /* Target the popover wrapper directly. Do not use wildcard `*` which breaks the backdrop layer. */
     div[data-baseweb="popover"] > div,
-    [data-testid="stVirtualDropdown"] > div {{
-        background: #141414 !important;
-        background-color: #141414 !important;
+    [data-testid="stVirtualDropdown"] > div,
+    [data-testid="stVirtualDropdown"] > div > div,
+    ul[data-baseweb="menu"],
+    ul[role="listbox"],
+    div[role="listbox"] {{
+        background: rgba(12, 11, 8, 0.95) !important;
+        background-color: rgba(12, 11, 8, 0.95) !important;
+        backdrop-filter: blur(18px) saturate(160%) !important;
+        -webkit-backdrop-filter: blur(18px) saturate(160%) !important;
         border: 1px solid {p['cardBorder']} !important;
         border-radius: 6px !important;
-        box-shadow: 0 10px 40px rgba(0,0,0,0.8), 0 0 20px {p['glow']} !important;
     }}
 
-    /* INDIVIDUAL OPTION TILES — strict native structure */
+    div[data-baseweb="popover"] > div {{
+        padding: 8px !important;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 20px {p['glow']} !important;
+    }}
+
+    /* INDIVIDUAL OPTION TILES — strict native structure (no custom margins/padding to prevent virtualization from breaking clicks!) */
     li[role="option"],
-    div[role="option"] {{
+    div[role="option"],
+    [data-testid="stVirtualDropdown"] [role="option"] {{
         background-color: transparent !important;
         color: {p['text']} !important;
         font-family: 'EB Garamond', serif !important;
@@ -501,6 +513,7 @@ def apply_theme(mood="default"):
     div[role="option"]:hover,
     li[role="option"][aria-selected="true"],
     div[role="option"][aria-selected="true"] {{
+        background: linear-gradient(160deg, {p['accent1']}26 0%, transparent 100%) !important;
         background-color: rgba(212, 175, 55, 0.2) !important;
         color: {p['accent1']} !important;
         font-weight: 700 !important;
