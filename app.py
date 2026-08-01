@@ -248,34 +248,41 @@ def apply_theme(mood="default"):
         display: none !important; height: 0 !important; padding: 0 !important; margin: 0 !important;
     }}
     div[role="radiogroup"] {{
-        display: flex !important; flex-direction: row !important; flex-wrap: nowrap !important;
+        display: grid !important; grid-auto-flow: column !important; grid-auto-columns: 1fr !important;
         gap: 10px !important; width: 100% !important; margin: 0 !important; padding: 0 !important;
         background: transparent !important; border: none !important;
     }}
     div[role="radiogroup"] label {{
         background: rgba(255,255,255,0.02); border: 1px solid {p['cardBorder']};
-        padding: 18px 16px !important; font-family: 'Cinzel', 'Playfair Display', serif; font-weight: 600; font-size: 15px; letter-spacing: 1px;
+        padding: 18px 12px !important; font-family: 'Cinzel', 'Playfair Display', serif; font-weight: 600; font-size: 14px; letter-spacing: 0.8px;
         text-transform: uppercase;
-        color: {p['text']} !important; opacity: 0.9; flex: 1 1 0 !important; min-width: 0 !important; max-width: none !important;
+        color: {p['text']} !important; opacity: 0.9; width: 100% !important; min-width: 0 !important; max-width: none !important;
         justify-content: center !important; align-items: center !important; text-align: center; gap: 0 !important;
         transition: box-shadow 0.3s ease, border-color 0.3s ease, opacity 0.3s ease, background 0.3s ease, color 0.3s ease;
-        cursor: pointer; position: relative; overflow: visible; z-index: 1; display: flex !important; min-height: 64px !important; box-sizing: border-box !important;
+        cursor: pointer; position: relative; overflow: visible; z-index: 1; display: flex !important; height: 64px !important; box-sizing: border-box !important;
     }}
-    /* Kill ONLY the actual BaseWeb radio dot/indicator element — never touch unknown wrapper divs, or the text inside them vanishes too */
-    div[role="radiogroup"] label div[data-baseweb="radio"] {{
-        display: none !important; width: 0 !important; height: 0 !important;
-        margin: 0 !important; padding: 0 !important; position: absolute !important; pointer-events: none !important;
+    /* Kill the radio dot/circle entirely — it is structurally the FIRST child of the label (the text is the
+       second child, data-testid="stMarkdownContainer"). Targeting by position is reliable across Streamlit
+       versions, unlike guessing an internal BaseWeb attribute name. */
+    div[role="radiogroup"] label > div:first-child,
+    div[role="radiogroup"] label > div:first-child *,
+    div[role="radiogroup"] label input {{
+        display: none !important; width: 0 !important; height: 0 !important; min-width: 0 !important; min-height: 0 !important;
+        margin: 0 !important; padding: 0 !important; opacity: 0 !important; visibility: hidden !important;
+        border: none !important; background: transparent !important; box-shadow: none !important;
+        position: absolute !important; overflow: hidden !important; pointer-events: none !important;
+        clip-path: inset(50%) !important; font-size: 0 !important; z-index: -1 !important;
     }}
-    div[role="radiogroup"] label input {{ display: none !important; }}
     div[role="radiogroup"] label::after {{ content: none !important; }}
     div[role="radiogroup"] label div[data-testid="stMarkdownContainer"] {{
-        width: 100% !important; flex: 1 1 auto !important; min-width: 0 !important;
+        width: 100% !important; min-width: 0 !important;
         display: block !important; visibility: visible !important; opacity: 1 !important; position: relative !important;
     }}
     div[role="radiogroup"] label p {{
         color: inherit !important; margin: 0 !important; text-align: center !important; width: 100% !important;
         white-space: normal !important; overflow: visible !important; text-overflow: unset !important;
-        line-height: 1.35 !important; word-break: keep-all !important; visibility: visible !important; opacity: 1 !important;
+        line-height: 1.3 !important; word-break: keep-all !important; visibility: visible !important; opacity: 1 !important;
+        display: block !important; position: static !important; clip-path: none !important; font-size: 14px !important;
     }}
     div[role="radiogroup"] label::before {{
         content: ""; position: absolute; inset: 0; z-index: -1;
@@ -542,11 +549,8 @@ def apply_theme(mood="default"):
         border: 1px solid {p['accent1']} !important;
         color: {p['accent1']} !important;
         font-weight: 700 !important;
-        transform: translateY(-1px) !important;
         box-shadow: none !important;
     }}
-
-    /* Multiselect Tags */
     span[data-baseweb="tag"] {{ 
         background: rgba(212,175,55,0.2) !important; 
         color: {p['text']} !important; 
@@ -957,12 +961,13 @@ elif choice == "📊 Dashboard":
                 text='count',
             )
             fig1.update_traces(
-                texttemplate='%{text:,}', textposition='outside',
+                texttemplate='%{text:,}', textposition='outside', cliponaxis=False,
                 marker_line_color='rgba(255,255,255,0.35)', marker_line_width=1,
                 hovertemplate='<b>%{y}</b><br>Applications: %{x:,}<extra></extra>',
             )
             fig1.update_layout(coloraxis_showscale=False, showlegend=False,
-                                xaxis_title="Applications", yaxis_title="")
+                                xaxis_title="Applications", yaxis_title="",
+                                xaxis_range=[0, purpose_counts['count'].max() * 1.18])
             style_fig(fig1, PALETTE, height=380)
             st.plotly_chart(fig1, use_container_width=True, config=PLOTLY_CONFIG, theme=None)
     with col2:
