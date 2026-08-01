@@ -78,10 +78,13 @@ def apply_theme(mood="default"):
 
     st.markdown(f"""
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700;800;900&family=Cormorant+Garamond:wght@400;500;600;700&family=Special+Elite&family=Orbitron:wght@500;700;900&family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700;800;900&family=Cormorant+Garamond:wght@400;500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Special+Elite&family=Orbitron:wght@500;700;900&family=Cinzel:wght@400;500;600;700;800&display=swap');
 
-    html, body, [class*="css"] {{ font-family: 'Cormorant Garamond', 'Poppins', serif; }}
+    html, body, [class*="css"] {{ font-family: 'EB Garamond', 'Cormorant Garamond', serif; font-size: 17px; }}
     #MainMenu, footer, header {{ visibility: hidden; }}
+
+    /* ---------- RETRO STRUCTURE: sharp, ledger-like corners everywhere (no rounded modern UI) ---------- */
+    .stApp, .stApp * {{ border-radius: 0 !important; }}
 
     /* ---------- VINTAGE GRAIN + VIGNETTE OVERLAY (retro texture, colors untouched) ---------- */
     .stApp::after {{
@@ -103,7 +106,7 @@ def apply_theme(mood="default"):
         background-attachment: fixed; color: {p['text']}; transition: background 1.2s ease;
     }}
     .block-container {{
-        padding-top: 1.2rem; max-width: 1600px; width: 100%;
+        padding-top: 1.2rem; max-width: 1900px; width: 100%;
         margin-left: auto; margin-right: auto;
     }}
     section.main > div.block-container {{ margin-left: auto; margin-right: auto; }}
@@ -138,12 +141,24 @@ def apply_theme(mood="default"):
 
     /* ---------- GLASS CARD (retro plaque edition — vintage frame, letterpress emboss) ---------- */
     .glass-card {{
-        background: rgba(255,255,255,0.03); border: 1px solid {p['cardBorder']};
-        outline: 1px solid rgba(0,0,0,0.5); outline-offset: -5px;
-        border-radius: 6px; padding: 26px; backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+        background: rgba(255,255,255,0.03); border: 1px double {p['cardBorder']};
+        outline: 1px solid rgba(0,0,0,0.5); outline-offset: -6px;
+        padding: 28px 26px; backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
         box-shadow: 0 0 30px rgba(0,0,0,0.6), 0 0 12px {p['glow']} inset, inset 0 1px 0 rgba(255,255,255,0.12), inset 0 -1px 0 rgba(0,0,0,0.5);
         transition: all 0.35s ease;
         margin-bottom: 18px; position: relative; z-index: 1;
+    }}
+    /* vintage certificate corner brackets */
+    .glass-card::before, .glass-card::after,
+    div[data-testid="stVerticalBlockBorderWrapper"]::before, div[data-testid="stVerticalBlockBorderWrapper"]::after {{
+        content: ""; position: absolute; width: 16px; height: 16px; pointer-events: none; z-index: 2;
+        border-color: {p['accent1']}; opacity: 0.75;
+    }}
+    .glass-card::before, div[data-testid="stVerticalBlockBorderWrapper"]::before {{
+        top: 6px; left: 6px; border-top: 2px solid; border-left: 2px solid;
+    }}
+    .glass-card::after, div[data-testid="stVerticalBlockBorderWrapper"]::after {{
+        bottom: 6px; right: 6px; border-bottom: 2px solid; border-right: 2px solid;
     }}
     .glass-card:hover {{
         transform: translateY(-4px); border-color: {p['accent2']};
@@ -154,10 +169,10 @@ def apply_theme(mood="default"):
     /* ---------- PANEL (for dashboard/analytics grid boxes) ---------- */
     div[data-testid="stVerticalBlockBorderWrapper"] {{
         background: rgba(255,255,255,0.02) !important;
-        border: 1px solid {p['cardBorder']} !important; border-radius: 6px !important;
-        outline: 1px solid rgba(0,0,0,0.5) !important; outline-offset: -5px !important;
+        border: 1px double {p['cardBorder']} !important;
+        outline: 1px solid rgba(0,0,0,0.5) !important; outline-offset: -6px !important;
         backdrop-filter: blur(16px); box-shadow: 0 0 24px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1); position: relative; z-index: 1;
-        transition: box-shadow 0.3s ease, transform 0.3s ease;
+        transition: box-shadow 0.3s ease, transform 0.3s ease; padding: 4px !important;
     }}
     div[data-testid="stVerticalBlockBorderWrapper"]:hover {{
         box-shadow: 0 0 24px {p['glow']}; transform: translateY(-3px);
@@ -238,21 +253,26 @@ def apply_theme(mood="default"):
         background: transparent !important; border: none !important;
     }}
     div[role="radiogroup"] label {{
-        background: rgba(255,255,255,0.02); border: 1px solid {p['cardBorder']}; border-radius: 4px;
-        padding: 12px 6px !important; font-family: 'Playfair Display', serif; font-weight: 700; font-size: 12.5px; letter-spacing: 0.2px;
+        background: rgba(255,255,255,0.02); border: 1px solid {p['cardBorder']};
+        padding: 16px 10px !important; font-family: 'Cinzel', 'Playfair Display', serif; font-weight: 600; font-size: 13px; letter-spacing: 1.4px;
+        text-transform: uppercase;
         color: {p['text']} !important; opacity: 0.85; flex: 1 1 0 !important; min-width: 0 !important; max-width: none !important;
         justify-content: center !important; align-items: center !important; text-align: center;
         transition: box-shadow 0.3s ease, border-color 0.3s ease, opacity 0.3s ease, background 0.3s ease, color 0.3s ease;
-        cursor: pointer; position: relative; overflow: hidden; z-index: 1; display: flex !important; min-height: 48px !important; box-sizing: border-box !important;
+        cursor: pointer; position: relative; overflow: hidden; z-index: 1; display: flex !important; min-height: 56px !important; box-sizing: border-box !important;
     }}
-    /* Kill the radio button indicator circle entirely (BaseWeb renders it as div[data-baseweb="radio"]) */
+    /* Kill the radio button indicator circle entirely — BaseWeb nests it as label > div[data-baseweb="radio"] > div (the visible dot) plus a hidden input */
     div[role="radiogroup"] label div[data-baseweb="radio"],
+    div[role="radiogroup"] label div[data-baseweb="radio"] *,
     div[role="radiogroup"] label > div:first-child,
+    div[role="radiogroup"] label > span:first-child,
     div[role="radiogroup"] label div[data-testid="stMarkdownContainer"] ~ div,
     div[role="radiogroup"] label svg,
     div[role="radiogroup"] label::after {{
         display: none !important; width: 0 !important; height: 0 !important;
+        min-width: 0 !important; min-height: 0 !important;
         margin: 0 !important; padding: 0 !important; opacity: 0 !important; content: none !important;
+        border: none !important; background: none !important;
     }}
     div[role="radiogroup"] label div[data-testid="stMarkdownContainer"] {{
         width: 100% !important; flex: 1 1 auto !important; min-width: 0 !important;
@@ -288,7 +308,8 @@ def apply_theme(mood="default"):
 
     /* ---------- STAT / METRIC CARDS ---------- */
     .stat-card {{
-        background: rgba(255,255,255,0.02); border: 1px solid {p['cardBorder']}; border-radius: 6px;
+        background: rgba(255,255,255,0.02); border: 1px double {p['cardBorder']};
+        outline: 1px solid rgba(0,0,0,0.4); outline-offset: -5px;
         padding: 22px 10px; text-align: center; backdrop-filter: blur(14px); animation: floaty 5s ease-in-out infinite;
         position: relative; z-index: 1; box-shadow: 0 0 16px {p['glow']};
     }}
@@ -311,15 +332,14 @@ def apply_theme(mood="default"):
     .stButton>button, .stFormSubmitButton>button, .stDownloadButton>button {{
         background: linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.01) 45%, rgba(0,0,0,0.15)) !important;
         color: {p['text']} !important; 
-        border: 1px solid {p['accent1']}66 !important; 
-        border-top: 1px solid {p['accent1']}aa !important;
-        border-radius: 4px !important; 
+        border: 1px double {p['accent1']}88 !important; 
+        outline: 1px solid rgba(0,0,0,0.4) !important; outline-offset: -4px !important;
         padding: 12px 20px !important;
-        font-family: 'Playfair Display', serif !important;
-        font-weight: 800 !important; 
-        letter-spacing: 1.2px !important; 
+        font-family: 'Cinzel', 'Playfair Display', serif !important;
+        font-weight: 600 !important; 
+        letter-spacing: 2px !important; 
         text-transform: uppercase !important;
-        font-size: 13.5px !important;
+        font-size: 12.5px !important;
         width: 100% !important;
         backdrop-filter: blur(16px) !important; 
         -webkit-backdrop-filter: blur(16px) !important;
@@ -467,19 +487,18 @@ def apply_theme(mood="default"):
     ul[data-baseweb="menu"],
     ul[role="listbox"],
     div[role="listbox"] {{
-        background: rgba(15, 13, 9, 0.16) !important;
-        background-color: rgba(15, 13, 9, 0.16) !important;
+        background: transparent !important;
+        background-color: transparent !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
         border: none !important;
     }}
 
     div[data-baseweb="popover"] > div {{
-        backdrop-filter: blur(20px) saturate(180%) !important;
-        -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
         border: 1px solid {p['cardBorder']} !important;
-        border-radius: 6px !important;
         box-shadow: 0 20px 50px rgba(0,0,0,0.75), 0 0 24px {p['glow']}, inset 0 1px 0 rgba(255,255,255,0.12) !important;
         padding: 8px !important;
-        background: rgba(15,13,9,0.1) !important;
+        background: transparent !important;
     }}
 
     /* INDIVIDUAL GLASS TILES — thin, near-transparent panes with a crisp rim and faint top sheen */
@@ -487,31 +506,20 @@ def apply_theme(mood="default"):
     ul[role="listbox"] li,
     div[role="listbox"] li,
     li[role="option"] {{
-        background: rgba(255, 255, 255, 0.05) !important;
-        border: 1px solid rgba(255, 255, 255, 0.18) !important;
-        border-top: 1px solid rgba(255,255,255,0.32) !important;
+        background: transparent !important;
+        border: 1px solid rgba(255, 255, 255, 0.14) !important;
         color: {p['text']} !important;
         transition: all 0.25s cubic-bezier(.34,1.56,.64,1) !important;
-        font-family: 'Cormorant Garamond', serif !important;
+        font-family: 'EB Garamond', serif !important;
         font-size: 16px !important;
         padding: 11px 16px !important;
         margin: 5px 6px !important;
-        border-radius: 4px !important;
-        backdrop-filter: blur(8px) saturate(160%) !important;
-        -webkit-backdrop-filter: blur(8px) saturate(160%) !important;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.18) !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        box-shadow: none !important;
         display: block !important;
         position: relative !important;
         overflow: hidden !important;
-    }}
-    /* Faint glossy highlight streak across the top of each tile — subtle, not opaque */
-    div[data-baseweb="popover"] li::before,
-    ul[role="listbox"] li::before,
-    div[role="listbox"] li::before,
-    li[role="option"]::before {{
-        content: ""; position: absolute; top: 0; left: 0; right: 0; height: 50%;
-        background: linear-gradient(180deg, rgba(255,255,255,0.14), rgba(255,255,255,0) 100%);
-        pointer-events: none;
     }}
 
     /* Hover and Selected states for tiles */
@@ -523,13 +531,12 @@ def apply_theme(mood="default"):
     ul[role="listbox"] li[aria-selected="true"],
     div[role="listbox"] li[aria-selected="true"],
     li[role="option"][aria-selected="true"] {{
-        background: linear-gradient(160deg, {p['accent1']}3a 0%, {p['accent2']}22 60%, transparent 100%) !important;
+        background: linear-gradient(160deg, {p['accent1']}26 0%, transparent 100%) !important;
         border: 1px solid {p['accent1']} !important;
-        border-top: 1px solid rgba(255,255,255,0.55) !important;
         color: {p['accent1']} !important;
         font-weight: 700 !important;
         transform: translateY(-1px) !important;
-        box-shadow: 0 8px 20px rgba(0,0,0,0.5), 0 0 16px {p['glow']}, inset 0 1px 0 rgba(255,255,255,0.4) !important;
+        box-shadow: none !important;
     }}
 
     /* Multiselect Tags */
